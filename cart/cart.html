@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#061735">
+
+    <title>Stock Mind | Shopping Cart</title>
+
+    <link rel="stylesheet" href="cart.css">
+    <link rel="stylesheet" href="../components/navbar.css">
+    <link rel="stylesheet" href="../components/footer.css">
+</head>
+
+<body>
+
+    <div id="navbar-container"></div>
+
+    <main class="cart-page">
+
+        <header class="cart-heading">
+            <div>
+                <span class="eyebrow">YOUR WHOLESALE ORDER</span>
+                <h1>Shopping <span>Cart</span></h1>
+                <p>Review your products and quantities before checkout.</p>
+            </div>
+
+            <a class="continue-link" href="../category/category.html">
+                <span>←</span> Continue shopping
+            </a>
+        </header>
+
+        <div class="cart-layout">
+
+            <section class="cart-panel">
+
+                <div class="panel-heading">
+                    <div>
+                        <h2>Your items</h2>
+                        <p id="productCount">0 products</p>
+                    </div>
+
+                    <span class="wholesale-badge">
+                        Wholesale
+                    </span>
+                </div>
+
+                <div id="cartItems" class="cart-items"></div>
+
+                <section id="emptyCart" class="empty-cart" hidden>
+                    <div class="empty-icon">🛍</div>
+
+                    <h2>Your cart is empty</h2>
+
+                    <p>
+                        Discover products from our marketplace
+                        and build your wholesale order.
+                    </p>
+
+                    <a href="../category/category.html" class="primary-button">
+                        Explore products <span>→</span>
+                    </a>
+                </section>
+
+                <p id="cartNotice" class="cart-notice" role="status"></p>
+
+            </section>
+
+            <aside class="order-summary">
+
+                <div class="summary-heading">
+                    <div>
+                        <span class="eyebrow">ORDER OVERVIEW</span>
+                        <h2>Order summary</h2>
+                    </div>
+
+                    <div class="summary-icon">▤</div>
+                </div>
+
+                <div class="summary-line">
+    <span>Products subtotal</span>
+    <strong id="subtotal">JOD 0.00</strong>
+</div>
+
+
+<div class="summary-line commission-line">
+
+    <span>
+        Stock Mind Commission (5%)
+    </span>
+
+    <strong id="commission">
+        JOD 0.00
+    </strong>
+
+</div>
+
+
+<div class="summary-line">
+    <span>Shipping</span>
+    <strong id="shipping">Calculated later</strong>
+</div>
+
+                <div class="summary-divider"></div>
+
+                <div class="total-line">
+    <span>Estimated total</span>
+    <strong id="total">JOD 0.00</strong>
+</div>
+
+                <p class="summary-note">
+                    Shipping costs and final pricing will be
+                    confirmed before the order is placed.
+                </p>
+
+                <button
+                    id="checkoutButton"
+                    class="primary-button checkout-button"
+                    type="button"
+                    disabled
+                >
+                    Proceed to checkout <span>→</span>
+                </button>
+
+                <div class="summary-features">
+                    <p><span>✓</span> Wholesale quantities</p>
+                    <p><span>✓</span> Review before confirming</p>
+                </div>
+
+            </aside>
+
+        </div>
+
+    </main>
+
+    <div id="footer-container"></div>
+
+    <script>
+        // Load the shared navbar.
+        fetch("../components/navbar.html")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Navbar could not be loaded");
+                }
+                return response.text();
+            })
+            .then(html => {
+                const container = document.getElementById("navbar-container");
+                container.innerHTML = html;
+
+                const menu = container.querySelector("#mobileMenu");
+                const inner = container.querySelector("#navInner");
+
+                if (menu && inner) {
+                    menu.addEventListener("click", () => {
+                        inner.classList.toggle("mobile-open");
+                    });
+                }
+            })
+            .catch(error => console.error(error));
+
+        // Load the shared footer.
+        fetch("../components/footer.html")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Footer could not be loaded");
+                }
+                return response.text();
+            })
+            .then(html => {
+                document.getElementById("footer-container").innerHTML = html;
+            })
+            .catch(error => console.error(error));
+    </script>
+<script src="../components/navbar.js"></script>
+<script src="../components/load-navbar.js"></script>
+<script>
+    loadStockMindNavbar();
+</script>
+    <script src="cart.js"></script>
+
+</body>
+</html>

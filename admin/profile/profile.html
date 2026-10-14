@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>
+Stock Mind | Admin Profile
+</title>
+
+
+<link rel="stylesheet" href="profile.css">
+
+<link rel="stylesheet" href="../components/sidebar.css">
+
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+
+</head>
+
+
+<body>
+
+
+<div id="sidebar"></div>
+
+
+
+
+<main class="content">
+
+
+
+<header class="page-header">
+
+
+<div>
+
+<h1>
+Admin Profile 👤
+</h1>
+
+<p>
+Manage your account information
+</p>
+
+
+</div>
+
+
+
+<div class="admin-top">
+
+🔔
+
+<span>
+Admin
+</span>
+
+</div>
+
+
+</header>
+
+
+
+
+
+
+
+
+<section class="profile-card">
+
+
+
+<div class="profile-image">
+
+<img 
+id="profileImage"
+src="../../components/logo.png"
+>
+
+
+<div class="image-actions">
+
+
+<label class="upload-btn">
+
+📷 Change Photo
+
+<input 
+type="file"
+id="imageUpload"
+accept="image/*"
+hidden
+>
+
+</label>
+
+
+
+<button 
+id="removeImage"
+class="remove-btn">
+
+🗑 Remove
+
+</button>
+
+
+</div>
+
+
+</div>
+
+
+<div class="profile-info">
+
+
+<h2>
+Stock Mind Admin
+</h2>
+
+
+<p>
+Super Administrator
+</p>
+
+
+<span class="status">
+● Active Account
+</span>
+
+
+</div>
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+
+<section class="cards">
+
+
+
+<div class="card">
+
+
+<h2>
+Personal Information
+</h2>
+
+
+
+<label>
+Full Name
+</label>
+
+<input 
+value="Stock Mind Admin"
+>
+
+
+<label>
+Email
+</label>
+
+<input
+value="admin@stockmind.com"
+>
+
+
+
+<label>
+Phone
+</label>
+
+<input
+placeholder="+962 7X XXX XXXX"
+>
+
+
+
+<label>
+Country
+</label>
+
+<input
+value="Jordan"
+>
+
+
+
+<button>
+Save Profile
+</button>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="card">
+
+
+<h2>
+Account Activity
+</h2>
+
+
+
+<div class="info-row">
+
+<span>
+Role
+</span>
+
+<b>
+Super Admin
+</b>
+
+</div>
+
+
+
+<div class="info-row">
+
+<span>
+Last Login
+</span>
+
+<b>
+Today 10:30 PM
+</b>
+
+</div>
+
+
+
+<div class="info-row">
+
+<span>
+Created
+</span>
+
+<b>
+October 2026
+</b>
+
+</div>
+
+
+
+<div class="info-row">
+
+<span>
+Status
+</span>
+
+<b class="green">
+Active
+</b>
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="card security">
+
+
+<h2>
+Security 🔒
+</h2>
+
+
+
+<button>
+Change Password
+</button>
+
+
+
+<button class="danger">
+Logout From All Devices
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+</section>
+
+
+
+
+
+</main>
+
+
+
+
+
+
+
+
+<script src="profile.js"></script>
+
+
+
+<script>
+
+fetch("../components/sidebar.html")
+
+.then(response => response.text())
+
+.then(data => {
+
+    document.getElementById("sidebar").innerHTML = data;
+
+
+    lucide.createIcons();
+
+});
+
+</script>
+
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="../components/sidebar.js"></script>
+
+
+</body>
+
+</html>

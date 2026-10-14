@@ -1,0 +1,25 @@
+{
+    "users": [
+        {
+            "id": 1,
+            "name": "Stock Mind Buyer",
+            "email": "buyer@stockmind.com",
+            "password": "Buyer123",
+            "role": "buyer"
+        },
+        {
+            "id": 2,
+            "name": "Stock Mind Seller",
+            "email": "seller@stockmind.com",
+            "password": "Seller123",
+            "role": "seller"
+        },
+        {
+            "id": 3,
+            "name": "Stock Mind Admin",
+            "email": "admin@stockmind.com",
+            "password": "StockMindAdmin123",
+            "role": "admin"
+        }
+    ]
+}

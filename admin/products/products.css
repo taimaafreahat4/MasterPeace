@@ -1,0 +1,650 @@
+/* =========================================
+   STOCK MIND ADMIN - PRODUCTS PAGE
+========================================= */
+
+
+*{
+
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Inter",sans-serif;
+
+}
+
+
+
+body{
+
+    background:#f5f6fc;
+
+    color:#071a3d;
+
+    min-height:100vh;
+
+}
+
+
+
+
+
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
+
+
+.content{
+
+    margin-left:280px;
+
+    width:calc(100% - 280px);
+
+    padding:35px;
+
+    min-height:100vh;
+
+}
+
+
+
+
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+
+.page-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:35px;
+
+}
+
+
+
+.page-header h1{
+
+    font-size:34px;
+
+    font-weight:800;
+
+}
+
+
+
+.page-header p{
+
+    margin-top:8px;
+
+    color:#8390aa;
+
+}
+
+
+
+
+
+.admin-profile{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    font-weight:600;
+
+}
+
+
+
+.admin-profile img{
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:12px;
+
+}
+
+
+
+
+
+/* =========================================
+   FILTERS
+========================================= */
+
+
+.controls{
+
+    display:flex;
+
+    gap:15px;
+
+    margin-bottom:30px;
+
+}
+
+
+
+.controls input,
+.controls select{
+
+
+    background:white;
+
+    border:none;
+
+    outline:none;
+
+    padding:16px 20px;
+
+    border-radius:18px;
+
+    font-size:15px;
+
+    box-shadow:
+    0 10px 30px rgba(0,0,0,.08);
+
+}
+
+
+
+.controls input{
+
+    width:350px;
+
+}
+
+
+
+
+
+
+/* =========================================
+   STAT CARDS
+========================================= */
+
+
+.stats{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:20px;
+
+}
+
+
+
+.stat-card{
+
+
+    background:white;
+
+    padding:25px;
+
+    border-radius:25px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    box-shadow:
+    0 15px 35px rgba(0,0,0,.07);
+
+    transition:.3s;
+
+}
+
+
+
+.stat-card:hover{
+
+    transform:translateY(-5px);
+
+}
+
+
+
+.icon{
+
+    width:55px;
+
+    height:55px;
+
+    border-radius:18px;
+
+    background:#eee5ff;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:28px;
+
+}
+
+
+
+.stat-card h2{
+
+    font-size:30px;
+
+}
+
+
+
+.stat-card p{
+
+    color:#8390aa;
+
+    margin:8px 0;
+
+}
+
+
+
+.stat-card span{
+
+    color:#16c784;
+
+    font-size:14px;
+
+    font-weight:600;
+
+}
+
+
+
+.stat-card .red{
+
+    color:#ff4d5e;
+
+}
+
+
+
+
+
+
+
+/* =========================================
+   TABLE
+========================================= */
+
+
+.table-container{
+
+    margin-top:35px;
+
+    background:white;
+
+    padding:30px;
+
+    border-radius:28px;
+
+    box-shadow:
+    0 15px 35px rgba(0,0,0,.07);
+
+}
+
+
+
+
+
+.table-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+
+
+.table-header h2{
+
+    font-size:25px;
+
+}
+
+
+
+.table-header button{
+
+    border:none;
+
+    background:#7c3cff;
+
+    color:white;
+
+    padding:13px 22px;
+
+    border-radius:14px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+}
+
+
+
+
+
+
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    margin-top:25px;
+
+}
+
+
+
+th{
+
+    text-align:left;
+
+    color:#8390aa;
+
+    padding:15px;
+
+    font-size:14px;
+
+}
+
+
+
+td{
+
+    padding:18px 15px;
+
+    border-top:1px solid #edf0f7;
+
+}
+
+
+
+
+
+
+
+
+/* =========================================
+   PRODUCT INFO
+========================================= */
+
+
+.product-info{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+}
+
+
+
+.product-info img{
+
+    width:50px;
+
+    height:50px;
+
+    object-fit:contain;
+
+    background:#f3f4fa;
+
+    border-radius:12px;
+
+}
+
+
+
+.product-info strong{
+
+    display:block;
+
+}
+
+
+
+.product-info small{
+
+    color:#8390aa;
+
+}
+
+
+
+
+
+
+
+/* =========================================
+   AI BADGES
+========================================= */
+
+
+.ai{
+
+    padding:8px 14px;
+
+    border-radius:30px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+
+
+.high{
+
+    background:#d9ffe9;
+
+    color:#16c784;
+
+}
+
+
+
+.warning{
+
+    background:#fff4cc;
+
+    color:#c58b00;
+
+}
+
+
+
+
+
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+
+.status{
+
+    padding:8px 15px;
+
+    border-radius:30px;
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+
+
+.available{
+
+    background:#d9ffe9;
+
+    color:#16c784;
+
+}
+
+
+
+.low{
+
+    background:#fff4cc;
+
+    color:#c58b00;
+
+}
+
+
+
+.out{
+
+    background:#ffe2e2;
+
+    color:#ff4d5e;
+
+}
+
+
+
+
+
+
+
+/* =========================================
+   ACTION BUTTONS
+========================================= */
+
+
+.action,
+.view,
+.edit,
+.delete{
+
+
+    width:35px;
+
+    height:35px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#f3f4fa;
+
+    cursor:pointer;
+
+    margin-right:5px;
+
+    transition:.2s;
+
+}
+
+
+
+.view:hover,
+.edit:hover,
+.delete:hover{
+
+    transform:scale(1.1);
+
+    background:#eee5ff;
+
+}
+
+
+
+
+
+
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+
+@media(max-width:1200px){
+
+
+.stats{
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+
+}
+
+
+
+
+@media(max-width:800px){
+
+
+.content{
+
+margin-left:0;
+
+width:100%;
+
+}
+
+
+
+.stats{
+
+grid-template-columns:1fr;
+
+}
+
+
+
+.controls{
+
+flex-direction:column;
+
+}
+
+
+
+.controls input{
+
+width:100%;
+
+}
+
+
+
+}

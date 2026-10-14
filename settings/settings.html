@@ -1,0 +1,284 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Settings | Stock Mind</title>
+
+    <link rel="stylesheet" href="settings.css">
+    <link rel="stylesheet" href="../components/navbar.css">
+    <link rel="stylesheet" href="../components/footer.css">
+</head>
+
+<body>
+    <!-- Shared Navbar -->
+    <div id="navbar"></div>
+
+    <main class="settings-page">
+
+        <!-- PAGE HEADER -->
+        <section class="settings-header">
+            <div class="settings-header-icon">
+                <span>⚙</span>
+            </div>
+
+            <div>
+                <p class="settings-eyebrow">ACCOUNT CENTER</p>
+                <h1>Settings</h1>
+                <p class="settings-subtitle">
+                    Manage your preferences, notifications, and account security.
+                </p>
+            </div>
+        </section>
+
+        <!-- SETTINGS NAVIGATION -->
+        <div class="settings-layout">
+
+            <aside class="settings-sidebar">
+                <a href="#notifications" class="settings-nav-link active">
+                    <span>♧</span>
+                    Notifications
+                </a>
+
+                <a href="#preferences" class="settings-nav-link">
+                    <span>☷</span>
+                    Shopping Preferences
+                </a>
+
+                <a href="#security" class="settings-nav-link">
+                    <span>♙</span>
+                    Security
+                </a>
+
+                <a href="#privacy" class="settings-nav-link">
+                    <span>♧</span>
+                    Privacy & Account
+                </a>
+            </aside>
+
+            <div class="settings-content">
+
+                <!-- NOTIFICATIONS -->
+                <section class="settings-card" id="notifications">
+                    <div class="settings-section-heading">
+                        <div class="section-icon purple-icon">♧</div>
+
+                        <div>
+                            <h2>Notifications</h2>
+                            <p>Choose which updates you want to receive.</p>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-description">
+                            <h3>Order Updates</h3>
+                            <p>Updates when an order is placed or its status changes.</p>
+                        </div>
+
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="notifyOrders">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-description">
+                            <h3>Shipping Notifications</h3>
+                            <p>Updates about shipping and delivery progress.</p>
+                        </div>
+
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="notifyShipping">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-description">
+                            <h3>Offers & Promotions</h3>
+                            <p>News about discounts, deals, and special offers.</p>
+                        </div>
+
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="notifyOffers">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <p class="section-note">
+                        These switches save your preferences in this browser.
+                        Actual email or push notifications require a notification service.
+                    </p>
+                </section>
+
+                <!-- SHOPPING PREFERENCES -->
+                <section class="settings-card" id="preferences">
+                    <div class="settings-section-heading">
+                        <div class="section-icon blue-icon">☷</div>
+
+                        <div>
+                            <h2>Shopping Preferences</h2>
+                            <p>Personalize how Stock Mind is displayed.</p>
+                        </div>
+                    </div>
+
+                    <div class="preference-grid">
+                        <label class="settings-field">
+                            <span>Preferred Language</span>
+
+                            <select id="preferredLanguage">
+                                <option value="en">English</option>
+                                <option value="ar">العربية</option>
+                            </select>
+
+                            <small>Saved as a preference; translation is not enabled automatically.</small>
+                        </label>
+
+                        <label class="settings-field">
+                            <span>Preferred Currency</span>
+
+                            <select id="preferredCurrency">
+                                <option value="JOD">Jordanian Dinar (JOD)</option>
+                                <option value="USD">US Dollar (USD)</option>
+                                <option value="SAR">Saudi Riyal (SAR)</option>
+                                <option value="AED">UAE Dirham (AED)</option>
+                            </select>
+
+                            <small>This saves your choice; it does not convert product prices.</small>
+                        </label>
+                    </div>
+                </section>
+
+                <!-- SECURITY -->
+                <section class="settings-card" id="security">
+                    <div class="settings-section-heading">
+                        <div class="section-icon orange-icon">♙</div>
+
+                        <div>
+                            <h2>Security</h2>
+                            <p>Manage your account password.</p>
+                        </div>
+                    </div>
+
+                    <form id="passwordForm" autocomplete="off">
+                        <label class="settings-field password-field">
+                            <span>Current Password</span>
+                            <input
+                                id="currentPassword"
+                                type="password"
+                                autocomplete="current-password"
+                                required
+                            >
+                        </label>
+
+                        <label class="settings-field password-field">
+                            <span>New Password</span>
+                            <input
+                                id="newPassword"
+                                type="password"
+                                minlength="8"
+                                autocomplete="new-password"
+                                required
+                            >
+                            <small>Use at least 8 characters.</small>
+                        </label>
+
+                        <label class="settings-field password-field">
+                            <span>Confirm New Password</span>
+                            <input
+                                id="confirmPassword"
+                                type="password"
+                                minlength="8"
+                                autocomplete="new-password"
+                                required
+                            >
+                        </label>
+
+                        <label class="show-password-option">
+                            <input type="checkbox" id="showPasswords">
+                            <span>Show password fields</span>
+                        </label>
+
+                        <button type="submit" class="primary-button">
+                            Update Password
+                        </button>
+
+                        <p id="passwordMessage" class="inline-message"
+                           role="status" aria-live="polite"></p>
+                    </form>
+
+                    <div class="security-warning">
+                        <strong>Prototype security notice</strong>
+                        <p>
+                            This project currently uses browser storage.
+                            Changing a password here is only a local demonstration,
+                            not secure production-grade account security.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- PRIVACY & ACCOUNT -->
+                <section class="settings-card" id="privacy">
+                    <div class="settings-section-heading">
+                        <div class="section-icon green-icon">♧</div>
+
+                        <div>
+                            <h2>Privacy & Account</h2>
+                            <p>Review your account and session options.</p>
+                        </div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-description">
+                            <h3>Account Information</h3>
+                            <p>Review or update your name, location, and profile photo.</p>
+                        </div>
+
+                        <a href="../profile/profile.html" class="secondary-button">
+                            Edit Profile
+                        </a>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-description">
+                            <h3>Sign Out</h3>
+                            <p>End your current session on this browser.</p>
+                        </div>
+
+                        <button type="button" id="settingsLogout"
+                                class="danger-button">
+                            Log Out
+                        </button>
+                    </div>
+
+                    <p class="section-note">
+                        Your settings are stored locally in this browser.
+                        Clearing browser storage may remove saved preferences.
+                    </p>
+                </section>
+
+                <!-- SAVE PREFERENCES -->
+                <div class="settings-save-bar">
+                    <p id="preferencesMessage" class="inline-message"
+                       role="status" aria-live="polite"></p>
+
+                    <button type="button" id="savePreferences"
+                            class="primary-button">
+                        <span>✓</span>
+                        Save Preferences
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Shared Footer -->
+    <div id="footer-container"></div>
+
+    <script src="../components/navbar.js"></script>
+    <script src="settings.js"></script>
+</body>
+</html>

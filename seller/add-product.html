@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>StockMind - Add Product</title>
+
+<link rel="stylesheet" href="seller.css">
+<link rel="stylesheet" href="../components/footer.css">
+
+</head>
+
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<div id="navbar"></div>
+
+
+
+<main class="seller-page">
+
+
+<!-- HEADER -->
+
+<section class="seller-heading">
+
+<span class="eyebrow">
+SELLER CENTER
+</span>
+
+<h1>
+Add New Product
+</h1>
+
+<p>
+List your product and reach thousands of buyers.
+</p>
+
+<div class="seller-navigation">
+    <a href="ai-advisor.html" class="seller-nav-button ai-nav-button">
+        <span class="seller-nav-icon">✦</span>
+        <span>
+            <strong>AI Buying Advisor</strong>
+            <small>Find the right products before buying</small>
+        </span>
+        <span class="seller-nav-arrow">→</span>
+    </a>
+</div>
+
+</section>
+
+
+
+
+<!-- STEPS -->
+
+<div class="wizard">
+
+
+<div class="steps">
+
+
+<div class="step active" data-step="1">
+
+<div class="step-number">
+1
+</div>
+
+<div class="step-copy">
+
+<strong>
+Details
+</strong>
+
+<small>
+Product information
+</small>
+
+</div>
+
+</div>
+
+
+
+
+<div class="step" data-step="2">
+
+<div class="step-number">
+2
+</div>
+
+<div class="step-copy">
+
+<strong>
+Photos
+</strong>
+
+<small>
+Upload images
+</small>
+
+</div>
+
+</div>
+
+
+
+
+
+<div class="step" data-step="3">
+
+<div class="step-number">
+3
+</div>
+
+<div class="step-copy">
+
+<strong>
+Review
+</strong>
+
+<small>
+Publish listing
+</small>
+
+</div>
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- =========================
+STEP 1 DETAILS
+========================= -->
+
+
+<section 
+class="wizard-panel"
+data-panel="1">
+
+
+<div class="panel-heading">
+
+<div>
+
+<span class="panel-kicker">
+PRODUCT DETAILS
+</span>
+
+<h2>
+Tell us about your product
+</h2>
+
+<p>
+Enter accurate information about your item.
+</p>
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="details-grid">
+
+
+<div class="field">
+
+<label>
+Product name
+</label>
+
+<input 
+type="text"
+id="productName"
+placeholder="Example: iPhone 15 Pro">
+
+</div>
+
+
+
+
+<div class="field">
+
+<label>
+Category
+</label>
+
+<select id="category">
+
+<option>
+Select category
+</option>
+
+<option>
+Clothes
+</option>
+
+<option>
+Books
+</option>
+
+<option>
+Electronics
+</option>
+
+<option>
+Cosmetics
+</option>
+
+</select>
+
+</div>
+
+
+
+
+
+<div class="field">
+
+<label>
+Condition
+</label>
+
+
+<select id="condition">
+
+<option>
+New
+</option>
+
+<option>
+Like New
+</option>
+
+<option>
+Used
+</option>
+
+</select>
+
+
+</div>
+
+
+
+
+
+<div class="field">
+
+<label>
+Quantity
+</label>
+
+<input
+type="number"
+id="quantity"
+min="1"
+value="1">
+
+</div>
+
+
+
+
+
+<div class="field">
+
+
+<label>
+Price (JOD)
+</label>
+
+
+<input
+type="number"
+id="price"
+placeholder="3.00">
+
+</div>
+
+
+
+
+
+<div class="field full-width">
+
+
+<label>
+Description
+</label>
+
+
+<textarea
+id="description"
+placeholder="Describe your product..."></textarea>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+<div class="wizard-actions">
+
+
+<button 
+class="btn btn-primary"
+id="detailsNextButton"
+type="button">
+
+Continue to photos →
+
+</button>
+
+
+</div>
+
+
+
+</section>
+<!-- =========================
+STEP 2 PHOTOS
+========================= -->
+
+<section 
+class="wizard-panel"
+data-panel="2"
+hidden>
+
+
+<div class="panel-heading">
+
+<div>
+
+<span class="panel-kicker">
+PRODUCT PHOTOS
+</span>
+
+<h2>
+Upload product images
+</h2>
+
+<p>
+Add clear photos to attract buyers.
+</p>
+
+</div>
+
+</div>
+
+
+
+
+<div class="upload-area">
+
+
+<div class="upload-symbol">
+📷
+</div>
+
+
+<h3>
+Choose product photos
+</h3>
+
+
+<p>
+Upload up to 10 images
+</p>
+
+
+<input
+type="file"
+id="productImages"
+accept="image/*"
+multiple>
+
+
+
+<label 
+for="productImages"
+class="btn btn-primary choose-files">
+
+Choose Photos
+
+</label>
+
+
+<div class="photo-count"
+id="photoCount">
+
+0 / 10
+
+</div>
+
+
+</div>
+
+
+
+
+<div 
+class="image-preview"
+id="imagePreview">
+
+</div>
+
+
+
+
+
+<div class="wizard-actions">
+
+
+<button
+type="button"
+class="btn btn-secondary"
+id="backToDetails">
+
+← Back
+
+</button>
+
+
+
+<button
+type="button"
+class="btn btn-primary"
+id="photosNextButton">
+
+Review listing →
+
+</button>
+
+
+</div>
+
+
+
+</section>
+
+
+
+
+
+
+
+<!-- =========================
+STEP 3 REVIEW
+========================= -->
+
+
+<section 
+class="wizard-panel"
+data-panel="3"
+hidden>
+
+
+
+<div class="panel-heading">
+
+<div>
+
+<span class="panel-kicker">
+REVIEW LISTING
+</span>
+
+<h2>
+Check your product
+</h2>
+
+<p>
+Make sure everything is correct before publishing.
+</p>
+
+</div>
+
+</div>
+
+
+
+
+
+<div class="review-card">
+
+
+
+<div class="review-gallery">
+
+
+<div class="review-main-image">
+
+<img
+id="reviewMainImage"
+src=""
+alt="Product">
+
+
+</div>
+
+
+
+<div 
+class="review-thumbnails"
+id="reviewThumbnails">
+
+</div>
+
+
+
+</div>
+
+<div class="review-information">
+
+
+<span 
+class="review-category"
+id="reviewCategory">
+
+CATEGORY
+
+</span>
+
+
+
+<h3 id="reviewName">
+Product name
+</h3>
+
+
+
+<div 
+class="review-price"
+id="reviewPrice">
+
+JOD 0.00
+
+</div>
+
+
+
+
+<div class="review-status">
+
+
+<span>
+●
+</span>
+
+
+<span id="reviewQuantity">
+0 units available
+</span>
+
+
+<span>
+|
+</span>
+
+
+<span id="reviewCondition">
+New
+</span>
+
+
+</div>
+
+
+
+
+
+
+<div class="review-description-block">
+
+
+<h4>
+Description
+</h4>
+
+
+<p id="reviewDescription">
+
+</p>
+
+
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="wizard-actions">
+
+
+<button
+type="button"
+class="btn btn-secondary"
+id="backToPhotos">
+
+← Back
+
+</button>
+
+
+
+<button
+type="button"
+class="btn btn-primary"
+id="publishButton">
+
+Publish Listing 🚀
+
+</button>
+
+
+</div>
+
+
+
+</section>
+
+
+
+
+
+</main>
+
+
+
+
+
+<div id="footer"></div>
+
+
+
+
+<script src="seller.js"></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Stock Mind | Sellers</title>
+
+<link rel="stylesheet" href="sellers.css">
+
+<link rel="stylesheet" href="../components/sidebar.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+</head>
+
+
+<body>
+
+
+<div id="sidebar"></div>
+
+
+
+<main class="content">
+
+
+
+<header class="page-header">
+
+
+<div>
+
+<h1>
+Seller Management 🏪
+</h1>
+
+<p>
+Manage sellers, stores and approvals
+</p>
+
+
+</div>
+
+
+
+<div class="admin-profile">
+
+🔔
+
+<img src="../../components/logo.png">
+
+<span>
+Admin
+</span>
+
+
+</div>
+
+
+</header>
+
+
+
+
+
+
+
+<section class="controls">
+
+
+<input 
+type="text"
+id="searchInput"
+placeholder="Search sellers..."
+>
+
+
+<select id="filterSelect">
+
+
+<option value="all">
+All Sellers
+</option>
+
+
+<option value="approved">
+Approved
+</option>
+
+
+<option value="pending">
+Pending
+</option>
+
+
+<option value="suspended">
+Suspended
+</option>
+
+
+
+</select>
+
+
+
+</section>
+
+
+
+
+
+
+
+<section class="stats">
+
+
+<div class="stat-card">
+
+
+<div class="icon">
+🏪
+</div>
+
+
+<div>
+
+<h2>
+2450
+</h2>
+
+<p>
+Total Sellers
+</p>
+
+<span>
++12%
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="stat-card">
+
+
+<div class="icon">
+✅
+</div>
+
+
+<div>
+
+<h2>
+2100
+</h2>
+
+<p>
+Verified Sellers
+</p>
+
+<span>
++8%
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="stat-card">
+
+
+<div class="icon">
+⏳
+</div>
+
+
+<div>
+
+<h2>
+280
+</h2>
+
+<p>
+Pending Approval
+</p>
+
+<span>
+Needs Review
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="stat-card">
+
+
+<div class="icon">
+🚫
+</div>
+
+
+<div>
+
+<h2>
+70
+</h2>
+
+<p>
+Suspended
+</p>
+
+<span class="red">
+-3%
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<section class="table-container">
+
+
+<div class="table-header">
+
+
+<h2>
+All Sellers
+</h2>
+
+
+<button>
++ Add Seller
+</button>
+
+
+</div>
+
+
+
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>
+Store
+</th>
+
+
+<th>
+Owner
+</th>
+
+
+<th>
+Email
+</th>
+
+
+<th>
+Products
+</th>
+
+
+<th>
+Sales
+</th>
+
+
+<th>
+Status
+</th>
+
+
+<th>
+Actions
+</th>
+
+
+</tr>
+
+</thead>
+
+
+
+
+
+<tbody id="sellerTable">
+
+
+
+<tr>
+
+
+<td>
+
+<div class="seller-info">
+
+<div class="avatar">
+B
+</div>
+
+Beauty Store
+
+</div>
+
+</td>
+
+
+<td>
+Sara Ahmed
+</td>
+
+
+<td>
+sara@gmail.com
+</td>
+
+
+<td>
+120
+</td>
+
+
+<td>
+5400 JOD
+</td>
+
+
+<td>
+
+<span class="status approved">
+Approved
+</span>
+
+</td>
+
+
+<td>
+
+
+<button class="view">
+👁
+</button>
+
+
+<button class="suspend">
+🚫
+</button>
+
+
+<button class="delete">
+🗑
+</button>
+
+
+</td>
+
+
+</tr>
+
+
+
+
+
+
+
+<tr>
+
+
+<td>
+
+<div class="seller-info">
+
+<div class="avatar">
+T
+</div>
+
+Tech Hub
+
+</div>
+
+</td>
+
+
+<td>
+Ahmad Ali
+</td>
+
+
+<td>
+ahmad@gmail.com
+</td>
+
+
+<td>
+80
+</td>
+
+
+<td>
+3200 JOD
+</td>
+
+
+<td>
+
+<span class="status pending">
+Pending
+</span>
+
+
+</td>
+
+
+<td>
+
+
+<button class="view">
+👁
+</button>
+
+
+<button class="approve">
+✅
+</button>
+
+
+<button class="delete">
+🗑
+</button>
+
+
+</td>
+
+
+</tr>
+
+
+
+
+</tbody>
+
+
+</table>
+
+
+
+</section>
+
+
+
+
+
+</main>
+
+
+
+
+<script src="sellers.js"></script>
+
+<script>
+
+fetch("../components/sidebar.html")
+
+.then(response => response.text())
+
+.then(data => {
+
+    document.getElementById("sidebar").innerHTML = data;
+
+
+    lucide.createIcons();
+
+});
+
+</script>
+
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="../components/sidebar.js"></script>
+
+
+
+</body>
+</html>

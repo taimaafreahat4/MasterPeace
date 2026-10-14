@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Stock Mind | Smarter Inventory</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+    <link rel="stylesheet" href="../components/navbar.css">
+    <link rel="stylesheet" href="../components/footer.css">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="navbar-container"></div>
+    <!-- =========================
+         HERO
+    ========================== -->
+<section class="hero" id="home">
+
+    <!-- BACKGROUND VIDEO -->
+<video 
+    class="hero-bg-video"
+    id="heroVideo"
+    autoplay
+    muted
+    loop
+    playsinline
+>
+
+    <source src="videos/warehouse.mp4" type="video/mp4">
+
+</video>
+
+    <div class="hero-overlay"></div>
+
+
+    <div class="hero-container">
+
+
+        <div class="hero-content">
+
+
+            <div class="hero-label">
+                AI-POWERED INVENTORY SOLUTIONS
+            </div>
+
+
+            <h1>
+                Smarter Decisions.<br>
+                <span>Less Dead Stock.</span>
+            </h1>
+
+
+            <p class="hero-description">
+
+                StockMind helps you predict product demand,
+                find the right products, and get smart
+                recommendations — before you buy and after you sell.
+
+            </p>
+
+
+
+            <div class="hero-buttons">
+
+
+                <button
+                class="primary-btn"
+                onclick="window.location.href='../login/login.html?role=buyer'">
+
+                    Start Buying
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+
+
+
+                <button
+                type="button"
+                class="primary-btn"
+                onclick="startSelling()">
+
+                    Start Selling
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+<div class="video-btn" id="watchVideoBtn">
+
+    <div class="play-circle">
+        <i class="fa-solid fa-play"></i>
+    </div>
+
+    Watch Video
+
+</div>
+
+            </div>
+
+
+
+
+
+            <div class="hero-features">
+
+
+                <div class="hero-feature">
+
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+
+                    <span>
+                        AI Predictions<br>
+                        for Better Buying
+                    </span>
+
+                </div>
+
+
+
+
+                <div class="hero-feature">
+
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-tag"></i>
+                    </div>
+
+                    <span>
+                        Reduce<br>
+                        Dead Stock
+                    </span>
+
+                </div>
+
+
+
+
+
+                <div class="hero-feature">
+
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-chart-column"></i>
+                    </div>
+
+                    <span>
+                        Smart<br>
+                        Recommendations
+                    </span>
+
+                </div>
+
+
+
+
+
+                <div class="hero-feature">
+
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-store"></i>
+                    </div>
+
+                    <span>
+                        Marketplace<br>
+                        for Buyers & Sellers
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+    <!-- =========================
+         CATEGORIES
+    ========================== -->
+
+    <section class="categories-section" id="categories">
+
+        <div class="container">
+
+            <div class="center-heading">
+
+                <div class="section-label">
+                    BROWSE BY CATEGORY
+                </div>
+
+                <h2 class="section-title">
+                    Explore Our Categories
+                </h2>
+
+                <p class="section-subtitle">
+                    Find the right products, discover new opportunities,
+                    and manage your inventory smarter with AI.
+                </p>
+
+            </div>
+
+
+            <div class="categories-grid" id="categoriesGrid">
+
+<!-- Clothing -->
+<a href="#" 
+class="category-card"
+onclick="openCategory('clothing')">
+    <img
+        class="category-image"
+        src="../Images/clothes/G74258s.webp"
+        alt="Clothing"
+    >
+
+    <div class="category-info">
+
+        <div class="category-icon">
+            <i class="fa-solid fa-shirt"></i>
+        </div>
+
+        <div class="category-name">
+            Clothing
+        </div>
+
+        <div class="category-products">
+            12,500+ products
+        </div>
+
+        <div class="category-arrow">
+            <i class="fa-solid fa-arrow-right"></i>
+        </div>
+
+    </div>
+
+</a>
+
+                <!-- Shoes -->
+
+                <div class="category-card" data-name="shoes">
+
+                    <img
+                        class="category-image"
+                        src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=700&q=80"
+                        alt="Shoes"
+                    >
+
+                    <div class="category-info">
+
+                        <div class="category-icon">
+                            <i class="fa-solid fa-shoe-prints"></i>
+                        </div>
+
+                        <div class="category-name">
+                            Shoes
+                        </div>
+
+                        <div class="category-products">
+                            8,900+ products
+                        </div>
+
+                        <div class="category-arrow">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Cosmetics -->
+
+                <div class="category-card" data-name="cosmetics">
+
+                    <img
+                        class="category-image"
+                        src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=700&q=80"
+                        alt="Cosmetics"
+                    >
+
+                    <div class="category-info">
+
+                        <div class="category-icon">
+                            <i class="fa-regular fa-heart"></i>
+                        </div>
+
+                        <div class="category-name">
+                            Cosmetics
+                        </div>
+
+                        <div class="category-products">
+                            6,700+ products
+                        </div>
+
+                        <div class="category-arrow">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Electronics -->
+
+                <div class="category-card" data-name="electronics">
+
+                    <img
+                        class="category-image"
+                        src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=700&q=80"
+                        alt="Electronics"
+                    >
+
+                    <div class="category-info">
+
+                        <div class="category-icon">
+                            <i class="fa-solid fa-laptop"></i>
+                        </div>
+
+                        <div class="category-name">
+                            Electronics
+                        </div>
+
+                        <div class="category-products">
+                            5,400+ products
+                        </div>
+
+                        <div class="category-arrow">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Home & Kitchen -->
+
+                <div class="category-card" data-name="home kitchen">
+
+                    <img
+                        class="category-image"
+                        src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=700&q=80"
+                        alt="Home and Kitchen"
+                    >
+
+                    <div class="category-info">
+
+                        <div class="category-icon">
+                            <i class="fa-solid fa-house"></i>
+                        </div>
+
+                        <div class="category-name">
+                            Home & Kitchen
+                        </div>
+
+                        <div class="category-products">
+                            4,800+ products
+                        </div>
+
+                        <div class="category-arrow">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Accessories -->
+
+                <div class="category-card" data-name="accessories">
+
+                    <img
+                        class="category-image"
+                        src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=700&q=80"
+                        alt="Accessories"
+                    >
+
+                    <div class="category-info">
+
+                        <div class="category-icon">
+                            <i class="fa-solid fa-gem"></i>
+                        </div>
+
+                        <div class="category-name">
+                            Accessories
+                        </div>
+
+                        <div class="category-products">
+                            3,600+ products
+                        </div>
+
+                        <div class="category-arrow">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Sports -->
+
+                <div class="category-card" data-name="sports">
+
+                    <img
+                        class="category-image"
+                        src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=700&q=80"
+                        alt="Sports"
+                    >
+
+                    <div class="category-info">
+
+                        <div class="category-icon">
+                            <i class="fa-solid fa-dumbbell"></i>
+                        </div>
+
+                        <div class="category-name">
+                            Sports
+                        </div>
+
+                        <div class="category-products">
+                            2,900+ products
+                        </div>
+
+                        <div class="category-arrow">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Others -->
+
+                <div class="category-card" data-name="others watches">
+
+                    <img
+                        class="category-image"
+                        src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=80"
+                        alt="Others"
+                    >
+
+                    <div class="category-info">
+
+                        <div class="category-icon">
+                            <i class="fa-solid fa-table-cells"></i>
+                        </div>
+
+                        <div class="category-name">
+                            Others
+                        </div>
+
+                        <div class="category-products">
+                            2,100+ products
+                        </div>
+
+                        <div class="category-arrow">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         ABOUT STOCKMIND
+    ========================== -->
+<section class="about-section" id="about">
+
+    <div class="about-container">
+
+
+        <!-- LEFT CONTENT -->
+        <div class="about-content">
+
+            <span class="about-label">
+                ABOUT STOCKMIND
+            </span>
+
+
+            <h2>
+                Smarter Inventory
+                <br>
+                for a Stronger
+                <span>Tomorrow</span>
+            </h2>
+
+
+            <p>
+                StockMind is an AI-powered platform designed to help
+                merchants and businesses avoid overstocking, reduce dead
+                stock, and maximize profits. With data-driven insights,
+                we make inventory smarter, faster, and easier.
+            </p>
+
+
+
+            <div class="stats">
+
+                <div>
+                    <strong>10K+</strong>
+                    <small>Active Merchants</small>
+                </div>
+
+
+                <div>
+                    <strong>500K+</strong>
+                    <small>Products Analyzed</small>
+                </div>
+
+
+                <div>
+                    <strong>98%</strong>
+                    <small>Prediction Accuracy</small>
+                </div>
+
+            </div>
+
+
+            <button class="about-btn">
+                Learn More About Us →
+            </button>
+
+
+        </div>
+
+
+
+
+        <!-- IMAGE AREA -->
+
+        <div class="about-visual">
+
+
+            <div class="about-image">
+    <img src="images/inventory-animation.svg" alt="Inventory Animation">
+</div>
+
+
+
+
+                
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+
+        <!-- FEATURES -->
+
+        <div class="about-features">
+
+
+            <div class="feature-box">
+
+                📈
+
+                <div>
+                    <h4>AI Demand Prediction</h4>
+                    <p>
+                        Know what will sell before you buy.
+                    </p>
+                </div>
+
+            </div>
+
+
+
+            <div class="feature-box">
+
+                📍
+
+                <div>
+                    <h4>
+                        Location & Time Analysis
+                    </h4>
+
+                    <p>
+                        Understand market trends.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+
+            <div class="feature-box">
+
+                👥
+
+                <div>
+                    <h4>
+                        Customer Insights
+                    </h4>
+
+                    <p>
+                        Analyze audience behavior.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+
+            <div class="feature-box">
+
+                ⭐
+
+                <div>
+                    <h4>
+                        Smart Recommendations
+                    </h4>
+
+                    <p>
+                        Get the right products.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+    <!-- =========================
+         HOW STOCKMIND WORKS
+    ========================== -->
+<section class="steps-section" id="steps">
+
+    <div class="steps-header">
+        <span>SIMPLE STEPS</span>
+        <h2>
+            How <b>StockMind</b> Works
+        </h2>
+        <p>
+            From prediction to action — everything you need in one platform.
+        </p>
+    </div>
+
+
+    <div class="steps-container">
+
+
+        <div class="step-card">
+            <div class="number">01</div>
+
+            <div class="step-icon">
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+
+            <h3>Predict Demand</h3>
+
+            <p>
+                Our AI analyzes location, season,
+                customers and past data to predict
+                what will sell.
+            </p>
+        </div>
+
+
+
+        <div class="arrow">
+            →
+        </div>
+
+
+        <div class="step-card">
+            <div class="number">02</div>
+
+            <div class="step-icon">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </div>
+
+            <h3>Get Recommendations</h3>
+
+            <p>
+                Receive smart suggestions on
+                what to buy, how much to buy,
+                and when.
+            </p>
+        </div>
+
+
+
+        <div class="arrow">
+            →
+        </div>
+
+
+
+        <div class="step-card">
+            <div class="number">03</div>
+
+            <div class="step-icon">
+                <i class="fa-solid fa-boxes-stacked"></i>
+            </div>
+
+            <h3>Manage Existing Stock</h3>
+
+            <p>
+                Find products at risk of becoming
+                dead stock and get solutions.
+            </p>
+        </div>
+
+
+
+        <div class="arrow">
+            →
+        </div>
+
+
+
+        <div class="step-card">
+            <div class="number">04</div>
+
+            <div class="step-icon">
+                <i class="fa-solid fa-chart-column"></i>
+            </div>
+
+            <h3>Grow Your Business</h3>
+
+            <p>
+                Make better decisions,
+                reduce losses and increase profits.
+            </p>
+
+        </div>
+
+
+    </div>       
+
+</section>   <!-- ✅ أضف هاد السطر: نهاية steps-section -->
+
+<section class="testimonials" id="testimonials">
+
+    <div class="testimonial-bg"></div>
+    <div class="testimonial-bg bg2"></div>
+
+    <div class="container">
+
+        <div class="center-heading">
+            <div class="section-label">WHAT OUR USERS SAY</div>
+
+            <h2 class="section-title">
+                Trusted by <span>Thousands</span> of Merchants
+            </h2>
+
+            <p class="section-subtitle">
+                Real people. Real results. See what our users have to say about StockMind.
+            </p>
+        </div>
+
+        <div class="t-stage" id="tStage">
+
+            <div class="t-arc"><span></span><span></span><span></span></div>
+
+            <!-- الكاردات بتنبني من testimonials.js -->
+            <div class="t-track" id="tTrack"></div>
+
+            <button class="t-arrow t-prev" id="tPrev" aria-label="Previous">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button class="t-arrow t-next" id="tNext" aria-label="Next">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+
+        </div>
+
+        <div class="t-dots" id="tDots"></div>
+
+    </div>
+</section>
+
+    <!-- =========================
+         AUTH MODAL
+    ========================== -->
+
+    <div class="modal-overlay" id="modalOverlay">
+
+        <div class="modal">
+
+            <button
+                class="close-modal"
+                onclick="closeModal()"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+
+            <h2 id="modalTitle">
+                Welcome Back
+            </h2>
+
+            <p id="modalDescription">
+                Login to your StockMind account.
+            </p>
+
+
+            <form id="authForm">
+
+                <input
+                    type="text"
+                    id="nameField"
+                    placeholder="Full Name"
+                >
+
+                <input
+                    type="email"
+                    id="emailField"
+                    placeholder="Email Address"
+                    required
+                >
+
+                <input
+                    type="password"
+                    id="passwordField"
+                    placeholder="Password"
+                    required
+                >
+
+                <button
+                    class="modal-submit"
+                    type="submit"
+                >
+                    Login
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+    <!-- =========================
+         TOAST
+    ========================== -->
+
+    <div class="toast" id="toast"></div>
+    <!-- Main JavaScript -->
+    <script>
+fetch("../components/navbar.html")
+    .then(response => response.text())
+    .then(data => {
+
+        document.getElementById("navbar-container").innerHTML = data;
+
+        const mobileMenu =
+            document.getElementById("mobileMenu");
+
+        const navInner =
+            document.getElementById("navInner");
+
+        if (mobileMenu && navInner) {
+
+            mobileMenu.addEventListener("click", function () {
+
+                navInner.classList.toggle("mobile-open");
+
+            });
+
+        }
+
+    })
+    .catch(error => {
+
+        console.error(
+            "Navbar failed to load:",
+            error
+        );
+
+    });
+</script>
+
+<script src="script.js"></script>
+
+<!-- FOOTER COMPONENT -->
+<div id="footer-container"></div>
+
+<script>
+    fetch("../components/footer.html")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Footer file not found");
+            }
+            return response.text();
+        })
+        .then(html => {
+            document.getElementById("footer-container").innerHTML = html;
+        })
+        .catch(error => {
+            console.error("Footer failed to load:", error);
+        });
+</script>
+
+<script>
+    function startSelling() {
+        localStorage.setItem("requestedRole", "seller");
+        window.location.href = "../login/login.html";
+    }
+</script>
+<script src="testimonials.js"></script>
+
+
+</body>
+</html>

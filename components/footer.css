@@ -1,0 +1,288 @@
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.site-footer {
+    width: 100%;
+    background: #061735;
+    color: #ffffff;
+
+    box-sizing: border-box;
+
+    font-family: Arial, sans-serif;
+}
+
+
+/* =====================================================
+   MAIN CONTAINER
+===================================================== */
+
+.footer-container {
+    width: 1180px;
+    max-width: 92%;
+
+    margin: 0 auto;
+
+    min-height: 232px;
+
+    padding: 38px 0 34px;
+
+    display: grid;
+
+    grid-template-columns: 2.1fr 1fr 1fr 1fr;
+
+    column-gap: 70px;
+
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   BRAND
+===================================================== */
+
+.footer-brand {
+    padding-top: 1px;
+}
+
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 13px;
+}
+
+
+.footer-logo img {
+    width: 44px;
+    height: 44px;
+
+    object-fit: contain;
+
+    display: block;
+}
+
+
+.footer-logo span {
+    font-size: 24px;
+    font-weight: 800;
+
+    letter-spacing: -0.8px;
+
+    color: #ffffff;
+}
+
+
+.footer-logo strong {
+    color: #a45cff;
+}
+
+
+.footer-brand p {
+    margin: 0;
+
+    color: #7184a8;
+
+    font-size: 12px;
+    line-height: 1.55;
+
+    font-weight: 400;
+}
+
+
+/* =====================================================
+   FOOTER COLUMNS
+===================================================== */
+
+.footer-column {
+    display: flex;
+    flex-direction: column;
+
+    padding-top: 2px;
+}
+
+
+.footer-column h3 {
+    margin: 0 0 17px;
+
+    color: #ffffff;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+.footer-column a {
+    width: fit-content;
+
+    margin-bottom: 11px;
+
+    color: #7184a8;
+
+    text-decoration: none;
+
+    font-size: 10px;
+    font-weight: 400;
+
+    line-height: 1.2;
+
+    transition: color 0.2s ease;
+}
+
+
+.footer-column a:hover {
+    color: #a45cff;
+}
+
+
+/* =====================================================
+   CONTACT ICONS
+===================================================== */
+
+.footer-icon {
+    display: inline-block;
+
+    width: 17px;
+
+    margin-right: 2px;
+
+    color: #7184a8;
+
+    font-size: 11px;
+
+    text-align: left;
+}
+
+
+/* =====================================================
+   BOTTOM
+===================================================== */
+
+.footer-bottom {
+    width: 1180px;
+    max-width: 92%;
+
+    min-height: 57px;
+
+    margin: 0 auto;
+
+    border-top: 1px solid rgba(113, 132, 168, 0.20);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    box-sizing: border-box;
+}
+
+
+.footer-bottom p {
+    margin: 0;
+
+    color: #60769c;
+
+    font-size: 10px;
+}
+
+
+.footer-bottom-links {
+    display: flex;
+    align-items: center;
+
+    gap: 22px;
+}
+
+
+.footer-bottom-links a {
+    color: #60769c;
+
+    text-decoration: none;
+
+    font-size: 10px;
+
+    transition: color 0.2s ease;
+}
+
+
+.footer-bottom-links a:hover {
+    color: #a45cff;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .footer-container {
+        grid-template-columns: 1.5fr 1fr 1fr;
+
+        column-gap: 40px;
+
+        row-gap: 35px;
+    }
+
+    .footer-brand {
+        grid-column: 1 / -1;
+    }
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+    .footer-container {
+        max-width: calc(100% - 40px);
+
+        padding: 35px 0;
+
+        grid-template-columns: 1fr 1fr;
+
+        column-gap: 25px;
+
+        row-gap: 30px;
+    }
+
+
+    .footer-brand {
+        grid-column: 1 / -1;
+    }
+
+
+    .footer-logo span {
+        font-size: 21px;
+    }
+
+
+    .footer-logo img {
+        width: 40px;
+        height: 40px;
+    }
+
+
+    .footer-bottom {
+        max-width: calc(100% - 40px);
+
+        padding: 18px 0;
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+
+    .footer-bottom-links {
+        gap: 15px;
+
+        flex-wrap: wrap;
+    }
+}

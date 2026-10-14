@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Stock Mind - Categories</title>
+
+    <link rel="stylesheet" href="category.css">
+
+    <link rel="stylesheet" href="../components/navbar.css">
+
+    <link rel="stylesheet" href="../components/footer.css">
+
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<div id="navbar-container"></div>
+
+<!-- ================= MAIN ================= -->
+
+<main class="main-container">
+
+    <!-- ================= CATEGORIES ================= -->
+
+    <section class="categories-section">
+
+        <div class="section-heading">
+
+            <h1>Categories</h1>
+
+            <p>
+
+                Explore products from every category
+
+            </p>
+
+        </div>
+
+        <div class="categories">
+            
+
+            <button class="category-card" data-category="clothing">
+                <div class="category-image">
+                    <img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=400&q=85" alt="Clothing">
+                </div>
+                <span>Clothing</span>
+            </button>
+
+            <button class="category-card active" data-category="cosmetics">
+                <div class="category-image">
+                    <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=400&q=85" alt="Cosmetics">
+                </div>
+                <span>Cosmetics</span>
+            </button>
+
+            <button class="category-card" data-category="electronics">
+                <div class="category-image">
+                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=400&q=85" alt="Electronics">
+                </div>
+                <span>Electronics</span>
+            </button>
+
+            <button class="category-card" data-category="home">
+                <div class="category-image">
+                    <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=400&q=85" alt="Home and Living">
+                </div>
+                <span>Home &amp; Living</span>
+            </button>
+
+            <button class="category-card" data-category="books">
+                <div class="category-image">
+                    <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=400&q=85" alt="Books">
+                </div>
+                <span>Books</span>
+            </button>
+
+            <button class="category-card" data-category="grocery">
+                <div class="category-image">
+                    <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=85" alt="Grocery">
+                </div>
+                <span>Grocery</span>
+            </button>
+
+            <button class="category-card" data-category="sports">
+                <div class="category-image">
+                    <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=400&q=85" alt="Sports">
+                </div>
+                <span>Sports</span>
+            </button>
+
+            <button class="category-card" data-category="bags">
+                <div class="category-image">
+                    <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=400&q=85" alt="Bags and Accessories">
+                </div>
+                <span>Bags &amp; Accessories</span>
+            </button>
+
+            <button class="category-card" data-category="auto">
+                <div class="category-image">
+                    <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=400&q=85" alt="Automotive">
+                </div>
+                <span>Automotive</span>
+            </button>
+
+        </div>
+
+    </section>
+
+    <!-- ================= PRODUCTS ================= -->
+
+    <section class="products-section">
+
+        <!-- TOOLBAR -->
+
+        <div class="market-toolbar">
+
+            <div class="sort-control">
+
+                <span>
+
+                    Sort By
+
+                </span>
+
+                <select id="sortSelect">
+
+                    <option value="recommended">
+
+                        Recommended
+
+                    </option>
+
+                    <option value="price-low">
+
+                        Price: Low to High
+
+                    </option>
+
+                    <option value="price-high">
+
+                        Price: High to Low
+
+                    </option>
+
+                    <option value="name">
+
+                        Name
+
+                    </option>
+
+                </select>
+
+            </div>
+
+            <button
+
+                id="trendsButton"
+
+                class="trends-button"
+
+            >
+
+                ✦ Trends
+
+            </button>
+
+            <div
+
+                class="results-count"
+
+                id="resultsCount"
+
+            ></div>
+
+        </div>
+
+        <!-- OLD FILTERS
+
+             Kept for JavaScript compatibility.
+
+             Hidden by CSS.
+
+        -->
+
+        <aside class="filters">
+
+            <h2>
+
+                Filters
+
+            </h2>
+
+            <div class="filter-title">
+
+                Subcategory
+
+            </div>
+
+            <label>
+
+                <input
+
+                    type="checkbox"
+
+                    class="subcategory"
+
+                    value="skincare"
+
+                >
+
+                Skincare
+
+            </label>
+
+            <label>
+
+                <input
+
+                    type="checkbox"
+
+                    class="subcategory"
+
+                    value="makeup"
+
+                    checked
+
+                >
+
+                Makeup
+
+            </label>
+
+            <label>
+
+                <input
+
+                    type="checkbox"
+
+                    class="subcategory"
+
+                    value="haircare"
+
+                >
+
+                Haircare
+
+            </label>
+
+        </aside>
+
+        <!-- PRODUCTS -->
+
+        <div
+
+            class="products-grid"
+
+            id="productsGrid"
+
+        ></div>
+        <section class="seller-listings-section">
+    <h2>Products Listed by Sellers</h2>
+
+    <div class="products-grid" id="sellerProductsGrid"></div>
+</section>
+
+    </section>
+
+    <!-- =====================================================
+
+         PRODUCT DETAILS
+
+    ====================================================== -->
+
+    <section
+
+        id="productDetailsPage"
+
+        class="product-details-page"
+
+    >
+
+        <div class="details-container">
+
+            <!-- BACK -->
+
+            <button
+
+                id="backToProducts"
+
+                class="back-button"
+
+            >
+
+                ← Back to Products
+
+            </button>
+
+            <!-- BREADCRUMB -->
+
+            <div class="details-breadcrumb">
+
+                Home → Categories →
+
+                <span id="detailsCategory">
+
+                    Product
+
+                </span>
+
+            </div>
+
+            <!-- DETAILS LAYOUT -->
+
+            <div class="details-layout">
+
+                <!-- ================= LEFT ================= -->
+
+                <div class="details-left">
+
+                    <!-- MAIN IMAGE -->
+
+                    <div class="main-product-image">
+
+                        <div
+
+                            id="detailsEmoji"
+
+                            class="details-emoji"
+
+                        >
+
+                            🛍️
+
+                        </div>
+
+                    </div>
+
+                    <!-- THUMBNAILS -->
+
+                    <div class="product-thumbnails">
+
+                        <button
+
+                            class="thumbnail active"
+
+                        >
+
+                            <span id="thumbEmoji1">
+
+                                🛍️
+
+                            </span>
+
+                        </button>
+
+                        <button class="thumbnail">
+
+                            <span id="thumbEmoji2">
+
+                                🛍️
+
+                            </span>
+
+                        </button>
+
+                        <button class="thumbnail">
+
+                            <span id="thumbEmoji3">
+
+                                🛍️
+
+                            </span>
+
+                        </button>
+
+                        <button class="thumbnail">
+
+                            <span id="thumbEmoji4">
+
+                                🛍️
+
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <!-- ================= RIGHT ================= -->
+
+                <div class="details-right">
+
+                    <!-- WHOLESALE -->
+
+                    <div class="wholesale-box">
+
+                        <h3>
+
+                            Wholesale Product
+
+                        </h3>
+
+                        <p>
+
+                            Minimum order:
+
+                            <strong id="minimumOrderText">
+
+                                10 units
+
+                            </strong>
+
+                        </p>
+
+                        <p class="stock">
+
+                            ● Available stock:
+
+                            <span>
+
+                                500 units
+
+                            </span>
+
+                        </p>
+
+                    </div>
+
+                    <!-- QUANTITY -->
+
+                    <div class="quantity-section">
+
+                        <div class="quantity-title">
+
+                            <strong>
+
+                                Quantity
+
+                            </strong>
+
+                            <span>
+
+                                Minimum
+
+                                <span id="quantityMinimum">
+
+                                    10
+
+                                </span>
+
+                                units
+
+                            </span>
+
+                        </div>
+
+                        <div class="quantity-price-row">
+
+                            <div class="quantity-box">
+
+                                <button id="minusButton">
+
+                                    −
+
+                                </button>
+
+                                <span id="quantityValue">
+
+                                    10
+
+                                </span>
+
+                                <button id="plusButton">
+
+                                    +
+
+                                </button>
+
+                            </div>
+
+                            <div class="unit-price">
+
+                                <span>
+
+                                    Unit Price
+
+                                </span>
+
+                                <strong id="unitPrice">
+
+                                    $10.00
+
+                                </strong>
+
+                                <small>
+
+                                    / unit
+
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- TOTAL -->
+
+                    <div class="total-box">
+
+                        <div>
+
+                            <span>
+
+                                Total Price
+
+                            </span>
+
+                            <strong id="totalPrice">
+
+                                $100.00
+
+                            </strong>
+
+                        </div>
+
+                        <small id="totalCalculation">
+
+                            10 units × $10.00
+
+                        </small>
+
+                    </div>
+
+                    <!-- ADD TO CART -->
+
+                    <button
+
+                        id="addToCartButton"
+
+                        class="add-cart-button"
+
+                    >
+
+                        🛒 Add to Cart
+
+                    </button>
+
+                    <!-- PRODUCT DETAILS -->
+
+                    <div class="product-info-details">
+
+                        <h3>
+
+                            Details
+
+                        </h3>
+
+                        <div class="detail-row">
+
+                            <span>
+
+                                Brand
+
+                            </span>
+
+                            <strong id="detailsBrand">
+
+                                Stock Mind
+
+                            </strong>
+
+                        </div>
+
+                        <div class="detail-row">
+
+                            <span>
+
+                                Category
+
+                            </span>
+
+                            <strong id="detailsCategoryName">
+
+                                Products
+
+                            </strong>
+
+                        </div>
+
+                        <div class="detail-row">
+
+                            <span>
+
+                                Minimum Order
+
+                            </span>
+
+                            <strong id="detailsMinimum">
+
+                                10 units
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+
+<div id="footer-container"></div>
+
+<!-- ================= LOAD NAVBAR ================= -->
+
+
+<!-- ================= NAVBAR ================= -->
+
+<div id="navbar-container"></div>
+
+<script src="../components/navbar.js"></script>
+
+<script>
+    fetch("../components/navbar.html")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Could not load navbar");
+            }
+            return response.text();
+        })
+        .then(html => {
+            document.getElementById("navbar-container").innerHTML = html;
+
+            // Initialize navbar after loading its HTML
+            if (typeof initStockMindNavbar === "function") {
+                initStockMindNavbar();
+            }
+
+            // Mobile menu
+            const menu = document.getElementById("mobileMenu");
+            const nav = document.getElementById("navInner");
+
+            if (menu && nav) {
+                menu.addEventListener("click", () => {
+                    nav.classList.toggle("mobile-open");
+                });
+            }
+        })
+        .catch(error => console.error("Navbar error:", error));
+
+
+    // ================= FOOTER =================
+
+    fetch("../components/footer.html")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Footer file not found");
+            }
+            return response.text();
+        })
+        .then(data => {
+            const footerContainer =
+                document.getElementById("footer-container");
+
+            if (footerContainer) {
+                footerContainer.innerHTML = data;
+            }
+        })
+        .catch(error => {
+            console.error("Footer failed to load:", error);
+        });
+</script>
+
+<!-- ================= CATEGORY JS ================= -->
+
+<script src="category.js"></script>
+<script src="seller-products.js"></script>
+
+</body>
+</html>

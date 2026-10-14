@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Favorites | Stock Mind</title>
+
+<link rel="stylesheet" href="favorite.css">
+<link rel="stylesheet" href="../../components/navbar.css">
+<link rel="stylesheet" href="../../components/footer.css">
+
+</head>
+
+
+<body>
+
+<div id="navbar"></div>
+
+<!-- NAVBAR موجود عندك -->
+
+
+
+<main class="favorite-page">
+
+
+<section class="favorite-header">
+
+<h1>
+My Favorites ❤️
+</h1>
+
+<p>
+Products you saved for later.
+</p>
+
+</section>
+
+
+
+
+<section id="favoriteContainer" class="favorite-container">
+
+
+</section>
+
+
+
+</main>
+
+
+<div id="footer-container"></div>
+
+<script>
+
+fetch("../../components/navbar.html")
+
+.then(res=>res.text())
+
+.then(html=>{
+
+document.getElementById("navbar").innerHTML=html;
+
+
+
+const menu =
+document.getElementById("mobileMenu");
+
+
+const nav =
+document.getElementById("navInner");
+
+
+
+if(menu && nav){
+
+menu.onclick=()=>{
+
+nav.classList.toggle("mobile-open");
+
+}
+
+}
+
+
+
+});
+
+
+
+fetch("../../components/footer.html")
+
+.then(res=>res.text())
+
+.then(html=>{
+
+document.getElementById("footer-container").innerHTML=html;
+
+});
+
+
+
+</script>
+
+<script src="favorite.js"></script>
+
+</body>
+</html>

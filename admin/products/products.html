@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>
+Stock Mind | Products Management
+</title>
+
+
+<link rel="stylesheet" href="products.css">
+
+<link rel="stylesheet" href="../components/sidebar.css">
+
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+
+</head>
+
+
+<body>
+
+
+
+<!-- SIDEBAR -->
+
+<div id="sidebar"></div>
+
+
+
+
+
+<main class="content">
+
+
+
+<header class="page-header">
+
+
+<div>
+
+<h1>
+Products Management 📦
+</h1>
+
+
+<p>
+Manage marketplace products and inventory
+</p>
+
+
+</div>
+
+
+
+
+<div class="admin-profile">
+
+
+🔔
+
+
+<img src="../../components/logo.png">
+
+
+<span>
+Admin
+</span>
+
+
+</div>
+
+
+
+</header>
+
+
+
+
+
+
+
+
+<!-- SEARCH -->
+
+
+<section class="controls">
+
+
+<input 
+type="text"
+id="searchInput"
+placeholder="Search products..."
+>
+
+
+
+
+<select id="categoryFilter">
+
+
+<option value="all">
+All Categories
+</option>
+
+
+<option value="electronics">
+Electronics
+</option>
+
+
+<option value="clothes">
+Clothes
+</option>
+
+
+<option value="cosmetics">
+Cosmetics
+</option>
+
+
+<option value="books">
+Books
+</option>
+
+
+</select>
+
+
+
+
+
+<select id="stockFilter">
+
+
+<option value="all">
+All Stock
+</option>
+
+
+<option value="available">
+Available
+</option>
+
+
+<option value="low">
+Low Stock
+</option>
+
+
+<option value="out">
+Out of Stock
+</option>
+
+
+</select>
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<!-- STATISTICS -->
+
+
+<section class="stats">
+
+
+
+<div class="stat-card">
+
+
+<div class="icon">
+📦
+</div>
+
+
+<div>
+
+<h2>
+8920
+</h2>
+
+
+<p>
+Total Products
+</p>
+
+
+<span>
++12%
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="stat-card">
+
+
+<div class="icon">
+✅
+</div>
+
+
+<div>
+
+<h2>
+8200
+</h2>
+
+
+<p>
+Active Products
+</p>
+
+
+<span>
++8%
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="stat-card">
+
+
+<div class="icon">
+⚠️
+</div>
+
+
+<div>
+
+<h2>
+350
+</h2>
+
+
+<p>
+Low Stock
+</p>
+
+
+<span>
+Need Attention
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="stat-card">
+
+
+<div class="icon">
+🚫
+</div>
+
+
+<div>
+
+<h2>
+70
+</h2>
+
+
+<p>
+Out Of Stock
+</p>
+
+
+<span class="red">
+Critical
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<!-- PRODUCTS TABLE -->
+
+
+<section class="table-container">
+
+
+
+<div class="table-header">
+
+
+<h2>
+All Products
+</h2>
+
+
+<button>
++ Add Product
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+
+<th>
+Product
+</th>
+
+
+<th>
+Seller
+</th>
+
+
+<th>
+Category
+</th>
+
+
+<th>
+Price
+</th>
+
+
+<th>
+Stock
+</th>
+
+
+<th>
+AI Status
+</th>
+
+
+<th>
+Status
+</th>
+
+
+<th>
+Actions
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+
+
+<tbody id="productsTable">
+
+
+
+
+
+<tr>
+
+
+<td>
+
+
+<div class="product-info">
+
+
+<img src="../../components/logo.png">
+
+
+<div>
+
+<strong>
+iPhone 15 Pro
+</strong>
+
+<small>
+Electronics
+</small>
+
+
+</div>
+
+
+</div>
+
+
+</td>
+
+
+
+
+
+<td>
+Tech Store
+</td>
+
+
+
+
+
+<td>
+Electronics
+</td>
+
+
+
+
+
+<td>
+700 JOD
+</td>
+
+
+
+
+
+<td>
+25
+</td>
+
+
+
+
+
+<td>
+
+<span class="ai high">
+📈 High Demand
+</span>
+
+
+</td>
+
+
+
+
+
+<td>
+
+<span class="status available">
+Available
+</span>
+
+
+</td>
+
+
+
+
+
+
+<td>
+
+
+<button class="view">
+👁
+</button>
+
+
+<button class="edit">
+✏️
+</button>
+
+
+<button class="delete">
+🗑
+</button>
+
+
+
+</td>
+
+
+
+
+
+</tr>
+
+
+
+
+
+
+
+
+
+<tr>
+
+
+<td>
+
+
+<div class="product-info">
+
+
+<img src="../../components/logo.png">
+
+
+<div>
+
+<strong>
+Foundation Cream
+</strong>
+
+<small>
+Cosmetics
+</small>
+
+
+</div>
+
+
+</div>
+
+
+</td>
+
+
+
+
+
+<td>
+Beauty Store
+</td>
+
+
+
+
+
+<td>
+Cosmetics
+</td>
+
+
+
+
+
+<td>
+15 JOD
+</td>
+
+
+
+
+
+<td>
+5
+</td>
+
+
+
+
+
+<td>
+
+
+<span class="ai warning">
+⚠️ Low Demand
+</span>
+
+
+</td>
+
+
+
+
+
+<td>
+
+
+<span class="status low">
+Low Stock
+</span>
+
+
+</td>
+
+
+
+
+
+<td>
+
+
+<button class="view">
+👁
+</button>
+
+
+<button class="edit">
+✏️
+</button>
+
+
+<button class="delete">
+🗑
+</button>
+
+
+</td>
+
+
+
+
+</tr>
+
+
+
+
+
+
+</tbody>
+
+
+
+</table>
+
+
+
+</section>
+
+
+
+
+
+</main>
+
+
+
+
+
+
+<script src="products.js"></script>
+<script>
+
+fetch("../components/sidebar.html")
+
+.then(response => response.text())
+
+.then(data => {
+
+    document.getElementById("sidebar").innerHTML = data;
+
+
+    lucide.createIcons();
+
+});
+
+</script>
+
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="../components/sidebar.js"></script>
+
+
+
+</body>
+
+</html>

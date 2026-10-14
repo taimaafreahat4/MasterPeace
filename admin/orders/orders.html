@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>
+Stock Mind | Orders Management
+</title>
+
+
+<link rel="stylesheet" href="orders.css">
+
+<link rel="stylesheet" href="../components/sidebar.css">
+
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+
+</head>
+
+
+<body>
+
+
+<div id="sidebar"></div>
+
+
+
+
+<main class="content">
+
+
+
+<header class="page-header">
+
+
+<div>
+
+<h1>
+Orders Management 🛒
+</h1>
+
+
+<p>
+Track and manage customer orders
+</p>
+
+
+</div>
+
+
+
+<div class="admin-profile">
+
+🔔
+
+<img src="../../components/logo.png">
+
+<span>
+Admin
+</span>
+
+
+</div>
+
+
+</header>
+
+
+
+
+
+
+
+
+
+<!-- FILTERS -->
+
+
+<section class="controls">
+
+
+<input 
+type="text"
+id="searchInput"
+placeholder="Search orders..."
+>
+
+
+
+
+<select id="statusFilter">
+
+
+<option value="all">
+All Orders
+</option>
+
+
+<option value="pending">
+Pending
+</option>
+
+
+<option value="processing">
+Processing
+</option>
+
+
+<option value="shipped">
+Shipped
+</option>
+
+
+<option value="completed">
+Completed
+</option>
+
+
+<option value="cancelled">
+Cancelled
+</option>
+
+
+</select>
+
+
+</section>
+
+
+
+
+
+
+
+
+<!-- STAT CARDS -->
+
+
+<section class="stats">
+
+
+
+<div class="stat-card">
+
+
+<div class="icon">
+🛒
+</div>
+
+
+<div>
+
+<h2>
+3450
+</h2>
+
+
+<p>
+Total Orders
+</p>
+
+
+<span>
++15%
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="stat-card">
+
+
+<div class="icon">
+⏳
+</div>
+
+
+<div>
+
+<h2>
+120
+</h2>
+
+
+<p>
+Pending
+</p>
+
+
+<span>
+Need Action
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="stat-card">
+
+
+<div class="icon">
+🚚
+</div>
+
+
+<div>
+
+<h2>
+230
+</h2>
+
+
+<p>
+Shipped
+</p>
+
+
+<span>
+On Delivery
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="stat-card">
+
+
+<div class="icon">
+✅
+</div>
+
+
+<div>
+
+<h2>
+980
+</h2>
+
+
+<p>
+Completed
+</p>
+
+
+<span>
++20%
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<!-- TABLE -->
+
+
+<section class="table-container">
+
+
+
+<div class="table-header">
+
+
+<h2>
+All Orders
+</h2>
+
+
+</div>
+
+
+
+
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+
+<th>
+Order ID
+</th>
+
+
+<th>
+Buyer
+</th>
+
+
+<th>
+Seller
+</th>
+
+
+<th>
+Amount
+</th>
+
+
+<th>
+Date
+</th>
+
+
+<th>
+Status
+</th>
+
+
+<th>
+Actions
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+
+
+<tbody id="ordersTable">
+
+
+
+
+
+<tr>
+
+
+<td>
+#SM1024
+</td>
+
+
+<td>
+Ahmad Ali
+</td>
+
+
+<td>
+Beauty Store
+</td>
+
+
+<td>
+120 JOD
+</td>
+
+
+<td>
+13 Oct 2026
+</td>
+
+
+<td>
+
+
+<select class="order-status">
+
+
+<option selected>
+Completed
+</option>
+
+
+<option>
+Processing
+</option>
+
+
+<option>
+Shipped
+</option>
+
+
+<option>
+Cancelled
+</option>
+
+
+</select>
+
+
+</td>
+
+
+<td>
+
+
+<button class="view">
+👁
+</button>
+
+
+<button class="delete">
+🗑
+</button>
+
+
+</td>
+
+
+
+</tr>
+
+
+
+
+
+
+
+<tr>
+
+
+<td>
+#SM1025
+</td>
+
+
+<td>
+Sara
+</td>
+
+
+<td>
+Tech Hub
+</td>
+
+
+<td>
+80 JOD
+</td>
+
+
+<td>
+13 Oct 2026
+</td>
+
+
+<td>
+
+
+<select class="order-status">
+
+
+<option selected>
+Pending
+</option>
+
+
+<option>
+Processing
+</option>
+
+
+<option>
+Shipped
+</option>
+
+
+<option>
+Completed
+</option>
+
+
+<option>
+Cancelled
+</option>
+
+
+</select>
+
+
+</td>
+
+
+<td>
+
+
+<button class="view">
+👁
+</button>
+
+
+<button class="delete">
+🗑
+</button>
+
+
+</td>
+
+
+
+</tr>
+
+
+
+
+
+
+
+</tbody>
+
+
+</table>
+
+
+
+
+</section>
+
+
+
+
+
+
+</main>
+
+
+
+
+
+
+
+
+<script src="orders.js"></script>
+
+
+<script>
+
+fetch("../components/sidebar.html")
+
+.then(response => response.text())
+
+.then(data => {
+
+    document.getElementById("sidebar").innerHTML = data;
+
+
+    lucide.createIcons();
+
+});
+
+</script>
+
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="../components/sidebar.js"></script>
+
+
+</body>
+
+</html>

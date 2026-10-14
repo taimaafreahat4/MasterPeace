@@ -1,0 +1,576 @@
+
+/* =========================================
+   STOCK MIND - EDIT PROFILE ONLY
+========================================= */
+
+:root {
+    --navy: #061735;
+    --purple: #7135e8;
+    --purple-light: #f5f0ff;
+    --purple-border: #dccbff;
+    --text: #14213d;
+    --muted: #7b8498;
+    --border: #e1e6f0;
+    --white: #ffffff;
+    --green: #16865b;
+    --red: #d93649;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #f0eaff;
+    color: var(--text);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+button,
+.upload-button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.profile-page {
+    width: 100%;
+    padding: 26px 20px;
+}
+
+.profile-card {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 34px;
+    background: var(--white);
+    border: 1px solid #e7eaf2;
+    border-radius: 22px;
+    box-shadow: 0 8px 35px rgba(6, 23, 53, 0.045);
+    animation: cardEnter 0.55s ease both;
+}
+
+@keyframes cardEnter {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================
+   PHOTO SECTION
+========================================= */
+
+.photo-section {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-bottom: 28px;
+    animation: fadeUp 0.55s 0.08s ease both;
+}
+
+.photo-wrapper {
+    position: relative;
+    width: 102px;
+    height: 102px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    transition: transform 0.25s ease;
+}
+
+.photo-wrapper:hover {
+    transform: scale(1.045);
+}
+
+.photo-wrapper img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: 3px solid var(--purple-border);
+    border-radius: 50%;
+    background: #f8f6ff;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.photo-wrapper:hover img {
+    border-color: var(--purple);
+    box-shadow: 0 0 0 5px rgba(113, 53, 232, 0.09);
+}
+
+.photo-edit-icon {
+    position: absolute;
+    right: -2px;
+    bottom: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 29px;
+    height: 29px;
+    border: 3px solid white;
+    border-radius: 50%;
+    background: var(--purple);
+    color: white;
+    font-size: 14px;
+    opacity: 0;
+    transform: scale(0.75);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+}
+
+.photo-wrapper:hover .photo-edit-icon {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.photo-info {
+    min-width: 0;
+}
+
+.photo-info h2 {
+    margin: 0 0 9px;
+    color: var(--navy);
+    font-size: 18px;
+    font-weight: 750;
+}
+
+.photo-info p {
+    margin: 0 0 15px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* Upload button */
+
+.upload-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 41px;
+    padding: 10px 15px;
+    border: 1px solid var(--purple-border);
+    border-radius: 10px;
+    background: #fbf9ff;
+    color: var(--purple);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        background 0.22s ease,
+        color 0.22s ease,
+        border-color 0.22s ease,
+        box-shadow 0.22s ease,
+        transform 0.22s ease;
+}
+
+.upload-button span {
+    font-size: 17px;
+    line-height: 1;
+}
+
+.upload-button:hover {
+    border-color: var(--purple);
+    background: var(--purple);
+    color: white;
+    box-shadow: 0 6px 16px rgba(113, 53, 232, 0.2);
+    transform: translateY(-2px);
+}
+
+.upload-button:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* =========================================
+   DIVIDERS AND HEADINGS
+========================================= */
+
+.section-divider {
+    height: 1px;
+    width: 100%;
+    background: var(--border);
+    margin: 0 0 30px;
+}
+
+.form-heading {
+    margin-bottom: 27px;
+}
+
+.form-heading h2 {
+    margin: 0 0 7px;
+    color: var(--navy);
+    font-size: 20px;
+    font-weight: 750;
+}
+
+.form-heading p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* =========================================
+   FORM GRID
+========================================= */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 23px 24px;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: 10px;
+    animation: fadeUp 0.45s ease both;
+}
+
+.form-field:nth-child(2) {
+    animation-delay: 0.04s;
+}
+
+.form-field:nth-child(3) {
+    animation-delay: 0.08s;
+}
+
+.form-field:nth-child(4) {
+    animation-delay: 0.12s;
+}
+
+.form-field:nth-child(5) {
+    animation-delay: 0.16s;
+}
+
+.form-field:nth-child(6) {
+    animation-delay: 0.20s;
+}
+
+.form-field:nth-child(7) {
+    animation-delay: 0.24s;
+}
+
+.form-field > span {
+    color: #24344f;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.form-field > span b {
+    color: var(--purple);
+}
+
+.form-field input {
+    width: 100%;
+    height: 54px;
+    padding: 0 15px;
+    border: 1px solid #dce3ef;
+    border-radius: 11px;
+    outline: none;
+    background: #ffffff;
+    color: var(--navy);
+    font-size: 13px;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.form-field input::placeholder {
+    color: #a1a9b8;
+}
+
+.form-field input:hover:not(:disabled) {
+    border-color: #b7a0f5;
+    background: #fdfcff;
+}
+
+.form-field input:focus {
+    border-color: var(--purple);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(113, 53, 232, 0.09);
+}
+
+.form-field input:disabled {
+    background: #f0f2f8;
+    color: #77839a;
+    cursor: not-allowed;
+}
+
+.form-field small {
+    margin-top: -3px;
+    color: #8b95a8;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+/* =========================================
+   ACTION BUTTONS
+========================================= */
+
+.bottom-divider {
+    margin: 28px 0 23px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 13px;
+}
+
+.cancel-button,
+.save-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-width: 110px;
+    min-height: 48px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.cancel-button {
+    border: 1px solid #dce3ef;
+    background: white;
+    color: #475570;
+}
+
+.cancel-button:hover {
+    border-color: #b9a0f7;
+    background: #faf8ff;
+    color: var(--purple);
+    transform: translateY(-2px);
+}
+
+.save-button {
+    border: 1px solid var(--purple);
+    background: var(--purple);
+    color: white;
+}
+
+.save-button:hover {
+    border-color: #5b21b6;
+    background: #5b21b6;
+    box-shadow: 0 7px 18px rgba(113, 53, 232, 0.24);
+    transform: translateY(-2px);
+}
+
+.save-button:active,
+.cancel-button:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.save-button:disabled {
+    opacity: 0.65;
+    cursor: wait;
+    transform: none;
+}
+
+.save-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    font-size: 11px;
+}
+
+/* =========================================
+   SUCCESS / ERROR MESSAGE
+========================================= */
+
+.form-message {
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    line-height: 1.6;
+    text-align: right;
+    opacity: 0;
+    transform: translateY(5px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.form-message:not(:empty) {
+    margin-top: 14px;
+    opacity: 1;
+    transform: translateY(0);
+    animation: messageEnter 0.25s ease both;
+}
+
+.form-message.success {
+    color: var(--green);
+}
+
+.form-message.error {
+    color: var(--red);
+}
+
+@keyframes messageEnter {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 700px) {
+    .profile-page {
+        padding: 14px;
+    }
+
+    .profile-card {
+        padding: 23px 20px;
+        border-radius: 17px;
+    }
+
+    .photo-section {
+        align-items: flex-start;
+        gap: 17px;
+        padding-bottom: 23px;
+    }
+
+    .photo-wrapper {
+        width: 80px;
+        height: 80px;
+    }
+
+    .photo-info h2 {
+        font-size: 16px;
+    }
+
+    .photo-info p {
+        font-size: 12px;
+    }
+
+    .form-heading h2 {
+        font-size: 19px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .full-width {
+        grid-column: auto;
+    }
+
+    .form-field input {
+        height: 49px;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    .cancel-button,
+    .save-button {
+        width: 100%;
+    }
+
+    .form-message {
+        text-align: left;
+    }
+}
+
+@media (max-width: 400px) {
+    .profile-page {
+        padding: 8px;
+    }
+
+    .profile-card {
+        padding: 19px 15px;
+    }
+
+    .photo-section {
+        gap: 12px;
+    }
+
+    .photo-wrapper {
+        width: 68px;
+        height: 68px;
+    }
+
+    .photo-info h2 {
+        font-size: 14px;
+    }
+
+    .photo-info p {
+        font-size: 11px;
+    }
+
+    .upload-button {
+        min-height: 36px;
+        padding: 8px 10px;
+        font-size: 11px;
+    }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

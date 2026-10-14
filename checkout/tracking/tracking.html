@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Stock Mind | Track Order</title>
+
+<link rel="stylesheet" href="tracking.css">
+
+<link rel="stylesheet" href="../../components/navbar.css">
+<link rel="stylesheet" href="../../components/footer.css">
+
+</head>
+
+
+<body>
+
+
+<div id="navbar-container"></div>
+
+<main class="tracking-page">
+
+
+<a href="../checkout.html" class="back-to-cart">
+    ← Back to Checkout
+</a>
+
+
+<section class="tracking-header">
+
+<span>ORDER TRACKING</span>
+
+<h1>
+Track Your Order
+</h1>
+
+<p>
+Stay updated with your delivery status.
+</p>
+
+</section>
+
+
+
+
+
+
+<section class="tracking-container">
+
+
+
+<div class="status-header">
+
+<h2>
+Order Status
+</h2>
+
+
+<div id="statusBadge">
+Shipped
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="timeline">
+
+
+
+<div class="timeline-step completed">
+
+<div class="circle">
+✓
+</div>
+
+<p>
+Ordered
+</p>
+
+</div>
+
+
+
+
+<div class="line completed-line"></div>
+
+
+
+
+<div class="timeline-step completed">
+
+<div class="circle">
+✓
+</div>
+
+<p>
+Processing
+</p>
+
+</div>
+
+
+
+
+<div class="line" id="deliveryLine"></div>
+
+
+
+
+
+<div class="timeline-step active" id="shippedStep">
+
+<div class="circle" id="shippedCircle">
+🚚
+</div>
+
+<p>
+Shipped
+</p>
+
+</div>
+
+
+
+
+
+<div class="line"></div>
+
+
+
+
+<div class="timeline-step" id="deliveredStep">
+
+<div class="circle" id="deliveredCircle">
+□
+</div>
+
+<p>
+Delivered
+</p>
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="details-card">
+
+
+<h2>
+Shipment Details
+</h2>
+
+
+<div class="detail">
+
+<span>
+Order Number
+</span>
+
+<strong id="orderNumber">
+#SM000000
+</strong>
+
+</div>
+
+
+
+<div class="detail">
+
+<span>
+Tracking Number
+</span>
+
+<strong id="trackingNumber">
+TRK000000
+</strong>
+
+</div>
+
+
+
+
+<div class="detail">
+
+<span>
+Order Date
+</span>
+
+<strong id="orderDate">
+--
+</strong>
+
+</div>
+
+
+
+
+<div class="detail">
+
+<span>
+Estimated Delivery
+</span>
+
+<strong id="deliveryDate">
+14 Oct 2026
+</strong>
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="action-grid">
+
+
+
+<div class="action-card">
+
+
+<h2>
+Have you received your order?
+</h2>
+
+
+<p>
+Confirm when your package arrives.
+</p>
+
+
+<button id="confirmDeliveryButton">
+
+✓ Yes, I received it
+
+</button>
+
+
+<p id="deliveryMessage"></p>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="action-card">
+
+
+<h2>
+How was your experience?
+</h2>
+
+
+<p>
+Your feedback helps us improve Stock Mind.
+</p>
+
+
+<div class="stars">
+
+<span>☆</span>
+<span>☆</span>
+<span>☆</span>
+<span>☆</span>
+<span>☆</span>
+
+</div>
+
+
+<button id="feedbackButton">
+
+Rate your order
+
+</button>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+<div class="bottom-actions">
+
+
+
+<a href="../../category/category.html">
+← Continue Shopping
+</a>
+
+
+</div>
+
+
+
+
+
+</section>
+
+
+
+
+</main>
+
+
+
+
+
+<div id="footer-container"></div>
+
+
+
+
+
+
+
+<script>
+
+
+
+
+
+
+
+fetch("../../components/footer.html")
+
+.then(res=>res.text())
+
+.then(html=>{
+
+document.getElementById("footer-container").innerHTML=html;
+
+});
+
+
+
+</script>
+
+<script src="../../components/navbar.js"></script>
+<script src="../../components/load-navbar.js"></script>
+
+<script>
+    loadStockMindNavbar(
+        "navbar-container",
+        "../../components/"
+    );
+</script>
+
+<script src="tracking.js"></script>
+</body>
+</html>

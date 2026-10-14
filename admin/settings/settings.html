@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>
+Stock Mind | Settings
+</title>
+
+
+<link rel="stylesheet" href="settings.css">
+
+<link rel="stylesheet" href="../components/sidebar.css">
+
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+
+</head>
+
+
+<body>
+
+
+<div id="sidebar"></div>
+
+
+
+<main class="content">
+
+
+
+<header class="page-header">
+
+
+<div>
+
+<h1>
+Settings ⚙️
+</h1>
+
+
+<p>
+Manage your admin account and marketplace preferences
+</p>
+
+
+</div>
+
+
+
+
+<div class="admin-profile">
+
+
+🔔
+
+<img src="../../components/logo.png">
+
+<span>
+Admin
+</span>
+
+
+</div>
+
+
+
+</header>
+
+
+
+
+
+
+
+<section class="settings-grid">
+
+
+
+
+
+<!-- PROFILE -->
+
+
+<div class="setting-card">
+
+
+<div class="card-title">
+
+<h2>
+👤 Profile Settings
+</h2>
+
+<p>
+Update your personal information
+</p>
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+<label>
+Full Name
+</label>
+
+<input 
+type="text"
+value="Stock Mind Admin"
+id="adminName"
+>
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+<label>
+Email
+</label>
+
+<input 
+type="email"
+value="admin@stockmind.com"
+id="adminEmail"
+>
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+<label>
+Phone
+</label>
+
+<input 
+type="text"
+placeholder="+962 7X XXX XXXX"
+>
+
+
+</div>
+
+
+
+<button class="save-btn">
+Save Changes
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- SECURITY -->
+
+
+<div class="setting-card">
+
+
+<div class="card-title">
+
+<h2>
+🔒 Security
+</h2>
+
+<p>
+Protect your admin account
+</p>
+
+</div>
+
+
+
+
+<div class="toggle-row">
+
+
+<span>
+Two Factor Authentication
+</span>
+
+
+<label class="switch">
+
+<input type="checkbox" checked>
+
+<span class="slider"></span>
+
+</label>
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+<label>
+New Password
+</label>
+
+<input 
+type="password"
+placeholder="********"
+>
+
+
+</div>
+
+
+
+
+<button class="save-btn">
+Update Password
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- MARKETPLACE -->
+
+
+<div class="setting-card">
+
+
+<div class="card-title">
+
+<h2>
+🏪 Marketplace Settings
+</h2>
+
+
+<p>
+Control platform behavior
+</p>
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+<label>
+Website Name
+</label>
+
+
+<input 
+type="text"
+value="Stock Mind"
+>
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+<label>
+Seller Commission %
+</label>
+
+
+<input 
+type="number"
+value="5"
+>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="toggle-row">
+
+
+<span>
+Allow New Sellers
+</span>
+
+
+<label class="switch">
+
+<input type="checkbox" checked>
+
+<span class="slider"></span>
+
+</label>
+
+
+</div>
+
+
+
+
+
+<div class="toggle-row">
+
+
+<span>
+Auto Approve Products
+</span>
+
+
+<label class="switch">
+
+<input type="checkbox">
+
+<span class="slider"></span>
+
+</label>
+
+
+</div>
+
+
+
+
+<button class="save-btn">
+Save Settings
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- NOTIFICATIONS -->
+
+
+<div class="setting-card">
+
+
+<div class="card-title">
+
+
+<h2>
+🔔 Notifications
+</h2>
+
+
+<p>
+Manage alerts
+</p>
+
+
+</div>
+
+
+
+
+<div class="toggle-row">
+
+
+<span>
+New Orders
+</span>
+
+
+<label class="switch">
+
+<input type="checkbox" checked>
+
+<span class="slider"></span>
+
+</label>
+
+
+</div>
+
+
+
+
+
+<div class="toggle-row">
+
+
+<span>
+Seller Requests
+</span>
+
+
+<label class="switch">
+
+<input type="checkbox" checked>
+
+<span class="slider"></span>
+
+</label>
+
+
+</div>
+
+
+
+
+
+
+<div class="toggle-row">
+
+
+<span>
+Low Stock Alerts
+</span>
+
+
+<label class="switch">
+
+<input type="checkbox">
+
+<span class="slider"></span>
+
+</label>
+
+
+</div>
+
+
+
+<button class="save-btn">
+Save Notifications
+</button>
+
+
+
+</div>
+
+
+
+
+</section>
+
+
+
+
+
+</main>
+
+
+
+
+
+
+
+<script src="settings.js"></script>
+
+
+<script>
+
+fetch("../components/sidebar.html")
+
+.then(response => response.text())
+
+.then(data => {
+
+    document.getElementById("sidebar").innerHTML = data;
+
+
+    lucide.createIcons();
+
+});
+
+</script>
+
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="../components/sidebar.js"></script>
+
+
+
+</body>
+
+</html>

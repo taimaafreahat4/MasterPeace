@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Stock Mind | Users Management</title>
+
+<link rel="stylesheet" href="users.css">
+
+<link rel="stylesheet" href="../components/sidebar.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+</head>
+
+
+<body>
+
+
+<!-- SIDEBAR -->
+
+<div id="sidebar"></div>
+
+
+
+<!-- MAIN CONTENT -->
+
+<main class="content">
+
+
+<header class="page-header">
+
+
+<div>
+
+<h1>
+Users Management 👥
+</h1>
+
+<p>
+Manage buyers and sellers accounts
+</p>
+
+</div>
+
+
+
+<div class="admin-profile">
+
+<span>
+🔔
+</span>
+
+
+<img src="../../components/logo.png">
+
+
+<strong>
+Admin
+</strong>
+
+
+</div>
+
+
+
+</header>
+
+
+
+
+
+<!-- SEARCH -->
+
+<section class="controls">
+
+
+<input 
+type="text"
+id="searchInput"
+placeholder="Search users..."
+>
+
+
+<select id="filterSelect">
+
+<option value="all">
+All Users
+</option>
+
+
+<option value="buyer">
+Buyers
+</option>
+
+
+<option value="seller">
+Sellers
+</option>
+
+
+<option value="active">
+Active
+</option>
+
+
+<option value="blocked">
+Blocked
+</option>
+
+
+</select>
+
+
+
+</section>
+
+
+
+
+
+
+
+<!-- STATISTICS -->
+
+
+<section class="stats">
+
+
+<div class="stat-card">
+
+<div class="stat-icon">
+👥
+</div>
+
+
+<div>
+
+<h2>
+12,540
+</h2>
+
+<p>
+Total Users
+</p>
+
+<span>
++12.5%
+</span>
+
+
+</div>
+
+</div>
+
+
+
+
+
+
+<div class="stat-card">
+
+
+<div class="stat-icon">
+🟢
+</div>
+
+
+<div>
+
+<h2>
+11,980
+</h2>
+
+
+<p>
+Active Users
+</p>
+
+
+<span>
++8.2%
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="stat-card">
+
+
+<div class="stat-icon">
+🆕
+</div>
+
+
+<div>
+
+<h2>
+540
+</h2>
+
+
+<p>
+New This Month
+</p>
+
+
+<span>
++15%
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="stat-card">
+
+
+<div class="stat-icon">
+🚫
+</div>
+
+
+<div>
+
+<h2>
+20
+</h2>
+
+
+<p>
+Blocked Users
+</p>
+
+
+<span class="red">
+-2%
+</span>
+
+
+</div>
+
+
+</div>
+
+
+
+
+</section>
+
+
+
+
+
+
+
+<!-- USERS TABLE -->
+
+
+<section class="table-container">
+
+
+<div class="table-header">
+
+<h2>
+All Users
+</h2>
+
+
+<button>
++ Add User
+</button>
+
+
+</div>
+
+
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>
+User
+</th>
+
+
+<th>
+Email
+</th>
+
+
+<th>
+Role
+</th>
+
+
+<th>
+Status
+</th>
+
+
+<th>
+Joined
+</th>
+
+
+<th>
+Actions
+</th>
+
+
+</tr>
+
+</thead>
+
+
+
+
+<tbody id="usersTable">
+
+
+
+<tr>
+
+
+<td>
+
+<div class="user-info">
+
+<div class="avatar">
+A
+</div>
+
+
+<div>
+Ahmad Ali
+</div>
+
+
+</div>
+
+</td>
+
+
+
+<td>
+ahmad@gmail.com
+</td>
+
+
+
+
+<td>
+
+<span class="badge buyer">
+Buyer
+</span>
+
+</td>
+
+
+
+
+
+<td>
+
+<span class="status active">
+Active
+</span>
+
+
+</td>
+
+
+
+
+
+<td>
+Oct 2026
+</td>
+
+
+
+
+<td>
+
+
+<button class="action view">
+👁
+</button>
+
+
+<button class="action block">
+🚫
+</button>
+
+
+<button class="action edit">
+✏️
+</button>
+
+
+<button class="action delete">
+🗑
+</button>
+
+
+</td>
+
+
+
+</tr>
+
+
+
+
+
+
+
+<tr>
+
+
+<td>
+
+<div class="user-info">
+
+
+<div class="avatar">
+S
+</div>
+
+
+<div>
+Sara Store
+</div>
+
+
+</div>
+
+
+</td>
+
+
+
+<td>
+sara@gmail.com
+</td>
+
+
+
+<td>
+
+<span class="badge seller">
+Seller
+</span>
+
+
+</td>
+
+
+
+<td>
+
+<span class="status pending">
+Pending
+</span>
+
+
+</td>
+
+
+
+<td>
+Oct 2026
+</td>
+
+
+
+
+<td>
+
+
+<button class="action view">
+👁
+</button>
+
+
+<button class="action block">
+🚫
+</button>
+
+
+<button class="action edit">
+✏️
+</button>
+
+
+<button class="action delete">
+🗑
+</button>
+
+
+</td>
+
+
+
+</tr>
+
+
+
+
+
+</tbody>
+
+
+
+</table>
+
+
+
+</section>
+
+
+
+</main>
+
+
+
+
+
+
+
+<script src="users.js"></script>
+
+<script>
+
+fetch("../components/sidebar.html")
+
+.then(response => response.text())
+
+.then(data => {
+
+    document.getElementById("sidebar").innerHTML = data;
+
+
+    lucide.createIcons();
+
+});
+
+</script>
+
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="../components/sidebar.js"></script>
+
+</body>
+
+</html>

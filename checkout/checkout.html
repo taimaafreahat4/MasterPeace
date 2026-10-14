@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock Mind | Checkout</title>
+  <link rel="stylesheet" href="checkout.css">
+  <link rel="stylesheet" href="../components/navbar.css">
+  <link rel="stylesheet" href="../components/footer.css">
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <main class="checkout-page">
+    <a href="../cart/cart.html" class="back-to-cart">
+    ← Back to Cart
+  </a>
+    <div class="breadcrumb">Home <span>›</span> Cart <span>›</span> <strong>Checkout</strong></div>
+    <div class="page-heading">
+      <div><p class="eyebrow">ALMOST THERE</p><h1>Checkout</h1><p class="subheading">Add your delivery details and choose how you’d like to pay.</p></div>
+      <div class="secure-label">🔒 Secure checkout demo</div>
+    </div>
+
+    <div class="checkout-layout">
+<form id="checkoutForm" class="checkout-form delivery-card">        <section class="checkout-panel">
+          <div class="panel-heading"><span class="step">1</span><div><h2>Delivery information</h2><p>Where should we deliver your order?</p></div></div>
+          <div class="form-grid">
+            <label class="full">Full name<input id="fullName" name="fullName" autocomplete="name" required placeholder="Enter your full name"></label>
+            <label class="full">Address<input id="address" name="address" autocomplete="street-address" required placeholder="Street, building, apartment"></label>
+            <label>City<input id="city" name="city" autocomplete="address-level2" required placeholder="City"></label>
+            <label>Phone number<input id="phone" name="phone" autocomplete="tel" type="tel" required placeholder="+962 7X XXX XXXX"></label>
+            <label class="full">Delivery notes <span class="optional">(optional)</span><textarea id="notes" name="notes" rows="2" placeholder="Any instructions for delivery"></textarea></label>
+          </div>
+        </section>
+
+        <section class="checkout-panel">
+          <div class="panel-heading"><span class="step">2</span><div><h2>Payment method</h2><p>Choose your preferred payment option.</p></div></div>
+          <div class="payment-options">
+            <label class="payment-option"><input type="radio" name="paymentMethod" value="card" checked><span class="payment-icon">💳</span><span class="payment-copy"><strong>Credit or debit card</strong><small>Visa, Mastercard and other cards</small></span><span class="payment-mark">✓</span></label>
+            <div id="cardFields" class="card-fields">
+              <label class="full">Name on card<input id="cardName" autocomplete="cc-name" placeholder="Name as shown on card"></label>
+              <label class="full">Card number<input id="cardNumber" inputmode="numeric" autocomplete="cc-number" maxlength="23" placeholder="1234 5678 9012 3456"></label>
+              <div class="form-grid two">
+                <label>Expiry date<input id="cardExpiry" autocomplete="cc-exp" maxlength="5" placeholder="MM/YY"></label>
+                <label>Security code<input id="cardCvv" autocomplete="cc-csc" inputmode="numeric" maxlength="4" placeholder="CVV"></label>
+              </div>
+              <p class="demo-note">Demo only: no real payment is processed. Do not use a real card. Card details are not saved.</p>
+            </div>
+            <label class="payment-option"><input type="radio" name="paymentMethod" value="paypal"><span class="payment-icon paypal">P</span><span class="payment-copy"><strong>PayPal</strong><small>Continue with PayPal (demo)</small></span><span class="payment-mark">✓</span></label>
+            <label class="payment-option"><input type="radio" name="paymentMethod" value="cod"><span class="payment-icon">🚚</span><span class="payment-copy"><strong>Cash on delivery</strong><small>Pay when your order arrives</small></span><span class="payment-mark">✓</span></label>
+          </div>
+          <p id="formError" class="form-error" role="alert"></p>
+        </section>
+        <button class="place-order-button" type="submit">Place Order <span>→</span></button>
+        <p class="fine-print">Your order will be saved for this browser session as a front-end demo.</p>
+      </form>
+
+      <aside class="order-summary summary-card">
+        <div class="summary-heading"><div><p class="eyebrow">YOUR PURCHASE</p><h2>Order summary</h2></div><span class="summary-icon">▤</span></div>
+        <div id="summaryItems" class="summary-items"></div>
+        <div id="emptyCartMessage" class="empty-cart" hidden>
+          <p>Your cart is empty.</p>
+          <a href="../../category/category.html" class="continue-shopping">
+    ← Continue Shopping
+</a>
+        </div>
+        <div class="summary-line"><span>Items</span><strong id="itemCount">0 units</strong></div>
+        <div class="summary-line"><span>Subtotal</span><strong id="subtotal">JOD 0.00</strong></div>
+        <div class="summary-line"><span>Shipping</span><strong id="shipping">Calculated later</strong></div>
+        <div class="summary-total"><span>Estimated total</span><strong id="total">JOD 0.00</strong></div>
+        <p class="summary-footnote">Shipping and final charges can be confirmed when a backend is connected.</p>
+      </aside>
+    </div>
+  </main>
+
+  <div id="footer-container"></div>
+  <script>
+    fetch("../components/navbar.html").then(r => { if (!r.ok) throw Error("Navbar not found"); return r.text(); })
+      .then(html => {
+        document.getElementById("navbar-container").innerHTML = html;
+        const menu = document.getElementById("mobileMenu"), inner = document.getElementById("navInner");
+        if (menu && inner) menu.addEventListener("click", () => inner.classList.toggle("mobile-open"));
+        if (window.updateCartBadge) window.updateCartBadge();
+      }).catch(err => console.error(err));
+    fetch("../components/footer.html").then(r => { if (!r.ok) throw Error("Footer not found"); return r.text(); })
+      .then(html => document.getElementById("footer-container").innerHTML = html)
+      .catch(err => console.error(err));
+  </script>
+  <script src="../components/navbar.js"></script>
+<script src="../components/load-navbar.js"></script>
+<script>
+    loadStockMindNavbar();
+</script>
+  <script src="checkout.js"></script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Profile | Stock Mind</title>
+    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="../components/navbar.css">
+<link rel="stylesheet" href="../components/footer.css">
+
+</head>
+
+<body>
+    <div id="navbar"></div>
+
+    <main class="profile-page">
+        <section class="profile-card">
+
+            <!-- PROFILE PHOTO -->
+            <div class="photo-section">
+                <div class="photo-wrapper">
+                    <img
+                        id="editAvatar"
+                        src="../components/logo.png"
+                        alt="Profile picture"
+                    >
+                    <span class="photo-edit-icon">✎</span>
+                </div>
+
+                <div class="photo-info">
+                    <h2>Your Profile Photo</h2>
+                    <p>Choose a JPG, PNG, or WEBP image up to 1.5 MB.</p>
+
+                    <label for="newImage" class="upload-button">
+                        <span>↑</span> Upload New Photo
+                    </label>
+
+                    <input
+                        type="file"
+                        id="newImage"
+                        accept="image/jpeg,image/png,image/webp"
+                        hidden
+                    >
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <!-- BASIC INFORMATION -->
+            <form id="profileForm">
+                <div class="form-heading">
+                    <h2>Basic Information</h2>
+                    <p>Fields marked with * are required.</p>
+                </div>
+
+                <div class="form-grid">
+
+                    <label class="form-field">
+                        <span>Full Name <b>*</b></span>
+                        <input
+                            id="editName"
+                            name="name"
+                            type="text"
+                            maxlength="80"
+                            autocomplete="name"
+                            placeholder="Enter your full name"
+                            required
+                        >
+                    </label>
+
+                    <label class="form-field">
+                        <span>Username <b>*</b></span>
+                        <input
+                            id="editUsername"
+                            name="username"
+                            type="text"
+                            maxlength="40"
+                            autocomplete="username"
+                            placeholder="Enter your username"
+                            required
+                        >
+                    </label>
+
+                    <label class="form-field">
+                        <span>Email Address</span>
+                        <input
+                            id="editEmail"
+                            name="email"
+                            type="email"
+                            disabled
+                        >
+                        <small>Email editing is disabled for now.</small>
+                    </label>
+
+                    <label class="form-field">
+                        <span>Phone Number</span>
+                        <input
+                            id="editPhone"
+                            name="phone"
+                            type="tel"
+                            maxlength="25"
+                            autocomplete="tel"
+                            placeholder="Enter your phone number"
+                        >
+                    </label>
+
+                    <label class="form-field">
+                        <span>Country</span>
+                        <input
+                            id="editCountry"
+                            name="country"
+                            type="text"
+                            maxlength="60"
+                            autocomplete="country-name"
+                            placeholder="Enter your country"
+                        >
+                    </label>
+
+                    <label class="form-field">
+                        <span>City</span>
+                        <input
+                            id="editCity"
+                            name="city"
+                            type="text"
+                            maxlength="60"
+                            autocomplete="address-level2"
+                            placeholder="Enter your city"
+                        >
+                    </label>
+
+                    <label class="form-field full-width">
+                        <span>Address</span>
+                        <input
+                            id="editAddress"
+                            name="address"
+                            type="text"
+                            maxlength="200"
+                            autocomplete="street-address"
+                            placeholder="Enter your address"
+                        >
+                    </label>
+
+                </div>
+
+                <div class="section-divider bottom-divider"></div>
+
+                <!-- ACTION BUTTONS -->
+                <div class="form-actions">
+                    <button
+                        type="button"
+                        id="cancelProfileChanges"
+                        class="cancel-button"
+                    >
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="save-button">
+                        <span class="save-icon">✓</span>
+                        Save Changes
+                    </button>
+                </div>
+
+                <p id="profileMessage" class="form-message" role="status"
+                   aria-live="polite"></p>
+            </form>
+
+        </section>
+    </main>
+
+<div id="footer-container"></div>
+
+
+<!-- Shared navbar logic -->
+<script src="../components/navbar.js"></script>
+
+<script>
+/* ================= NAVBAR ================= */
+
+fetch("../components/navbar.html")
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Navbar file could not be loaded");
+        }
+
+        return response.text();
+    })
+    .then(html => {
+        document.getElementById("navbar").innerHTML = html;
+
+        // IMPORTANT: Initialize the navbar after inserting its HTML.
+        if (typeof initStockMindNavbar === "function") {
+            initStockMindNavbar();
+        } else {
+            console.error("initStockMindNavbar() was not found.");
+        }
+
+        const menu = document.getElementById("mobileMenu");
+        const nav = document.getElementById("navInner");
+
+        if (menu && nav) {
+            menu.addEventListener("click", () => {
+                nav.classList.toggle("mobile-open");
+            });
+        }
+    })
+    .catch(error => console.error("Navbar error:", error));
+
+
+/* ================= FOOTER ================= */
+
+fetch("../components/footer.html")
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Footer file could not be loaded");
+        }
+
+        return response.text();
+    })
+    .then(html => {
+        document.getElementById("footer-container").innerHTML = html;
+    })
+    .catch(error => console.error("Footer error:", error));
+</script>
+
+<!-- SUCCESS ANIMATION MODAL -->
+<div id="successModal" class="success-overlay" hidden>
+    <div class="success-modal" role="dialog"
+         aria-modal="true" aria-labelledby="successTitle">
+
+        <div class="success-glow"></div>
+
+        <div class="success-icon-wrap">
+            <svg class="success-check" viewBox="0 0 80 80"
+                 role="img" aria-label="Success">
+                <circle class="check-circle" cx="40" cy="40" r="34"/>
+                <path class="check-mark" d="M23 41 L34 52 L57 28"/>
+            </svg>
+        </div>
+
+        <div class="success-sparkles" aria-hidden="true">
+            <span>✦</span>
+            <span>✧</span>
+            <span>✦</span>
+            <span>✧</span>
+            <span>✦</span>
+            <span>✧</span>
+        </div>
+
+        <p class="success-eyebrow">STOCK MIND</p>
+
+        <h2 id="successTitle">Profile Updated!</h2>
+
+        <p class="success-description">
+            Your personal information has been saved successfully.
+        </p>
+
+        <div class="success-status">
+            <span class="success-status-dot"></span>
+            All changes saved
+        </div>
+
+        <button type="button" id="successDone" class="success-done">
+            Done
+            <span>✓</span>
+        </button>
+    </div>
+</div>
+
+    <script src="profile.js"></script>
+</body>
+</html>
