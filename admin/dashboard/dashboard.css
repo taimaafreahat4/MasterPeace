@@ -477,3 +477,38 @@ td,th{
 
 
 }
+.card-icon svg {
+
+    width: 26px;
+    height: 26px;
+
+    stroke: #a78bfa;
+
+    stroke-width: 2.3;
+
+}
+.card-icon {
+
+    width: 48px;
+    height: 48px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#f0eaff;
+
+    border-radius:14px;
+
+}
+/* Dashboard Cards Icons */
+
+.card-icon svg {
+
+    width: 26px;
+    height: 26px;
+
+    stroke: #a78bfa !important;
+    stroke-width: 2.2;
+
+}

@@ -12,79 +12,107 @@
 
 <body>
 
-<canvas id="bgCanvas"></canvas>
-<div class="blob b1"></div>
-<div class="blob b2"></div>
-<div class="blob b3"></div>
-<div class="grid-overlay"></div>
+<!-- =====================================================
+     BACKGROUND SCENE  (warehouse + conveyor belts)
+===================================================== -->
+<div class="scene" aria-hidden="true">
+    <div class="aurora a1"></div>
+    <div class="aurora a2"></div>
+    <div class="aurora a3"></div>
 
-<div class="login-page">
+    <canvas id="bgCanvas"></canvas>
 
-    <!-- ================= LEFT ================= -->
-    <section class="brand-side">
-        <div class="brand-content">
+    <div class="floor-wrap"><div class="floor"></div></div>
 
-            <div class="logo">
-                <img src="../components/logo.png" alt="Stock Mind" onerror="this.style.display='none'">
-                <span>Stock <b>Mind</b></span>
+    <!-- far belt: small boxes moving the other way -->
+    <div class="far-zone"><div class="far-belt"></div><div class="far-lane" id="farLane"></div></div>
+
+    <!-- near belt: the main belt the big box arrives on -->
+    <div class="belt-zone">
+        <div class="belt"></div>
+        <div class="belt-glow"></div>
+        <div class="near-lane" id="nearLane"></div>
+    </div>
+
+    <div class="vignette"></div>
+</div>
+
+<canvas id="fxCanvas" aria-hidden="true"></canvas>
+
+
+<!-- =====================================================
+     TOP BAR
+===================================================== -->
+<header class="topbar">
+    <a href="../home/index.html" class="brand">
+        <span class="brand-ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>
+        </span>
+        <span>Stock <b>Mind</b></span>
+    </a>
+
+    <a href="../home/index.html" class="back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        Back to home
+    </a>
+</header>
+
+
+<!-- =====================================================
+     STAGE
+===================================================== -->
+<main class="stage" id="stage">
+
+    <!-- floating info chips (appear after the form pops out) -->
+    
+
+
+    <!-- ========== THE BOX ========== -->
+    <div class="hero-box" id="heroBox" aria-hidden="true">
+
+        <div class="beam"></div>
+        <div class="shock"></div>
+        <div class="hero-shadow"></div>
+
+        <div class="hero-shake">
+            <div class="persp">
+                <div class="cube" id="cube">
+
+                    <div class="face f-bottom"></div>
+                    <div class="face f-back"></div>
+                    <div class="face f-left"></div>
+
+                    <div class="face f-right">
+                        <span class="frag">FRAGILE</span>
+                        <span class="bar"></span>
+                    </div>
+
+                    <div class="face f-front">
+                        <div class="f-label">
+                            <span class="lg">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>
+                            </span>
+                            <b>STOCK<em>MIND</em></b>
+                            <small>AI INVENTORY</small>
+                        </div>
+                        <span class="up">↑ ↑</span>
+                    </div>
+
+                    <div class="inner-glow"></div>
+
+                    <div class="flap fl-left"></div>
+                    <div class="flap fl-right"></div>
+                    <div class="flap fl-back"><i class="tape"></i></div>
+                    <div class="flap fl-front"><i class="tape"></i></div>
+
+                </div>
             </div>
-
-
-            <h1>
-                <span class="w">Smart</span> <span class="w">Shopping.</span><br>
-                <span class="w grad">Smarter</span> <span class="w grad">Decisions.</span>
-            </h1>
-
-            <p class="lead">
-                AI-powered marketplace connecting buyers and sellers
-                in one intelligent platform.
-            </p>
-
-            <!-- floating dashboard preview -->
-            <div class="dash" id="dash">
-                <div class="dash-head">
-                    <span class="dash-title">Demand Forecast</span>
-                    <span class="live"><i></i> LIVE</span>
-                </div>
-
-                <div class="bars">
-                    <span style="--h:38%"></span>
-                    <span style="--h:55%"></span>
-                    <span style="--h:42%"></span>
-                    <span style="--h:70%"></span>
-                    <span style="--h:60%"></span>
-                    <span style="--h:86%"></span>
-                    <span style="--h:100%"></span>
-                </div>
-
-                <div class="dash-stats">
-                    <div>
-                        <strong><span class="count" data-to="98" data-suffix="%">0</span></strong>
-                        <small>Accuracy</small>
-                    </div>
-                    <div>
-                        <strong>-<span class="count" data-to="38" data-suffix="%">0</span></strong>
-                        <small>Dead stock</small>
-                    </div>
-                    <div>
-                        <strong><span class="count" data-to="10" data-suffix="K+">0</span></strong>
-                        <small>Merchants</small>
-                    </div>
-                </div>
-
-                <div class="float-chip c1">✨ Restock 120 units</div>
-                <div class="float-chip c2">📈 +27% profit</div>
-            </div>
-
-            
-
         </div>
-    </section>
+    </div>
 
 
-    <!-- ================= RIGHT ================= -->
-    <section class="form-side">
-
+    <!-- ========== LOGIN CARD ========== -->
+    <div class="card-clip" id="cardClip">
         <div class="card-wrap" id="cardWrap">
             <div class="login-card" id="loginCard">
 
@@ -93,20 +121,34 @@
                 <h2>Welcome Back <span class="wave">👋</span></h2>
                 <p class="sub">Login to your Stock Mind account</p>
 
-                <div class="roles">
-                    <div class="role-slider" id="roleSlider"></div>
+                <div class="roles" id="roles">
+                    <div class="role-slider"></div>
 
                     <button type="button" class="role active" id="buyerRole">
-                        <em>🛍️</em>
-                        <strong>Buyer</strong>
-                        <span>Buy products</span>
-                    </button>
+                    <em class="role-icon">
+                        <i data-lucide="users"></i>
+                    </em>
+                    <strong>Buyer</strong>
+                    <span>Buy products</span>
+                </button>
 
-                    <button type="button" class="role" id="sellerRole">
-                        <em>🏪</em>
-                        <strong>Seller</strong>
-                        <span>Sell products</span>
-                    </button>
+
+                <button type="button" class="role" id="sellerRole">
+                    <em class="role-icon">
+                        <i data-lucide="store"></i>
+                    </em>
+                    <strong>Seller</strong>
+                    <span>Sell products</span>
+                </button>
+
+
+                <button type="button" class="role" id="adminRole">
+                    <em class="role-icon">
+                        <i data-lucide="shield"></i>
+                    </em>
+                    <strong>Admin</strong>
+                    <span>Manage site</span>
+                </button>
                 </div>
 
                 <h3 id="loginType">Login as Buyer</h3>
@@ -140,18 +182,21 @@
 
                 </form>
 
-                <div class="demo">
-                    <span>Quick demo:</span>
-                    <button type="button" data-demo="buyer">Buyer</button>
-                    <button type="button" data-demo="seller">Seller</button>
-                </div>
+                
 
-            </div>
+<p class="signup-line">
+    New here? <a href="signup.html">Create an account</a>
+</p>            </div>
         </div>
+    </div>
 
-    </section>
+</main>
 
-</div>
+
+<!-- skip / replay -->
+<button type="button" class="skip" id="skipBtn">Skip intro <span>⏭</span></button>
+<button type="button" class="replay" id="replayBtn" title="Replay intro" aria-label="Replay intro">↻</button>
+
 
 <!-- success overlay -->
 <div class="success" id="success">
@@ -164,7 +209,11 @@
         <p id="successText">Taking you to your dashboard...</p>
     </div>
 </div>
+<script src="https://unpkg.com/lucide@latest"></script>
 
+<script>
+    lucide.createIcons();
+</script>
 <script src="login.js"></script>
 </body>
 </html>

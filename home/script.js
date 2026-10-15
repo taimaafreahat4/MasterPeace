@@ -464,3 +464,60 @@ document.addEventListener("keydown", event => {
 
 
 
+
+/* =====================================================
+   ABOUT SECTION – reveal on scroll + count-up
+   الصق هاد الكود بآخر script.js
+===================================================== */
+(function () {
+    const section = document.getElementById("about");
+    if (!section) return;
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const items = section.querySelectorAll(".am-reveal");
+    const counters = section.querySelectorAll(".am-count");
+
+    // بدون IntersectionObserver أو حركة مخفضة: خلي كل شي ظاهر
+    if (!("IntersectionObserver" in window) || reduce) return;
+
+    section.classList.add("am-ready");
+
+    function runCounter(el) {
+        const to = +el.dataset.to;
+        const suffix = el.dataset.suffix || "";
+        const dur = 1400;
+        const start = performance.now();
+
+        function tick(now) {
+            const p = Math.min((now - start) / dur, 1);
+            const eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = Math.round(to * eased) + (p === 1 ? suffix : "");
+            if (p < 1) requestAnimationFrame(tick);
+        }
+        el.textContent = "0";
+        requestAnimationFrame(tick);
+    }
+
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const el = entry.target;
+            el.classList.add("in");
+            // بعد ما يخلص الدخول، شيل التأخير عشان الـ hover يكون فوري
+            setTimeout(() => el.style.setProperty("--d", "0s"), 1500);
+            io.unobserve(el);
+        });
+    }, { threshold: 0.15 });
+
+    items.forEach((el) => io.observe(el));
+
+    const co = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            runCounter(entry.target);
+            co.unobserve(entry.target);
+        });
+    }, { threshold: 0.6 });
+
+    counters.forEach((el) => co.observe(el));
+})();

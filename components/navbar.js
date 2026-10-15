@@ -5,7 +5,7 @@
 
 function readNavbarStorage(key, fallback) {
     try {
-        const value = JSON.parse(localStorage.getItem(key));
+        const value = JSON.parse(sessionStorage.getItem(key));
         return value ?? fallback;
     } catch (error) {
         console.error("Could not read " + key, error);
@@ -172,12 +172,7 @@ function updateNavbarCartCount() {
 
     const items = Array.isArray(cart) ? cart : [];
 
-    const count = items.reduce((total, item) => {
-        const quantity = Number(item.quantity) || 1;
-        return total + quantity;
-    }, 0);
-
-    badge.textContent = count;
+    badge.textContent = items.length;
 }
 
 /* =====================================================

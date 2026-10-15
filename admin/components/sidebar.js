@@ -44,3 +44,18 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
 });
+document.addEventListener("click", function (e) {
+
+    const logout = e.target.closest("#logoutBtn");
+    if (!logout) return;
+
+    e.preventDefault();
+
+    // مسح بيانات تسجيل الدخول
+    localStorage.removeItem("stockMindUser");
+    localStorage.removeItem("user");
+
+    // الرجوع للصفحة الرئيسية
+    window.location.href = "../../home/index.html";
+
+});

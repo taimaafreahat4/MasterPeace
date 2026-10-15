@@ -80,10 +80,9 @@
         checkoutButton.disabled = isEmpty;
 
         if (countElement) {
-            const units = cart.reduce((sum, item) => sum + item.quantity, 0);
-            countElement.textContent =
-                `${cart.length} ${cart.length === 1 ? "product" : "products"} · ${units} units`;
-        }
+    countElement.textContent =
+        `${cart.length} ${cart.length === 1 ? "product" : "products"}`;
+}
 
         if (isEmpty) {
 
@@ -302,3 +301,23 @@ checkoutButton.addEventListener("click", () => {
 
     renderCart();
 })();
+const checkoutButton = document.getElementById("checkoutButton");
+
+if (checkoutButton) {
+    checkoutButton.addEventListener("click", function () {
+
+        const loggedInUser = localStorage.getItem("loggedInUser");
+
+        if (!loggedInUser) {
+            sessionStorage.setItem(
+                "redirectAfterLogin",
+                "../checkout/checkout.html"
+            );
+
+            window.location.href = "../login/login.html";
+            return;
+        }
+
+        window.location.href = "../checkout/checkout.html";
+    });
+}

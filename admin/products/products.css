@@ -648,3 +648,9 @@ width:100%;
 
 
 }
+.card-icon svg {
+    width:26px;
+    height:26px;
+    stroke:#a78bfa !important;
+    stroke-width:2.3;
+}

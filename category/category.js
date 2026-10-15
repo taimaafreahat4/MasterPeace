@@ -345,26 +345,25 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function saveCart(cart) {
-        sessionStorage.setItem(CART_KEY, JSON.stringify(cart));
-        updateCartCount();
-    }
+function saveCart(cart) {
+    sessionStorage.setItem(CART_KEY, JSON.stringify(cart));
 
-    function updateCartCount() {
-        const cart = getCart();
+    updateCartCount();
 
-        const count = cart.reduce(
-            (total, item) => total + Number(item.quantity || 0),
-            0
-        );
+    window.dispatchEvent(new Event("cartUpdated"));
+}
+function updateCartCount() {
+    const cart = getCart();
 
-        document.querySelectorAll(
-            "[data-cart-count], .cart-count"
-        ).forEach(badge => {
-            badge.textContent = String(count);
-            badge.hidden = count === 0;
-        });
-    }
+    const count = cart.length;
+
+    document.querySelectorAll(
+        "[data-cart-count], .cart-count"
+    ).forEach(badge => {
+        badge.textContent = String(count);
+        badge.hidden = count === 0;
+    });
+}
 
     function showNotice(message) {
         let notice = $("#categoryNotice");
