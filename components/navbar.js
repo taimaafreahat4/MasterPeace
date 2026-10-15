@@ -1,99 +1,166 @@
-
 /* =====================================================
    STOCK MIND - SHARED NAVBAR
+   مكانه: components/navbar.js
+===================================================== */
+
+/* جذر المشروع محسوب من مكان هاد الملف (بيشتغل من أي صفحة) */
+var NAVBAR_SRC  = (typeof NAVBAR_SRC !== "undefined" && NAVBAR_SRC) ||
+                  (document.currentScript ? document.currentScript.src : "");
+var NAVBAR_ROOT = NAVBAR_SRC ? new URL("../", NAVBAR_SRC).href : "/";
+var NAVBAR_DEFAULT_AVATAR = NAVBAR_ROOT + "components/logo.png";
+
+
+/* =====================================================
+   STORAGE HELPERS
 ===================================================== */
 
 function readNavbarStorage(key, fallback) {
     try {
-        const value = JSON.parse(sessionStorage.getItem(key));
-        return value ?? fallback;
+        const raw = localStorage.getItem(key) ?? sessionStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
     } catch (error) {
         console.error("Could not read " + key, error);
         return fallback;
     }
 }
 
+/* المستخدم المسجّل دخوله (من login.js) + بيانات حسابه المحفوظة */
+function getNavbarUser() {
+
+    const session = readNavbarStorage("stockMindUser", null);
+
+    if (!session || !session.loggedIn) return null;
+
+    const saved = readNavbarStorage("stockMindAccount", null);
+
+    const sameAccount =
+        saved && saved.email && session.email &&
+        String(saved.email).toLowerCase() === String(session.email).toLowerCase();
+
+    /* ندمج بيانات الحساب المحفوظ بس إذا كان نفس الشخص */
+    const merged = sameAccount ? { ...saved } : {};
+
+    Object.keys(session).forEach(key => {
+        if (session[key] !== "" && session[key] != null) {
+            merged[key] = session[key];
+        }
+    });
+
+    merged.loggedIn = true;
+
+    return merged;
+}
+
+
 /* =====================================================
    INITIALIZE NAVBAR
-   Call this AFTER navbar.html is inserted into the page.
+   (بتتنفذ لحالها بعد ما النافبار يظهر بالصفحة)
 ===================================================== */
 
 function initStockMindNavbar() {
-    
-const sessionUser = readNavbarStorage("stockMindUser", null);
-const savedAccount = readNavbarStorage("stockMindAccount", null);
 
-const user = sessionUser
-    ? { ...(savedAccount || {}), ...sessionUser }
-    : null;
-
+    const user       = getNavbarUser();
+    const isLoggedIn = Boolean(user);
 
     const guestButtons = document.getElementById("guestButtons");
-    const userProfile = document.getElementById("userProfile");
+    const userProfile  = document.getElementById("userProfile");
 
-    const isLoggedIn = Boolean(user && user.loggedIn);
+    /* قبل الدخول: Login + Sign Up | بعد الدخول: الصورة والاسم */
+    if (guestButtons) guestButtons.hidden = isLoggedIn;
+    if (userProfile)  userProfile.hidden  = !isLoggedIn;
 
-    /* Show guest buttons before login */
-    if (guestButtons) {
-        guestButtons.hidden = isLoggedIn;
-    }
-
-    /* Show profile only after login */
-    if (userProfile) {
-        userProfile.hidden = !isLoggedIn;
-    }
-
-    /* Update cart and favorites regardless of login status */
     updateNavbarCartCount();
     updateNavbarFavoriteCount();
-
-    /* Mobile navigation */
     setupNavbarMobileMenu();
 
-    /* No profile data to populate if user is logged out */
     if (!isLoggedIn) {
         closeProfileDropdown();
         return;
     }
 
-    /* Profile information */
-    const profileImage = document.getElementById("profileImage");
-    const username = document.getElementById("username");
-    const menuUserName = document.getElementById("menuUserName");
+    /* ---------- بيانات المستخدم ---------- */
+
+    const profileImage  = document.getElementById("profileImage");
+    const username      = document.getElementById("username");
+    const menuUserName  = document.getElementById("menuUserName");
     const menuUserEmail = document.getElementById("menuUserEmail");
 
-    const displayName = user.name || user.username || "User";
-    const displayRole = user.role || "Buyer";
+    const displayName =
+        user.name ||
+        user.username ||
+        (user.email ? String(user.email).split("@")[0] : "") ||
+        "User";
 
+    const displayRole = String(user.role || "Buyer");
+
+    /* الصورة */
     if (profileImage) {
-        profileImage.src = user.image || "/components/logo.png";
+        profileImage.onerror = () => {
+            profileImage.onerror = null;
+            profileImage.src = NAVBAR_DEFAULT_AVATAR;
+        };
+        profileImage.src = user.image || NAVBAR_DEFAULT_AVATAR;
         profileImage.alt = displayName + " profile picture";
     }
 
-    /* Role appears underneath the profile image */
+    /* الاسم الأول جنب الصورة */
     if (username) {
-        username.textContent = displayRole;
+        username.textContent = displayName.trim().split(" ")[0];
+        username.title = displayName + " (" + displayRole + ")";
     }
 
-    if (menuUserName) {
-        menuUserName.textContent = displayName;
-    }
+    /* الاسم الكامل والإيميل داخل القائمة */
+    if (menuUserName)  menuUserName.textContent  = displayName;
+    if (menuUserEmail) menuUserEmail.textContent = user.email || "";
 
-    if (menuUserEmail) {
-        menuUserEmail.textContent = user.email || "";
-    }
-
+    setupRoleLinks(displayRole);
     setupProfileDropdown();
     setupNavbarLogout();
 }
+
+
+/* =====================================================
+   روابط القائمة حسب الدور (Admin / Seller / Buyer)
+===================================================== */
+
+function setupRoleLinks(role) {
+
+    const menu = document.getElementById("profileMenu");
+    if (!menu) return;
+
+    const r = String(role).toLowerCase();
+
+    const dash     = menu.querySelector('a[href*="dashboard"]');
+    const edit     = menu.querySelector('a[href*="profile.html"]');
+    const settings = menu.querySelector('a[href*="settings.html"]');
+
+    const setLabel = (link, text) => {
+        const label = link && link.querySelector("span:last-child");
+        if (label) label.textContent = text;
+    };
+
+    if (r === "admin") {
+
+        if (dash)     { dash.href     = NAVBAR_ROOT + "admin/dashboard/dashboard.html"; setLabel(dash, "Admin Dashboard"); }
+        if (edit)     { edit.href     = NAVBAR_ROOT + "admin/profile/profile.html"; }
+        if (settings) { settings.href = NAVBAR_ROOT + "admin/settings/settings.html"; }
+
+    } else if (r === "seller") {
+
+        if (dash) { dash.href = NAVBAR_ROOT + "seller/add-product.html"; setLabel(dash, "Seller Dashboard"); }
+
+    }
+}
+
 
 /* =====================================================
    PROFILE DROPDOWN
 ===================================================== */
 
 function setupProfileDropdown() {
+
     const trigger = document.getElementById("profileTrigger");
-    const menu = document.getElementById("profileMenu");
+    const menu    = document.getElementById("profileMenu");
     const profile = document.getElementById("userProfile");
 
     if (!trigger || !menu || !profile) return;
@@ -128,23 +195,21 @@ function setupProfileDropdown() {
 }
 
 function closeProfileDropdown() {
+
     const trigger = document.getElementById("profileTrigger");
-    const menu = document.getElementById("profileMenu");
+    const menu    = document.getElementById("profileMenu");
 
-    if (menu) {
-        menu.hidden = true;
-    }
-
-    if (trigger) {
-        trigger.setAttribute("aria-expanded", "false");
-    }
+    if (menu)    menu.hidden = true;
+    if (trigger) trigger.setAttribute("aria-expanded", "false");
 }
+
 
 /* =====================================================
    LOG OUT
 ===================================================== */
 
 function setupNavbarLogout() {
+
     const logoutButton = document.getElementById("logoutBtn");
 
     if (!logoutButton) return;
@@ -153,50 +218,56 @@ function setupNavbarLogout() {
     logoutButton.dataset.ready = "true";
 
     logoutButton.addEventListener("click", () => {
-        localStorage.removeItem("stockMindUser");
 
-        /* Keep the saved account, cart, and favorites */
-        window.location.href = "/home/index.html";
+        /* بنمسح بيانات الدخول بس. الحساب المحفوظ والسلة والمفضلة بيضلوا */
+        ["stockMindUser", "user"].forEach(key => {
+            localStorage.removeItem(key);
+            sessionStorage.removeItem(key);
+        });
+
+        window.location.href = NAVBAR_ROOT + "home/index.html";
     });
 }
+
 
 /* =====================================================
    CART COUNTER
 ===================================================== */
 
 function updateNavbarCartCount() {
-    const cart = readNavbarStorage("stockMindCart", []);
+
+    const cart  = readNavbarStorage("stockMindCart", []);
     const badge = document.getElementById("cartCount");
 
     if (!badge) return;
 
-    const items = Array.isArray(cart) ? cart : [];
-
-    badge.textContent = items.length;
+    badge.textContent = Array.isArray(cart) ? cart.length : 0;
 }
+
 
 /* =====================================================
    FAVORITES COUNTER
 ===================================================== */
 
 function updateNavbarFavoriteCount() {
+
     const favorites = readNavbarStorage("stockMindFavorites", []);
-    const badge = document.getElementById("favoriteCount");
+    const badge     = document.getElementById("favoriteCount");
 
     if (!badge) return;
 
-    badge.textContent = Array.isArray(favorites)
-        ? favorites.length
-        : 0;
+    badge.textContent = Array.isArray(favorites) ? favorites.length : 0;
 }
+
 
 /* =====================================================
    MOBILE MENU
 ===================================================== */
 
 function setupNavbarMobileMenu() {
+
     const mobileMenu = document.getElementById("mobileMenu");
-    const navInner = document.getElementById("navInner");
+    const navInner   = document.getElementById("navInner");
 
     if (!mobileMenu || !navInner) return;
     if (mobileMenu.dataset.ready === "true") return;
@@ -205,33 +276,57 @@ function setupNavbarMobileMenu() {
 
     mobileMenu.addEventListener("click", () => {
         const isOpen = navInner.classList.toggle("mobile-open");
-
         mobileMenu.setAttribute("aria-expanded", String(isOpen));
     });
 }
 
+
 /* =====================================================
-   UPDATE COUNTERS WHEN CART OR FAVORITES CHANGE
+   EVENTS (تحديث العدادات / تغيّر المستخدم)
 ===================================================== */
 
 if (!window.stockMindNavbarEventsReady) {
+
     window.stockMindNavbarEventsReady = true;
 
-    window.addEventListener("cartUpdated", () => {
-        updateNavbarCartCount();
-    });
-
-    window.addEventListener("favoritesUpdated", () => {
-        updateNavbarFavoriteCount();
-    });
+    window.addEventListener("cartUpdated", updateNavbarCartCount);
+    window.addEventListener("favoritesUpdated", updateNavbarFavoriteCount);
+    window.addEventListener("userUpdated", initStockMindNavbar);
 
     window.addEventListener("storage", event => {
         if (
             event.key === "stockMindCart" ||
             event.key === "stockMindFavorites" ||
-            event.key === "stockMindUser"
+            event.key === "stockMindUser" ||
+            event.key === "stockMindAccount"
         ) {
             initStockMindNavbar();
         }
     });
 }
+
+
+/* =====================================================
+   AUTO START
+   بيستنى النافبار يتحمّل بالصفحة وبعدين بيشغّله لحاله
+===================================================== */
+
+(function autoInitNavbar() {
+
+    if (document.getElementById("guestButtons")) {
+        initStockMindNavbar();
+        return;
+    }
+
+    const obs = new MutationObserver(() => {
+        if (document.getElementById("guestButtons")) {
+            obs.disconnect();
+            initStockMindNavbar();
+        }
+    });
+
+    obs.observe(document.documentElement, { childList: true, subtree: true });
+
+    setTimeout(() => obs.disconnect(), 15000);
+
+})();

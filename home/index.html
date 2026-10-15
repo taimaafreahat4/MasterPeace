@@ -817,38 +817,14 @@ onclick="openCategory('clothing')">
 
     <div class="toast" id="toast"></div>
     <!-- Main JavaScript -->
-    <script>
+<script src="../components/navbar.js"></script>
+<script>
 fetch("../components/navbar.html")
-    .then(response => response.text())
-    .then(data => {
-
-        document.getElementById("navbar-container").innerHTML = data;
-
-        const mobileMenu =
-            document.getElementById("mobileMenu");
-
-        const navInner =
-            document.getElementById("navInner");
-
-        if (mobileMenu && navInner) {
-
-            mobileMenu.addEventListener("click", function () {
-
-                navInner.classList.toggle("mobile-open");
-
-            });
-
-        }
-
+    .then(r => r.text())
+    .then(html => {
+        document.getElementById("navbar-container").innerHTML = html;
     })
-    .catch(error => {
-
-        console.error(
-            "Navbar failed to load:",
-            error
-        );
-
-    });
+    .catch(e => console.error("Navbar failed to load:", e));
 </script>
 
 <script src="script.js"></script>

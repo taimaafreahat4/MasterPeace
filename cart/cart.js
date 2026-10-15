@@ -262,33 +262,16 @@ function isBuyerLoggedIn() {
     }
 }
 
+
 checkoutButton.addEventListener("click", () => {
     if (getCart().length === 0) return;
 
-    if (!isBuyerLoggedIn()) {
-        // Save the intended destination before asking the guest to log in.
-        sessionStorage.setItem(RETURN_KEY, "cart");
-
-        window.location.href = "../login/login.html?return=cart";
-        return;
-    }
-
-    // The buyer is already logged in. Do not ask for login again.
+    // Go directly to checkout without redirecting to login.
     window.location.href = "../checkout/checkout.html";
 });
 
 
-    checkoutButton.addEventListener("click", () => {
-        if (getCart().length === 0) return;
 
-        if (!isBuyerLoggedIn()) {
-            sessionStorage.setItem(RETURN_KEY, "cart");
-            window.location.href = "../login/login.html?return=cart";
-            return;
-        }
-
-        window.location.href = "../checkout/checkout.html";
-    });
 
     if (browseButton) {
         browseButton.addEventListener("click", () => {
@@ -306,17 +289,6 @@ const checkoutButton = document.getElementById("checkoutButton");
 if (checkoutButton) {
     checkoutButton.addEventListener("click", function () {
 
-        const loggedInUser = localStorage.getItem("loggedInUser");
-
-        if (!loggedInUser) {
-            sessionStorage.setItem(
-                "redirectAfterLogin",
-                "../checkout/checkout.html"
-            );
-
-            window.location.href = "../login/login.html";
-            return;
-        }
 
         window.location.href = "../checkout/checkout.html";
     });
