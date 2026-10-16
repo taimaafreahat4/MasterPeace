@@ -124,31 +124,64 @@ function initStockMindNavbar() {
 ===================================================== */
 
 function setupRoleLinks(role) {
-
     const menu = document.getElementById("profileMenu");
+
     if (!menu) return;
 
-    const r = String(role).toLowerCase();
+    const normalizedRole = String(role || "buyer").toLowerCase();
 
-    const dash     = menu.querySelector('a[href*="dashboard"]');
-    const edit     = menu.querySelector('a[href*="profile.html"]');
+    const dash = menu.querySelector('a[href*="dashboard"]');
+    const edit = menu.querySelector('a[href*="profile.html"]');
     const settings = menu.querySelector('a[href*="settings.html"]');
 
     const setLabel = (link, text) => {
         const label = link && link.querySelector("span:last-child");
-        if (label) label.textContent = text;
+
+        if (label) {
+            label.textContent = text;
+        }
     };
 
-    if (r === "admin") {
+    // Default routes for a buyer
+    let routes = {
+        dashboard: "buyer-dashboard/dashboard.html",
+        dashboardLabel: "My Dashboard",
+        profile: "profile/profile.html#edit-profile",
+        settings: "settings/settings.html"
+    };
 
-        if (dash)     { dash.href     = NAVBAR_ROOT + "admin/dashboard/dashboard.html"; setLabel(dash, "Admin Dashboard"); }
-        if (edit)     { edit.href     = NAVBAR_ROOT + "admin/profile/profile.html"; }
-        if (settings) { settings.href = NAVBAR_ROOT + "admin/settings/settings.html"; }
+    // Admin routes
+    if (normalizedRole.includes("admin")) {
+        routes = {
+            dashboard: "admin/dashboard/dashboard.html",
+            dashboardLabel: "Admin Dashboard",
+            profile: "admin/profile/profile.html",
+            settings: "admin/settings/settings.html"
+        };
+    }
 
-    } else if (r === "seller") {
+    // Seller routes
+    else if (normalizedRole.includes("seller")) {
+        routes = {
+            dashboard: "seller/stockmind_seller_center/dashboard.html",
+            dashboardLabel: "Seller Dashboard",
+            profile: "profile/profile.html#edit-profile",
+            settings: "settings/settings.html"
+        };
+    }
 
-        if (dash) { dash.href = NAVBAR_ROOT + "seller/add-product.html"; setLabel(dash, "Seller Dashboard"); }
+    // Always use absolute project-root URLs
+    if (dash) {
+        dash.href = NAVBAR_ROOT + routes.dashboard;
+        setLabel(dash, routes.dashboardLabel);
+    }
 
+    if (edit) {
+        edit.href = NAVBAR_ROOT + routes.profile;
+    }
+
+    if (settings) {
+        settings.href = NAVBAR_ROOT + routes.settings;
     }
 }
 

@@ -317,11 +317,11 @@ loginForm.addEventListener("submit", e => {
 
          else if (isSeller) {
 
-            window.location.href =
-            "../seller/add-product.html";
+    window.location.href =
+        "../seller/stockmind_seller_center/dashboard.html";
 
-
-        } else {
+} 
+         else {
 
             window.location.href =
             "../category/category.html";

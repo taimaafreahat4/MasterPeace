@@ -1,21 +1,372 @@
-/* Shared seller navigation - collapsible curtain */
-:root{--seller-purple:#7135e8;--seller-purple-soft:#f7f3ff;--seller-muted:#7c89a5;--seller-border:#e8e2f6}
-#seller-tabs-mount{position:relative;z-index:80}
-.sm-seller-tabs{width:100%;background:#fff;border-bottom:1px solid var(--seller-border);box-shadow:0 3px 14px rgba(76,43,140,.05);transition:height .25s ease;}
-.sm-seller-tabs__inner{max-width:1200px;margin:0 auto;padding:0 18px;display:flex;align-items:stretch;min-height:72px;overflow-x:auto;scrollbar-width:none}
-.sm-seller-tabs__inner::-webkit-scrollbar{display:none}
-.sm-seller-tab{display:flex;align-items:center;justify-content:center;gap:10px;padding:0 21px;white-space:nowrap;text-decoration:none;color:#7c82a3;border-bottom:3px solid transparent;font:700 15px Arial,Helvetica,sans-serif;transition:background .2s,color .2s,border-color .2s}
-.sm-seller-tab:hover{background:#fbf9ff;color:var(--seller-purple)}
-.sm-seller-tab.is-active{color:var(--seller-purple);background:#faf8ff;border-bottom-color:var(--seller-purple)}
-.sm-seller-tab__icon{font-size:18px;line-height:1}
-.sm-seller-tabs__toggle{display:flex;justify-content:center;align-items:center;gap:9px;width:100%;height:36px;border:0;background:#fbf9ff;color:var(--seller-purple);font-weight:800;cursor:pointer;font-size:12px}
-.sm-seller-tabs__toggle:hover{background:#f0e8ff}
-.sm-seller-tabs.is-collapsed .sm-seller-tabs__inner{display:none}
-.sm-seller-tabs:not(.is-collapsed) .sm-seller-tabs__toggle{height:22px;font-size:10px;background:#fff;color:#8b7ab6;border-top:1px solid #f4efff}
-.sm-seller-tabs:not(.is-collapsed) .sm-seller-tabs__toggle .toggle-label{display:none}
-.sm-seller-tabs:not(.is-collapsed) .sm-seller-tabs__toggle .toggle-arrow{transform:rotate(180deg)}
-.sm-seller-tabs.is-collapsed .sm-seller-tabs__toggle .toggle-arrow{transform:none}
-@media(max-width:700px){.sm-seller-tabs__inner{min-height:60px;padding:0 6px}.sm-seller-tab{font-size:12px;padding:0 14px;gap:7px}.sm-seller-tab__icon{font-size:15px}}
+
+/* =====================================================
+   STOCK MIND — CURVED WAVE SELLER NAVIGATION
+   File: seller-tabs.css
+   ===================================================== */
+
+#seller-tabs-mount {
+    position: relative;
+    isolation: isolate;
+    z-index: 20;
+
+    width: 100%;
+    margin-top: 70px;
+    padding: 10px 22px 5px;
+
+    overflow: hidden;
+}
+
+/* Soft decorative waves on both sides */
+
+#seller-tabs-mount::before,
+#seller-tabs-mount::after {
+    position: absolute;
+    z-index: -1;
+    content: "";
+    pointer-events: none;
+}
+
+#seller-tabs-mount::before {
+    top: -72px;
+    right: -55px;
+    width: 330px;
+    height: 155px;
+    background: linear-gradient(
+        120deg,
+        rgba(194, 174, 255, 0.25),
+        rgba(139, 92, 246, 0.42)
+    );
+    border-radius: 48% 0 0 58%;
+    transform: rotate(-9deg);
+}
+
+#seller-tabs-mount::after {
+    bottom: -92px;
+    left: -65px;
+    width: 370px;
+    height: 145px;
+    background: linear-gradient(
+        120deg,
+        rgba(204, 191, 255, 0.12),
+        rgba(158, 130, 255, 0.25)
+    );
+    border-radius: 0 62% 40% 0;
+    transform: rotate(5deg);
+}
+
+/* Main seller navigation */
+
 .sm-seller-tabs {
-    margin-top: 80px;
+    position: relative;
+    width: 100%;
+    max-width: 1240px;
+    margin: 0 auto;
+}
+
+/* White translucent navigation strip */
+
+.sm-seller-tabs__inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+    width: 100%;
+    min-height: 70px;
+    padding: 8px 13px;
+    overflow: visible;
+
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.96);
+    border-radius: 20px 20px 34px 34px;
+
+    box-shadow:
+        0 10px 32px rgba(89, 66, 181, 0.09),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+
+    transition:
+        max-height 0.3s ease,
+        opacity 0.25s ease,
+        padding 0.3s ease;
+}
+
+/* Individual navigation links */
+
+.sm-seller-tab {
+    position: relative;
+    isolation: isolate;
+    z-index: 1;
+
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    min-height: 52px;
+    min-width: 0;
+    padding: 13px 17px;
+
+    color: #596987;
+    background: transparent;
+    border: 0;
+    border-radius: 18px;
+
+    font-size: 13px;
+    font-weight: 750;
+    line-height: 1.35;
+    text-decoration: none;
+    white-space: nowrap;
+
+    transition:
+        color 0.25s ease,
+        transform 0.25s ease,
+        background 0.25s ease;
+}
+
+.sm-seller-tab:hover {
+    color: #7041df;
+    background: rgba(124, 87, 231, 0.07);
+}
+
+/* Tab icons */
+
+.sm-seller-tab__icon {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+
+    width: 21px;
+    height: 21px;
+
+    color: #7565d5;
+    font-size: 20px;
+    line-height: 1;
+
+    transition:
+        color 0.25s ease,
+        transform 0.25s ease;
+}
+
+/* Curved active wave */
+
+.sm-seller-tab.is-active {
+    color: #ffffff;
+    font-weight: 800;
+    background: transparent;
+    border-radius: 0;
+}
+
+.sm-seller-tab.is-active::before {
+    position: absolute;
+    z-index: -1;
+    content: "";
+    inset: 0 -9px 0 -5px;
+
+    background: linear-gradient(
+        115deg,
+        #8b5cf6 0%,
+        #7138ec 55%,
+        #6229df 100%
+    );
+
+    border-radius:
+        25px 47px 39px 24px /
+        47% 55% 48% 53%;
+
+    transform: skewX(-4deg);
+
+    box-shadow:
+        0 8px 18px rgba(112, 56, 230, 0.23),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+    transition:
+        border-radius 0.3s ease,
+        transform 0.3s ease;
+}
+
+/* Rounded wave tip on the right */
+
+.sm-seller-tab.is-active::after {
+    position: absolute;
+    z-index: -1;
+    content: "";
+    top: 3px;
+    right: -10px;
+
+    width: 19px;
+    height: calc(100% - 6px);
+
+    background: linear-gradient(
+        135deg,
+        #7c46ef,
+        #632bdd
+    );
+
+    border-radius: 35% 65% 58% 42% / 30% 45% 55% 70%;
+    transform: rotate(-5deg);
+}
+
+.sm-seller-tab.is-active .sm-seller-tab__icon {
+    color: #ffffff;
+    transform: scale(1.06);
+}
+
+/* Keyboard accessibility */
+
+.sm-seller-tab:focus-visible,
+.sm-seller-tabs__toggle:focus-visible {
+    outline: 3px solid #a995ff;
+    outline-offset: 4px;
+}
+
+/* Small centered curtain toggle */
+
+.sm-seller-tabs__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    min-height: 22px;
+    margin: 1px auto 0;
+    padding: 3px 12px;
+
+    color: #7652d9;
+    background: transparent;
+    border: 0;
+    border-radius: 20px;
+
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 800;
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease;
+}
+
+.sm-seller-tabs__toggle:hover {
+    color: #572bc7;
+    background: rgba(124, 87, 231, 0.08);
+}
+
+.sm-seller-tabs__toggle .toggle-arrow {
+    display: inline-block;
+    font-size: 12px;
+    transition: transform 0.25s ease;
+}
+
+.sm-seller-tabs.is-collapsed
+.sm-seller-tabs__toggle .toggle-arrow {
+    transform: rotate(180deg);
+}
+
+/* Collapsed curtain */
+
+.sm-seller-tabs.is-collapsed .sm-seller-tabs__inner {
+    max-height: 0;
+    min-height: 0;
+    margin: 0 auto;
+    padding-top: 0;
+    padding-bottom: 0;
+
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+
+    border-color: transparent;
+    box-shadow: none;
+    background: transparent;
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 900px) {
+    #seller-tabs-mount {
+        padding-right: 14px;
+        padding-left: 14px;
+    }
+
+    .sm-seller-tabs__inner {
+        gap: 3px;
+        padding: 7px 9px;
+    }
+
+    .sm-seller-tab {
+        gap: 7px;
+        padding-right: 11px;
+        padding-left: 11px;
+        font-size: 11px;
+    }
+
+    .sm-seller-tab__icon {
+        width: 18px;
+        height: 18px;
+        font-size: 17px;
+    }
+}
+
+@media (max-width: 650px) {
+    #seller-tabs-mount {
+        padding: 8px 10px 4px;
+    }
+
+    .sm-seller-tabs__inner {
+        justify-content: flex-start;
+        gap: 7px;
+        min-height: 64px;
+        padding: 7px 8px;
+
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .sm-seller-tabs__inner::-webkit-scrollbar {
+        display: none;
+    }
+
+    .sm-seller-tab {
+        flex: 0 0 auto;
+        min-height: 47px;
+        gap: 7px;
+        padding: 11px 13px;
+        font-size: 11px;
+    }
+
+    .sm-seller-tab.is-active::before {
+        border-radius: 22px 38px 32px 20px;
+    }
+
+    .sm-seller-tab.is-active::after {
+        right: -7px;
+        width: 14px;
+    }
+
+    #seller-tabs-mount::before {
+        right: -180px;
+    }
+
+    #seller-tabs-mount::after {
+        left: -200px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sm-seller-tabs *,
+    .sm-seller-tabs *::before,
+    .sm-seller-tabs *::after {
+        transition: none !important;
+    }
 }

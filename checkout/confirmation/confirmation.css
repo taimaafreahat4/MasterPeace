@@ -784,7 +784,7 @@ border:1px solid #eee;
 
 .back-to-cart {
     position: relative;
-    top: -60px;
+    top: -1px;
     margin-top: 0 !important;
     margin-bottom: -50px;
     z-index: 2;

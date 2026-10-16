@@ -196,16 +196,23 @@ function setupImageUpload() {
         const reader = new FileReader();
 
         reader.onload = () => {
-            pendingImage = reader.result;
+    pendingImage = reader.result;
 
-            // Preview only. The image is saved when Save Changes is clicked.
-            document.getElementById("editAvatar").src = pendingImage;
+    // Update the profile photo.
+    document.getElementById("editAvatar").src = pendingImage;
 
-            showMessage(
-                "Image preview ready. Click Save Changes to apply it.",
-                "success"
-            );
-        };
+    // Update the navbar photo immediately.
+    const navbarPhoto = document.getElementById("profileImage");
+
+    if (navbarPhoto) {
+        navbarPhoto.src = pendingImage;
+    }
+
+    showMessage(
+        "Image preview ready. Click Save Changes to save it.",
+        "success"
+    );
+};
 
         reader.onerror = () => {
             showMessage(
@@ -275,7 +282,7 @@ function setupProfileForm() {
                 changes.image || getProfileData().image || DEFAULT_AVATAR;
 
             saveOriginalValues();
-
+window.dispatchEvent(new Event("userUpdated"));
             document.getElementById("newImage").value = "";
 
             showMessage(

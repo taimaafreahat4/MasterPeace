@@ -50,6 +50,7 @@ select {
     align-items: center;
     gap: 18px;
     margin-bottom: 30px;
+    margin-top: 50px;
     animation: settingsEnter .45s ease both;
 }
 
