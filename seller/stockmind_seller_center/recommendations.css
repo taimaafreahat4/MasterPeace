@@ -986,3 +986,132 @@
         grid-template-columns: 1fr;
     }
 }
+/* =========================================
+   RECOMMENDATIONS — DASHBOARD METRIC STYLE
+   ========================================= */
+
+.rec-page .rec-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 13px;
+}
+
+/* Shared card appearance */
+.rec-page .rec-metrics > * {
+    --metric-color: #4776e6;
+    --metric-tint: #eaf0ff;
+
+    position: relative;
+    isolation: isolate;
+    min-width: 0;
+    min-height: 145px;
+    padding: 18px 17px;
+    overflow: hidden;
+
+    background: linear-gradient(
+        135deg,
+        #ffffff 45%,
+        var(--metric-tint) 180%
+    ) !important;
+
+    border: 1px solid #e6eaf3;
+    border-radius: 17px;
+
+    box-shadow: 0 5px 22px rgba(20, 43, 87, 0.035);
+
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        border-color 0.22s ease;
+}
+
+/* Decorative circle like the Dashboard cards */
+.rec-page .rec-metrics > *::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    right: -22px;
+    bottom: -34px;
+
+    width: 88px;
+    height: 88px;
+
+    border: 16px solid var(--metric-tint);
+    border-radius: 50%;
+
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Card 1 — Products reviewed: blue */
+.rec-page .rec-metrics > *:has(#metric-products) {
+    --metric-color: #4a76e7;
+    --metric-tint: #eaf0ff;
+}
+
+/* Card 2 — Need attention: amber */
+.rec-page .rec-metrics > *:has(#metric-attention) {
+    --metric-color: #d6972c;
+    --metric-tint: #fff4df;
+}
+
+/* Card 3 — Units at risk: pink/red */
+.rec-page .rec-metrics > *:has(#metric-units) {
+    --metric-color: #d95d6a;
+    --metric-tint: #fff0f1;
+}
+
+/* Card 4 — Capital tied up: green */
+.rec-page .rec-metrics > *:has(#metric-capital) {
+    --metric-color: #229773;
+    --metric-tint: #e2f7ef;
+}
+
+/* Metric numbers */
+.rec-page #metric-products,
+.rec-page #metric-attention,
+.rec-page #metric-units,
+.rec-page #metric-capital {
+    position: relative;
+    z-index: 1;
+    color: #152444;
+    font-size: clamp(24px, 2.2vw, 31px);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.7px;
+    overflow-wrap: anywhere;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Icon containers */
+.rec-page .rec-metrics > * [class*="icon"] {
+    color: var(--metric-color);
+    background-color: var(--metric-tint);
+    border-radius: 12px;
+}
+
+/* Keep card content above its decorative circle */
+.rec-page .rec-metrics > * > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Gentle hover effect */
+.rec-page .rec-metrics > *:hover {
+    transform: translateY(-3px);
+    border-color: var(--metric-tint);
+    box-shadow: 0 12px 27px rgba(20, 43, 87, 0.075);
+}
+
+/* Responsive layout */
+@media (max-width: 850px) {
+    .rec-page .rec-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .rec-page .rec-metrics {
+        grid-template-columns: 1fr;
+    }
+}
