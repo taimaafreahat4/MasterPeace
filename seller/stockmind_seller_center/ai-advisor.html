@@ -1,0 +1,478 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#061735">
+    <title>Before You Buy | Stock Mind</title>
+
+    <link rel="stylesheet" href="seller-shared.css">
+    <link rel="stylesheet" href="ai-advisor.css">
+    <link rel="stylesheet" href="seller-tabs.css">
+    <link rel="stylesheet" href="../../components/navbar.css">
+    <link rel="stylesheet" href="../../components/footer.css">
+</head>
+
+<body data-seller-page="ai-advisor">
+
+    <div id="navbar-container"></div>
+    <div id="seller-tabs-mount"></div>
+
+    <main class="ai-page">
+
+        <!-- Page introduction -->
+        <section class="advisor-hero">
+            <div class="advisor-hero-copy">
+                <span class="ai-eyebrow">
+                    <span class="eyebrow-dot"></span>
+                    SMART BUYING · SELLER CENTER
+                </span>
+
+                <h1>
+                    Make your next purchase
+                    <span>with confidence.</span>
+                </h1>
+
+                <p>
+                    Evaluate a product before investing your money.
+                    Consider your store location, customers, season,
+                    current stock, and expected selling margin.
+                </p>
+
+                <a href="#wizardTop" class="ai-hero-cta">
+                    Start product analysis
+                    <span aria-hidden="true">↓</span>
+                </a>
+
+                <div class="ai-hero-benefits">
+                    <div>
+                        <span class="benefit-icon">⌖</span>
+                        <span>Location fit</span>
+                    </div>
+                    <div>
+                        <span class="benefit-icon">◷</span>
+                        <span>Seasonal demand</span>
+                    </div>
+                    <div>
+                        <span class="benefit-icon">↗</span>
+                        <span>Purchase guidance</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="advisor-hero-visual" aria-hidden="true">
+                <div class="visual-glow"></div>
+                <div class="visual-orbit orbit-outer"></div>
+                <div class="visual-orbit orbit-inner"></div>
+
+                <div class="visual-main-icon">
+                    <span>✦</span>
+                </div>
+
+                <div class="visual-float-card float-card-top">
+                    <span class="float-card-icon">↗</span>
+                    <span>
+                        <strong>Demand insights</strong>
+                        <small>Understand your market</small>
+                    </span>
+                </div>
+
+                <div class="visual-float-card float-card-bottom">
+                    <span class="float-card-icon">✓</span>
+                    <span>
+                        <strong>Smarter decisions</strong>
+                        <small>Plan before you purchase</small>
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analysis workspace -->
+        <section class="advisor-workspace" id="wizardTop">
+
+            <div class="workspace-heading">
+                <div>
+                    <span class="ai-eyebrow">PRODUCT EVALUATION</span>
+                    <h2>Before You Buy</h2>
+                    <p>
+                        Complete the details below to receive an
+                        illustrative purchasing recommendation.
+                    </p>
+                </div>
+
+                <a href="dashboard.html" class="ai-back-link">
+                    <span aria-hidden="true">←</span>
+                    Dashboard
+                </a>
+            </div>
+
+            <!-- Progress stepper -->
+            <ol class="ai-stepper" id="stepper" aria-label="Analysis progress">
+                <li class="ai-step step active">
+                    <span>1</span>
+                    <div>
+                        <b>Product details</b>
+                        <small>Tell us what you plan to buy</small>
+                    </div>
+                </li>
+
+                <li class="ai-step-line step-line"></li>
+
+                <li class="ai-step step">
+                    <span>2</span>
+                    <div>
+                        <b>Analysis</b>
+                        <small>Evaluate the buying signals</small>
+                    </div>
+                </li>
+
+                <li class="ai-step-line step-line"></li>
+
+                <li class="ai-step step">
+                    <span>3</span>
+                    <div>
+                        <b>Recommendation</b>
+                        <small>Review your result</small>
+                    </div>
+                </li>
+            </ol>
+
+            <!-- STEP 1 -->
+            <form id="advisorForm" class="advisor-form step-panel"
+                  data-panel="1" novalidate>
+
+                <div class="ai-form-section">
+                    <div class="ai-section-heading">
+                        <div class="ai-section-icon">01</div>
+                        <div>
+                            <h3>Product information</h3>
+                            <p>Define the product and the order you are considering.</p>
+                        </div>
+                    </div>
+
+                    <div class="ai-product-layout">
+
+                        <label class="ai-photo-upload photo-box"
+                               id="photoBox" for="photoInput">
+                            <img id="photoPreview" alt="Product preview">
+
+                            <span class="photo-empty">
+                                <span class="upload-icon">↑</span>
+                                <strong>Product photo</strong>
+                                <small>Click to upload · Optional</small>
+                            </span>
+
+                            <input type="file" id="photoInput"
+                                   accept="image/*" hidden>
+                        </label>
+
+                        <div class="ai-fields-grid fields">
+
+                            <label class="ai-field ai-field-full full">
+                                <span>Product name <i>*</i></span>
+                                <input id="productName" maxlength="80"
+                                       placeholder="e.g. Electric heater"
+                                       autocomplete="off" required>
+                            </label>
+
+                            <label class="ai-field">
+                                <span>Cost per unit <i>*</i></span>
+                                <div class="ai-input-suffix">
+                                    <input id="unitCost" type="number"
+                                           min="0.01" step="0.01"
+                                           value="20" required>
+                                    <span>JOD</span>
+                                </div>
+                            </label>
+
+                            <label class="ai-field">
+                                <span>Expected selling price <i>*</i></span>
+                                <div class="ai-input-suffix">
+                                    <input id="sellPrice" type="number"
+                                           min="0.01" step="0.01"
+                                           value="35" required>
+                                    <span>JOD</span>
+                                </div>
+                            </label>
+
+                            <label class="ai-field ai-field-full full">
+                                <span>Planned purchase quantity <i>*</i></span>
+                                <input id="plannedQty" type="number"
+                                       min="1" step="1" value="100" required>
+                                <small class="ai-field-help">
+                                    How many units are you considering purchasing?
+                                </small>
+                            </label>
+
+                            <label class="ai-field ai-field-full full">
+                                <span>Product category <i>*</i></span>
+                                <select id="category" required>
+                                    <option value="clothing">Clothing</option>
+                                    <option value="shoes">Shoes</option>
+                                    <option value="cosmetics">Cosmetics</option>
+                                    <option value="electronics">Electronics</option>
+                                    <option value="home" selected>Home &amp; Living</option>
+                                    <option value="accessories">Bags &amp; Accessories</option>
+                                    <option value="sports">Sports</option>
+                                    <option value="grocery">Grocery</option>
+                                    <option value="books">Books</option>
+                                    <option value="automotive">Automotive</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-form-section">
+                    <div class="ai-section-heading">
+                        <div class="ai-section-icon">02</div>
+                        <div>
+                            <h3>Your store &amp; customers</h3>
+                            <p>These details help contextualize the estimate.</p>
+                        </div>
+                    </div>
+
+                    <div class="ai-fields-grid fields two">
+
+                        <label class="ai-field">
+                            <span>Store location <i>*</i></span>
+                            <input id="location" value="Amman, Jordan"
+                                   maxlength="80" required>
+                        </label>
+
+                        <label class="ai-field">
+                            <span>Store type</span>
+                            <select id="storeType">
+                                <option value="commercial">Commercial shopping area</option>
+                                <option value="residential">Residential neighborhood</option>
+                                <option value="tourist">Tourist area</option>
+                                <option value="university">University or school area</option>
+                                <option value="online">Online store</option>
+                            </select>
+                        </label>
+
+                        <label class="ai-field">
+                            <span>Target customers</span>
+                            <select id="customers">
+                                <option value="young">Children and teenagers</option>
+                                <option value="youngAdults">Young adults</option>
+                                <option value="adults">Adults</option>
+                                <option value="families" selected>Families and mixed ages</option>
+                                <option value="all">All age groups</option>
+                            </select>
+                        </label>
+
+                        <label class="ai-field">
+                            <span>Expected arrival season</span>
+                            <select id="arrival">
+                                <option value="winter" selected>Winter</option>
+                                <option value="spring">Spring</option>
+                                <option value="summer">Summer</option>
+                                <option value="autumn">Autumn</option>
+                            </select>
+                        </label>
+
+                        <label class="ai-field">
+                            <span>Past sales of similar products</span>
+                            <select id="pastSales">
+                                <option value="strong">Strong</option>
+                                <option value="average" selected>Average</option>
+                                <option value="weak">Weak</option>
+                                <option value="none">No sales history</option>
+                            </select>
+                        </label>
+
+                        <label class="ai-field">
+                            <span>Current stock of similar items</span>
+                            <select id="stockLevel">
+                                <option value="none" selected>None</option>
+                                <option value="some">Some</option>
+                                <option value="high">A lot</option>
+                            </select>
+                        </label>
+
+                        <label class="ai-field ai-field-full full">
+                            <span>Average visitors per day</span>
+                            <input id="visitors" type="number" min="0"
+                                   max="100000" value="50" required>
+                            <small class="ai-field-help">
+                                An approximate daily number is enough for this demo.
+                            </small>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="ai-form-disclaimer">
+                    <span aria-hidden="true">ⓘ</span>
+                    <p>
+                        This prototype uses illustrative estimation rules.
+                        It does not access live market data or guarantee sales.
+                    </p>
+                </div>
+
+                <div class="ai-form-footer">
+                    <div class="ai-required-note">
+                        <i>*</i> Required fields
+                    </div>
+
+                    <button class="ai-primary-btn primary-btn"
+                            type="submit">
+                        <span>Analyze product</span>
+                        <span aria-hidden="true">→</span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- STEP 2 -->
+            <section class="ai-analysis-state step-panel"
+                     data-panel="2" hidden aria-live="polite">
+
+                <div class="ai-analyzing-card card analyzing">
+                    <div class="ai-analysis-symbol brain-icon big">✦</div>
+
+                    <span class="ai-eyebrow">STOCK MIND ANALYSIS</span>
+                    <h3>Reviewing your buying signals</h3>
+                    <p>
+                        Evaluating product fit, seasonality, store context,
+                        and potential inventory risk.
+                    </p>
+
+                    <ul class="ai-analysis-checks checks" id="checks">
+                        <li><i></i>Reading product details</li>
+                        <li><i></i>Checking seasonal demand</li>
+                        <li><i></i>Matching store location and customers</li>
+                        <li><i></i>Estimating stock and sales risk</li>
+                    </ul>
+
+                    <div class="ai-progress progress">
+                        <div id="progressBar"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STEP 3 -->
+            <section class="ai-results step-panel"
+                     id="resultsSection" data-panel="3" hidden>
+
+                <div class="ai-results-heading">
+                    <div>
+                        <span class="ai-eyebrow">YOUR BUYING REPORT</span>
+                        <h2>Product analysis results</h2>
+                        <p>Review the estimate before making your purchasing decision.</p>
+                    </div>
+                    <button type="button" class="ai-text-button link-btn"
+                            id="newBtn">+ Analyze another product</button>
+                </div>
+
+                <div class="ai-result-top res-top">
+
+                    <article class="ai-result-product card prod-card">
+                        <div class="ai-result-image res-img" id="resImg">📦</div>
+                        <div class="ai-result-product-info">
+                            <span class="ai-result-kicker">PRODUCT REVIEW</span>
+                            <h3 id="resName">Product name</h3>
+                            <span class="ai-category-chip chip" id="resCategory">Category</span>
+                            <p id="resLocation">Location</p>
+                        </div>
+                    </article>
+
+                    <article class="ai-demand-card card demand-card"
+                             id="demandCard">
+                        <span class="ai-result-kicker">EXPECTED DEMAND</span>
+                        <div class="ai-demand-row demand-row">
+                            <strong id="demandLevel">—</strong>
+                            <div class="mini-bars" aria-hidden="true">
+                                <i></i><i></i><i></i>
+                            </div>
+                        </div>
+                        <p id="demandText"></p>
+                    </article>
+                </div>
+
+                <div class="ai-result-stats res-stats">
+                    <article class="ai-stat card stat">
+                        <span class="ai-stat-icon">▦</span>
+                        <strong id="planQty">—</strong>
+                        <span>Planned quantity</span>
+                    </article>
+
+                    <article class="ai-stat card stat good">
+                        <span class="ai-stat-icon">✓</span>
+                        <strong id="aiQty">—</strong>
+                        <span>Suggested starting quantity</span>
+                    </article>
+
+                    <article class="ai-stat card stat">
+                        <span class="ai-stat-icon">◈</span>
+                        <strong id="saleProb">—</strong>
+                        <span>Suitability score</span>
+                    </article>
+                </div>
+
+                <div class="ai-result-details res-grid">
+                    <article class="ai-result-card card">
+                        <div class="ai-result-card-heading">
+                            <span class="ai-section-icon">↗</span>
+                            <div>
+                                <h3 class="card-title">Illustrative demand trend</h3>
+                                <p>Sample monthly demand indicators, not actual sales data.</p>
+                            </div>
+                        </div>
+                        <div class="ai-chart chart" id="chart"></div>
+                    </article>
+
+                    <article class="ai-result-card card">
+                        <div class="ai-result-card-heading">
+                            <span class="ai-section-icon">✦</span>
+                            <div>
+                                <h3 class="card-title">Why this recommendation?</h3>
+                                <p>Factors influencing your estimate.</p>
+                            </div>
+                        </div>
+                        <ul class="ai-reasons-list why" id="whyList"></ul>
+                    </article>
+                </div>
+
+                <div class="ai-next-step next-bar">
+                    <div class="ai-next-icon bulb">💡</div>
+                    <div class="next-text">
+                        <h4>Suggested next step</h4>
+                        <p id="nextStep"></p>
+                    </div>
+                    <div class="ai-result-actions next-actions">
+                        <button type="button" class="ai-secondary-btn ghost-btn"
+                                id="editBtn">← Edit details</button>
+                        <button type="button" class="ai-secondary-btn ghost-btn"
+                                id="downloadBtn">Download report ↓</button>
+                        <button type="button" class="ai-primary-btn primary-btn small"
+                                id="saveBtn">Save analysis</button>
+                    </div>
+                </div>
+
+                <p class="ai-final-disclaimer">
+                    This result is an illustrative estimate, not a guarantee
+                    of demand, revenue, or profit.
+                </p>
+            </section>
+
+        </section>
+    </main>
+
+    <div id="footer-container"></div>
+
+    <!-- Existing Stock Mind navbar -->
+    <script src="../../components/navbar.js"></script>
+    <script src="../../components/load-navbar.js"></script>
+    <script>
+        if (typeof loadStockMindNavbar === "function") {
+            loadStockMindNavbar("navbar-container", "../../components/");
+        }
+    </script>
+
+    <!-- Seller functionality -->
+    <script src="seller-data.js"></script>
+    <script src="seller-tabs.js"></script>
+    <script src="ai-advisor.js"></script>
+</body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#061735">
+    <meta name="description" content="Stock Mind seller dashboard for inventory health, stock value and actionable product insights.">
+
+    <title>Seller Dashboard | Stock Mind</title>
+
+    <link rel="stylesheet" href="seller-shared.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="seller-tabs.css">
+
+    <link rel="stylesheet" href="../../components/navbar.css">
+    <link rel="stylesheet" href="../../components/footer.css">
+</head>
+
+<body data-seller-page="dashboard">
+
+    <!-- Shared navbar -->
+    <div id="navbar-container"></div>
+
+    <!-- Seller navigation -->
+    <div id="seller-tabs-mount"></div>
+
+    <main class="sm-page dashboard-page">
+
+        <!-- Page heading -->
+        <section class="db-hero">
+            <div class="db-hero-copy">
+                <span class="db-eyebrow">
+                    <span class="db-live-dot"></span>
+                    SELLER CENTER / OVERVIEW
+                </span>
+
+                <h1>Your business, at a glance.</h1>
+
+                <p>
+                    Understand what's in stock, spot products that need attention,
+                    and make your next inventory decision using your recorded data.
+                </p>
+
+                <div class="db-update-line">
+                    <span class="db-update-indicator"></span>
+                    <span id="dashboard-data-status">Preparing your inventory overview...</span>
+                </div>
+            </div>
+
+            <div class="db-hero-actions">
+                <a href="ai-advisor.html" class="db-btn db-btn-primary">
+                    <span aria-hidden="true">✦</span>
+                    Analyze a product
+                </a>
+
+                <a href="inventory.html" class="db-btn db-btn-secondary">
+                    View inventory
+                    <span aria-hidden="true">↗</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Summary metrics -->
+        <section class="db-metrics" aria-label="Business summary">
+
+            <article class="db-metric-card db-metric-blue">
+                <div class="db-metric-top">
+                    <span class="db-metric-label">Units on hand</span>
+                    <span class="db-metric-icon" aria-hidden="true">▦</span>
+                </div>
+
+                <div class="db-metric-value" id="metric-on-hand">—</div>
+                <div class="db-metric-foot">
+                    <span class="db-metric-caption">Units remaining across tracked products</span>
+                </div>
+            </article>
+
+            <article class="db-metric-card db-metric-purple">
+                <div class="db-metric-top">
+                    <span class="db-metric-label">Tracked products</span>
+                    <span class="db-metric-icon" aria-hidden="true">◈</span>
+                </div>
+
+                <div class="db-metric-value" id="metric-products">—</div>
+                <div class="db-metric-foot">
+                    <span class="db-metric-caption">Products in your inventory records</span>
+                </div>
+            </article>
+
+            <article class="db-metric-card db-metric-amber">
+                <div class="db-metric-top">
+                    <span class="db-metric-label">Units needing attention</span>
+                    <span class="db-metric-icon" aria-hidden="true">!</span>
+                </div>
+
+                <div class="db-metric-value" id="metric-at-risk">—</div>
+                <div class="db-metric-foot">
+                    <span class="db-metric-caption">Remaining units aged 40+ days</span>
+                </div>
+            </article>
+
+            <article class="db-metric-card db-metric-green">
+                <div class="db-metric-top">
+                    <span class="db-metric-label">Stock cost value</span>
+                    <span class="db-metric-icon" aria-hidden="true">¤</span>
+                </div>
+
+                <div class="db-metric-value db-metric-money" id="metric-capital">—</div>
+                <div class="db-metric-foot">
+                    <span class="db-metric-caption">Estimated cost of units still in stock</span>
+                </div>
+            </article>
+
+            <article class="db-metric-card db-metric-cyan">
+                <div class="db-metric-top">
+                    <span class="db-metric-label">Marketplace listings</span>
+                    <span class="db-metric-icon" aria-hidden="true">◇</span>
+                </div>
+
+                <div class="db-metric-value" id="metric-listings">—</div>
+                <div class="db-metric-foot">
+                    <span class="db-metric-caption">Listings returned by your seller data</span>
+                </div>
+            </article>
+
+            <article class="db-metric-card db-metric-pink">
+                <div class="db-metric-top">
+                    <span class="db-metric-label">Saved analyses</span>
+                    <span class="db-metric-icon" aria-hidden="true">⌁</span>
+                </div>
+
+                <div class="db-metric-value" id="metric-analyses">—</div>
+                <div class="db-metric-foot">
+                    <span class="db-metric-caption">Previously saved buying decisions</span>
+                </div>
+            </article>
+
+        </section>
+
+        <!-- Charts section -->
+        <section class="db-section">
+
+            <div class="db-section-heading">
+                <div>
+                    <span class="db-section-kicker">INVENTORY INTELLIGENCE</span>
+                    <h2>Understand your stock</h2>
+                    <p>See where your inventory stands and which products deserve a closer look.</p>
+                </div>
+
+                <a href="inventory.html" class="db-text-link">
+                    Explore inventory <span aria-hidden="true">→</span>
+                </a>
+            </div>
+
+            <div class="db-chart-grid">
+
+                <!-- Stock age donut -->
+                <article class="db-panel db-chart-panel">
+                    <div class="db-panel-heading">
+                        <div>
+                            <h3>Stock age breakdown</h3>
+                            <p>Grouped by recorded days in stock</p>
+                        </div>
+
+                        <span class="db-chart-symbol" aria-hidden="true">◷</span>
+                    </div>
+
+                    <div class="db-donut-layout">
+                        <div class="db-donut-wrap" id="age-donut-wrap">
+                            <div id="age-donut" class="db-donut-empty">
+                                <span>—</span>
+                            </div>
+
+                            <div class="db-donut-center">
+                                <strong id="age-total">—</strong>
+                                <span>products</span>
+                            </div>
+                        </div>
+
+                        <div id="age-legend" class="db-donut-legend"></div>
+                    </div>
+
+                    <div class="db-chart-note" id="age-note">
+                        Stock age information will appear when available.
+                    </div>
+                </article>
+
+                <!-- Units by product -->
+                <article class="db-panel db-chart-panel">
+                    <div class="db-panel-heading">
+                        <div>
+                            <h3>Remaining stock</h3>
+                            <p>Products with the most units on hand</p>
+                        </div>
+
+                        <span class="db-chart-symbol" aria-hidden="true">▤</span>
+                    </div>
+
+                    <div id="stock-bars" class="db-bar-chart">
+                        <div class="db-empty-chart">Loading inventory records...</div>
+                    </div>
+
+                    <div class="db-chart-note">
+                        Shows recorded remaining quantities, not sales forecasts.
+                    </div>
+                </article>
+
+                <!-- Sales pace -->
+                <article class="db-panel db-chart-panel">
+                    <div class="db-panel-heading">
+                        <div>
+                            <h3>Estimated sales pace</h3>
+                            <p>Units sold per recorded day</p>
+                        </div>
+
+                        <span class="db-chart-symbol" aria-hidden="true">↗</span>
+                    </div>
+
+                    <div id="sales-pace-chart" class="db-bar-chart">
+                        <div class="db-empty-chart">Loading sales records...</div>
+                    </div>
+
+                    <div class="db-chart-note">
+                        An aggregate average where sold units and days are available;
+                        it is not a day-by-day sales trend.
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- Category and data quality -->
+        <section class="db-secondary-grid">
+
+            <article class="db-panel db-category-panel">
+                <div class="db-panel-heading">
+                    <div>
+                        <span class="db-section-kicker">CAPITAL DISTRIBUTION</span>
+                        <h3>Stock cost by category</h3>
+                        <p>Estimated cost value of remaining units</p>
+                    </div>
+                </div>
+
+                <div id="category-chart" class="db-category-chart">
+                    <div class="db-empty-chart">Calculating category totals...</div>
+                </div>
+
+                <div id="category-note" class="db-chart-note">
+                    Values depend on product cost data.
+                </div>
+            </article>
+
+            <article class="db-panel db-data-panel">
+                <div class="db-panel-heading">
+                    <div>
+                        <span class="db-section-kicker">DATA QUALITY</span>
+                        <h3>How reliable is this overview?</h3>
+                        <p>Check which product details are available.</p>
+                    </div>
+
+                    <span class="db-data-icon" aria-hidden="true">✓</span>
+                </div>
+
+                <div id="data-quality-list" class="db-quality-list">
+                    <div class="db-quality-row">
+                        <span class="db-quality-dot"></span>
+                        <span>Checking inventory records...</span>
+                    </div>
+                </div>
+
+                <div class="db-data-disclaimer">
+                    <strong>Important</strong>
+                    <p>
+                        Stock age, average sales pace and cost value are calculated
+                        from available records. Missing fields are not treated as
+                        confirmed business results.
+                    </p>
+                </div>
+            </article>
+
+        </section>
+
+        <!-- Action queue -->
+        <section class="db-section">
+            <div class="db-section-heading">
+                <div>
+                    <span class="db-section-kicker">YOUR NEXT MOVES</span>
+                    <h2>Priority action list</h2>
+                    <p>Practical checks generated from your current inventory records.</p>
+                </div>
+
+                <a href="recommendations.html" class="db-text-link">
+                    All recommendations <span aria-hidden="true">→</span>
+                </a>
+            </div>
+
+            <div id="attention-list" class="db-attention-list">
+                <div class="db-panel db-loading-panel">
+                    Preparing your priority list...
+                </div>
+            </div>
+        </section>
+
+        <!-- Inventory details -->
+        <section class="db-section db-table-section">
+            <div class="db-section-heading">
+                <div>
+                    <span class="db-section-kicker">PRODUCT DETAIL</span>
+                    <h2>Inventory at a glance</h2>
+                    <p>Products are ordered by stock age and estimated inventory cost.</p>
+                </div>
+
+                <a href="inventory.html" class="db-text-link">
+                    Manage inventory <span aria-hidden="true">→</span>
+                </a>
+            </div>
+
+            <article class="db-panel db-table-panel">
+                <div class="db-table-scroll">
+                    <table class="db-inventory-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>On hand</th>
+                                <th>Sold</th>
+                                <th>Days in stock</th>
+                                <th>Sell-through</th>
+                                <th>Stock cost</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="inventory-table-body">
+                            <tr>
+                                <td colspan="7" class="db-table-empty">
+                                    Loading inventory records...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="db-table-footer">
+                    <span id="inventory-table-summary">Waiting for inventory data...</span>
+                    <span class="db-table-legend">
+                        <span class="db-legend-dot db-dot-healthy"></span> Under 40 days
+                        <span class="db-legend-dot db-dot-warning"></span> 40–59 days
+                        <span class="db-legend-dot db-dot-critical"></span> 60+ days
+                    </span>
+                </div>
+            </article>
+        </section>
+
+        <!-- Quick links -->
+        <section class="db-quick-links">
+            <a href="ai-advisor.html" class="db-quick-link">
+                <span class="db-quick-icon">✦</span>
+                <span>
+                    <strong>Before You Buy</strong>
+                    <small>Review a product before spending your budget.</small>
+                </span>
+                <span class="db-quick-arrow">↗</span>
+            </a>
+
+            <a href="recommendations.html" class="db-quick-link">
+                <span class="db-quick-icon">◈</span>
+                <span>
+                    <strong>AI Recommendations</strong>
+                    <small>Review products that may need action.</small>
+                </span>
+                <span class="db-quick-arrow">↗</span>
+            </a>
+
+            <a href="marketplace.html" class="db-quick-link">
+                <span class="db-quick-icon">◇</span>
+                <span>
+                    <strong>Marketplace</strong>
+                    <small>Review listings or explore surplus stock opportunities.</small>
+                </span>
+                <span class="db-quick-arrow">↗</span>
+            </a>
+        </section>
+
+    </main>
+
+    <!-- Shared footer -->
+    <div id="footer-container"></div>
+
+    <!-- Navbar -->
+    <script src="../../components/navbar.js"></script>
+    <script src="../../components/load-navbar.js"></script>
+
+    <script>
+        if (typeof loadStockMindNavbar === "function") {
+            loadStockMindNavbar("navbar-container", "../../components/");
+        }
+    </script>
+
+    <!-- Seller data and page behavior -->
+    <script src="seller-data.js"></script>
+    <script src="seller-tabs.js"></script>
+    <script src="dashboard.js"></script>
+
+</body>
+</html>

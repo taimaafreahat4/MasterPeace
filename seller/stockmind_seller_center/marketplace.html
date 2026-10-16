@@ -1,0 +1,321 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#061735">
+
+    <title>Marketplace | Stock Mind</title>
+
+    <!-- Seller page styles -->
+    <link rel="stylesheet" href="seller-shared.css">
+    <link rel="stylesheet" href="marketplace.css">
+    <link rel="stylesheet" href="seller-tabs.css">
+
+    <!-- Existing shared navbar and footer -->
+    <link rel="stylesheet" href="../../components/navbar.css">
+    <link rel="stylesheet" href="../../components/footer.css">
+</head>
+
+<body data-seller-page="marketplace">
+
+    <!-- Main Stock Mind navbar -->
+    <div id="navbar-container"></div>
+
+    <!-- Seller navigation curtain -->
+    <div id="seller-tabs-mount"></div>
+
+    <main class="sm-page">
+
+        <!-- Page heading -->
+        <header class="sm-heading">
+
+            <div>
+                <span class="sm-eyebrow">
+                    STOCK MIND MARKETPLACE
+                </span>
+
+                <h1>Turn surplus into opportunity.</h1>
+
+                <p>
+                    Publish extra inventory for other businesses and buyers.
+                    New products can also appear on your existing Category page.
+                </p>
+            </div>
+
+            <button
+                class="sm-btn sm-btn-primary"
+                id="open-listing"
+                type="button">
+                ＋ Add a product
+            </button>
+
+        </header>
+
+        <!-- Add product form -->
+        <section
+            class="sm-card"
+            id="listing-form-card"
+            hidden
+            style="margin-bottom:18px">
+
+            <div class="sm-section-head">
+
+                <div>
+                    <h2>Create Marketplace listing</h2>
+
+                    <p>
+                        Complete your product information before publishing.
+                    </p>
+                </div>
+
+                <button
+                    class="sm-btn sm-btn-secondary"
+                    id="close-form"
+                    type="button">
+                    Close ×
+                </button>
+
+            </div>
+
+            <form id="marketplace-form">
+
+                <div class="sm-form-grid">
+
+                    <div class="sm-field">
+                        <label for="m-name">Product name *</label>
+
+                        <input
+                            id="m-name"
+                            name="productName"
+                            required
+                            maxlength="100"
+                            placeholder="Example: Wireless Mouse">
+                    </div>
+
+                    <div class="sm-field">
+                        <label for="m-category">Category *</label>
+
+                        <select id="m-category" name="category" required>
+                            <option>Electronics</option>
+                            <option>Home &amp; Living</option>
+                            <option>Clothes</option>
+                            <option>Books</option>
+                            <option>Cosmetics</option>
+                            <option>Bags &amp; Accessories</option>
+                            <option>Sports</option>
+                            <option>Grocery</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+
+                    <div class="sm-field">
+                        <label for="m-price">Price per unit (JOD) *</label>
+
+                        <input
+                            id="m-price"
+                            name="price"
+                            type="number"
+                            min="0.01"
+                            step="0.01"
+                            required
+                            placeholder="12.00">
+                    </div>
+
+                    <div class="sm-field">
+                        <label for="m-quantity">Available quantity *</label>
+
+                        <input
+                            id="m-quantity"
+                            name="quantity"
+                            type="number"
+                            min="1"
+                            step="1"
+                            required
+                            placeholder="50">
+                    </div>
+
+                    <div class="sm-field">
+                        <label for="m-min">Minimum order quantity</label>
+
+                        <input
+                            id="m-min"
+                            name="minOrder"
+                            type="number"
+                            min="1"
+                            step="1"
+                            value="1">
+                    </div>
+
+                    <div class="sm-field">
+                        <label for="m-location">Stock location</label>
+
+                        <input
+                            id="m-location"
+                            name="location"
+                            value="Amman, Jordan"
+                            maxlength="100">
+                    </div>
+
+                    <div class="sm-field">
+                        <label for="m-seller">Seller / store</label>
+
+                        <input
+                            id="m-seller"
+                            name="seller"
+                            value="My Store"
+                            maxlength="100">
+                    </div>
+
+                    <div class="sm-field">
+                        <label for="m-condition">Condition</label>
+
+                        <select id="m-condition" name="condition">
+                            <option>New</option>
+                            <option>Like New</option>
+                            <option>Used</option>
+                        </select>
+                    </div>
+
+                    <div class="sm-field">
+                        <label for="m-image">Image URL (optional)</label>
+
+                        <input
+                            id="m-image"
+                            name="image"
+                            type="url"
+                            placeholder="https://example.com/product.jpg">
+                    </div>
+
+                    <div class="sm-field">
+                        <label for="m-description">Description</label>
+
+                        <input
+                            id="m-description"
+                            name="description"
+                            maxlength="500"
+                            placeholder="Product details...">
+                    </div>
+
+                </div>
+
+                <p class="sm-notice" style="margin-top:15px">
+                    Demo version: listings are saved in this browser.
+                    A production marketplace needs a shared backend and database.
+                </p>
+
+                <div
+                    class="sm-actions"
+                    style="justify-content:flex-end;margin-top:16px">
+
+                    <button
+                        class="sm-btn sm-btn-secondary"
+                        type="reset">
+                        Clear
+                    </button>
+
+                    <button
+                        class="sm-btn sm-btn-primary"
+                        type="submit">
+                        Publish listing →
+                    </button>
+
+                </div>
+
+            </form>
+        </section>
+
+        <!-- Search and category filter -->
+        <section
+            class="sm-grid sm-grid-2"
+            style="margin-bottom:18px;align-items:end">
+
+            <div class="sm-field">
+                <label for="market-search">Search listings</label>
+
+                <input
+                    class="sm-search"
+                    id="market-search"
+                    type="search"
+                    placeholder="Product, category, seller...">
+            </div>
+
+            <div class="sm-field">
+                <label for="market-category-filter">Filter category</label>
+
+                <select
+                    id="market-category-filter"
+                    class="sm-search">
+
+                    <option value="">All categories</option>
+                    <option>Electronics</option>
+                    <option>Home &amp; Living</option>
+                    <option>Clothes</option>
+                    <option>Books</option>
+                    <option>Cosmetics</option>
+                    <option>Bags &amp; Accessories</option>
+                    <option>Sports</option>
+                    <option>Grocery</option>
+                    <option>Other</option>
+
+                </select>
+            </div>
+
+        </section>
+
+        <!-- Product listings -->
+        <div class="sm-section-head">
+
+            <div>
+                <h2>Available products</h2>
+                <p id="market-count">Loading products...</p>
+            </div>
+
+            <a
+                href="../../category/category.html"
+                class="sm-btn sm-btn-secondary">
+                Open Category page ↗
+            </a>
+
+        </div>
+
+        <section
+            class="sm-products"
+            id="market-grid"
+            aria-live="polite">
+        </section>
+
+        <div
+            class="sm-card sm-empty"
+            id="market-empty"
+            hidden>
+            No listings found. Try another search or add a product.
+        </div>
+
+    </main>
+
+    <!-- Existing Stock Mind footer -->
+    <div id="footer-container"></div>
+
+    <!-- Main navbar -->
+    <script src="../../components/navbar.js"></script>
+    <script src="../../components/load-navbar.js"></script>
+
+    <script>
+        if (typeof loadStockMindNavbar === "function") {
+            loadStockMindNavbar(
+                "navbar-container",
+                "../../components/"
+            );
+        }
+    </script>
+
+    <!-- Seller navigation and data -->
+    <script src="seller-data.js"></script>
+    <script src="seller-tabs.js"></script>
+    <script src="marketplace.js"></script>
+
+</body>
+</html>

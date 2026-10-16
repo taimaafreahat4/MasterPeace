@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#061735">
+
+    <title>AI Recommendations | Stock Mind</title>
+
+    <link rel="stylesheet" href="seller-shared.css">
+    <link rel="stylesheet" href="recommendations.css">
+    <link rel="stylesheet" href="seller-tabs.css">
+    <link rel="stylesheet" href="../../components/navbar.css">
+    <link rel="stylesheet" href="../../components/footer.css">
+</head>
+
+<body data-seller-page="recommendations">
+
+    <div id="navbar-container"></div>
+    <div id="seller-tabs-mount"></div>
+
+    <main class="sm-page rec-page">
+
+        <!-- PAGE INTRODUCTION -->
+        <header class="rec-heading">
+            <div>
+                <span class="rec-eyebrow">
+                    <span class="rec-live-dot"></span>
+                    INVENTORY INTELLIGENCE
+                </span>
+
+                <h1>Make the next move <span>count.</span></h1>
+
+                <p>
+                    Identify slow-moving stock, understand where your
+                    capital is tied up, and choose your next action
+                    using your recorded inventory and sales figures.
+                </p>
+            </div>
+
+            <a href="inventory.html" class="rec-outline-button">
+                <span aria-hidden="true">▦</span>
+                Review inventory
+            </a>
+        </header>
+
+        <!-- DATA SOURCE / TRANSPARENCY -->
+        <section class="rec-data-note" aria-live="polite">
+            <span class="rec-note-icon">↗</span>
+
+            <div>
+                <strong id="rec-data-title">Checking your inventory data...</strong>
+                <p id="rec-data-description">
+                    Recommendations will be calculated from the
+                    inventory records available in your browser.
+                </p>
+            </div>
+
+            <span class="rec-demo-tag" id="rec-data-badge">
+                DATA CHECK
+            </span>
+        </section>
+
+        <!-- SUMMARY METRICS -->
+        <section class="rec-metrics" id="rec-metrics"
+                 aria-label="Recommendation summary">
+
+            <article class="rec-metric">
+                <div class="rec-metric-top">
+                    <span>Products reviewed</span>
+                    <span class="rec-metric-icon">▦</span>
+                </div>
+                <strong id="metric-products">—</strong>
+                <p>Products with inventory records</p>
+            </article>
+
+            <article class="rec-metric">
+                <div class="rec-metric-top">
+                    <span>Need attention</span>
+                    <span class="rec-metric-icon amber">!</span>
+                </div>
+                <strong id="metric-attention">—</strong>
+                <p>Based on stock age and sell-through</p>
+            </article>
+
+            <article class="rec-metric">
+                <div class="rec-metric-top">
+                    <span>Units at risk</span>
+                    <span class="rec-metric-icon red">◇</span>
+                </div>
+                <strong id="metric-units">—</strong>
+                <p>Remaining units in flagged products</p>
+            </article>
+
+            <article class="rec-metric">
+                <div class="rec-metric-top">
+                    <span>Capital tied up</span>
+                    <span class="rec-metric-icon green">JOD</span>
+                </div>
+                <strong id="metric-capital">—</strong>
+                <p>Estimated purchase cost of flagged stock</p>
+            </article>
+
+        </section>
+
+        <!-- RECOMMENDATION CENTER -->
+        <section class="rec-workspace">
+
+            <div class="rec-workspace-heading">
+                <div>
+                    <span class="rec-eyebrow">ACTION CENTER</span>
+                    <h2>Recommended actions</h2>
+                    <p>
+                        Prioritized using remaining stock, stock age,
+                        sales recorded, and selling margin.
+                    </p>
+                </div>
+
+                <span class="rec-total-badge" id="rec-count">
+                    Loading...
+                </span>
+            </div>
+
+            <!-- SEARCH + FILTER -->
+            <div class="rec-toolbar">
+
+                <label class="rec-search">
+                    <span aria-hidden="true">⌕</span>
+                    <input
+                        id="rec-search"
+                        type="search"
+                        placeholder="Search products or categories..."
+                        aria-label="Search recommendations">
+                </label>
+
+                <label class="rec-filter">
+                    <span>Priority</span>
+                    <select id="rec-priority">
+                        <option value="all">All priorities</option>
+                        <option value="high">High priority</option>
+                        <option value="medium">Needs attention</option>
+                        <option value="low">Monitor</option>
+                    </select>
+                </label>
+
+                <label class="rec-filter">
+                    <span>Action</span>
+                    <select id="rec-action">
+                        <option value="all">All actions</option>
+                        <option value="marketplace">List surplus</option>
+                        <option value="discount">Test discount</option>
+                        <option value="branch">Review stock transfer</option>
+                        <option value="monitor">Monitor stock</option>
+                    </select>
+                </label>
+
+            </div>
+
+            <!-- DYNAMIC RECOMMENDATION CARDS -->
+            <div class="rec-list" id="recommendations-list"
+                 aria-live="polite"></div>
+
+            <div class="rec-empty" id="rec-empty" hidden>
+                <div class="rec-empty-icon">⌕</div>
+                <h3>No matching recommendations</h3>
+                <p>Change the search or priority filters to see other products.</p>
+                <button type="button" id="rec-reset-filters"
+                        class="rec-outline-button">
+                    Reset filters
+                </button>
+            </div>
+
+        </section>
+
+        <!-- EXPLANATION -->
+        <section class="rec-method">
+            <div class="rec-method-icon">ⓘ</div>
+
+            <div>
+                <h3>How these recommendations work</h3>
+                <p>
+                    The current version calculates sell-through, remaining
+                    stock, holding age, estimated sales velocity, and
+                    capital tied up in inventory. Dated sales records,
+                    when available, can also help compare recent periods.
+                    Branch transfers are suggestions to investigate, not
+                    confirmed transfer decisions.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- DISCOUNT SIMULATOR -->
+    <div class="rec-modal" id="discount-modal" hidden>
+        <div class="rec-modal-backdrop" data-close-discount></div>
+
+        <section class="rec-dialog"
+                 role="dialog"
+                 aria-modal="true"
+                 aria-labelledby="discount-title">
+
+            <div class="rec-dialog-header">
+                <div>
+                    <span class="rec-eyebrow">PRICE SCENARIO</span>
+                    <h2 id="discount-title">Simulate a discount</h2>
+                    <p id="discount-product-name">Product</p>
+                </div>
+
+                <button type="button" class="rec-close"
+                        data-close-discount aria-label="Close dialog">
+                    ×
+                </button>
+            </div>
+
+            <label class="rec-discount-field" for="discount-rate">
+                Proposed discount
+                <select id="discount-rate">
+                    <option value="5">5% discount</option>
+                    <option value="10" selected>10% discount</option>
+                    <option value="15">15% discount</option>
+                    <option value="20">20% discount</option>
+                </select>
+            </label>
+
+            <div class="rec-scenario-grid">
+                <div>
+                    <span>Current selling price</span>
+                    <strong id="discount-original">—</strong>
+                </div>
+
+                <div>
+                    <span>Scenario price</span>
+                    <strong id="discount-new-price">—</strong>
+                </div>
+
+                <div>
+                    <span>Gross margin after discount</span>
+                    <strong id="discount-margin">—</strong>
+                </div>
+
+                <div>
+                    <span>Profit per unit before other costs</span>
+                    <strong id="discount-profit">—</strong>
+                </div>
+            </div>
+
+            <p class="rec-scenario-warning" id="discount-warning"></p>
+
+            <button type="button" class="rec-primary-button"
+                    data-close-discount>
+                Done
+            </button>
+
+        </section>
+    </div>
+
+    <div id="footer-container"></div>
+
+    <!-- Existing Stock Mind navbar -->
+    <script src="../../components/navbar.js"></script>
+    <script src="../../components/load-navbar.js"></script>
+
+    <script>
+        if (typeof loadStockMindNavbar === "function") {
+            loadStockMindNavbar(
+                "navbar-container",
+                "../../components/"
+            );
+        }
+    </script>
+
+    <!-- Seller scripts -->
+    <script src="seller-data.js"></script>
+    <script src="seller-tabs.js"></script>
+    <script src="recommendations.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#061735">
+
+    <title>My Inventory | Stock Mind</title>
+
+    <!-- Inventory styles -->
+    <link rel="stylesheet" href="seller-shared.css">
+    <link rel="stylesheet" href="inventory.css">
+    <link rel="stylesheet" href="seller-tabs.css">
+
+    <!-- Existing shared components -->
+    <link rel="stylesheet" href="../../components/navbar.css">
+    <link rel="stylesheet" href="../../components/footer.css">
+</head>
+
+<body data-seller-page="inventory">
+
+    <!-- Main Stock Mind navbar -->
+    <div id="navbar-container"></div>
+
+    <!-- Seller navigation curtain -->
+    <div id="seller-tabs-mount"></div>
+
+    <main class="sm-page">
+
+        <!-- Page heading -->
+        <header class="sm-heading">
+            <div>
+                <span class="sm-eyebrow">STOCK CONTROL</span>
+
+                <h1>My Inventory</h1>
+
+                <p>
+                    Track what you bought, what sold, and what is
+                    still taking up storage space.
+                </p>
+            </div>
+
+            <a href="ai-advisor.html" class="sm-btn sm-btn-primary">
+                ＋ Analyze a purchase
+            </a>
+        </header>
+
+        <!-- Inventory metrics -->
+        <section
+            class="sm-grid sm-grid-4"
+            id="inventory-metrics"
+            aria-label="Inventory overview">
+        </section>
+
+        <!-- Inventory table -->
+        <section class="sm-card" style="margin-top:18px">
+
+            <div class="sm-section-head">
+                <div>
+                    <h2>Inventory items</h2>
+
+                    <p>
+                        Search your current stock and review products
+                        that may need attention.
+                    </p>
+                </div>
+
+                <input
+                    id="inventory-search"
+                    class="sm-search"
+                    type="search"
+                    style="max-width:270px"
+                    placeholder="Search products..."
+                    aria-label="Search inventory products">
+            </div>
+
+            <div class="sm-table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Purchased</th>
+                            <th>Sold</th>
+                            <th>On hand</th>
+                            <th>Days held</th>
+                            <th>Status</th>
+                            <th>AI action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="inventory-body"></tbody>
+                </table>
+            </div>
+
+            <div
+                class="sm-empty"
+                id="inventory-empty"
+                hidden>
+                No matching products found.
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Existing shared footer -->
+    <div id="footer-container"></div>
+
+    <!-- Load the existing Stock Mind navbar -->
+    <script src="../../components/navbar.js"></script>
+    <script src="../../components/load-navbar.js"></script>
+
+    <script>
+        if (typeof loadStockMindNavbar === "function") {
+            loadStockMindNavbar(
+                "navbar-container",
+                "../../components/"
+            );
+        }
+    </script>
+
+    <!-- Seller components and inventory logic -->
+    <script src="seller-tabs.js"></script>
+    <script src="seller-data.js"></script>
+    <script src="inventory.js"></script>
+
+</body>
+</html>
