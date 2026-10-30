@@ -1,5 +1,7 @@
 /* =====================================================
    STOCK MIND — LOGIN
+   Roles on the page: Buyer / Seller
+   Admin: no tab, logs in with email + password only
 ===================================================== */
 
 let role = "Buyer";
@@ -7,7 +9,6 @@ let role = "Buyer";
 const body       = document.body;
 const buyer      = document.getElementById("buyerRole");
 const seller     = document.getElementById("sellerRole");
-const admin      = document.getElementById("adminRole");
 const title      = document.getElementById("loginType");
 const rolesBox   = document.getElementById("roles");
 const loginForm  = document.getElementById("loginForm");
@@ -21,20 +22,17 @@ const heroBox    = document.getElementById("heroBox");
 
 
 /* =====================================================
-   ROLE SELECT  (Buyer / Seller / Admin)
+   ROLE SELECT  (Buyer / Seller)
 ===================================================== */
-
-const ROLE_BTN   = { Buyer: buyer, Seller: seller, Admin: admin };
-const ROLE_INDEX = { Buyer: 0, Seller: 1, Admin: 2 };
 
 function setRole(newRole, animate = true) {
 
     role = newRole;
 
-    Object.values(ROLE_BTN).forEach(b => b.classList.remove("active"));
-    ROLE_BTN[newRole].classList.add("active");
+    buyer.classList.toggle("active", newRole === "Buyer");
+    seller.classList.toggle("active", newRole === "Seller");
 
-    rolesBox.style.setProperty("--i", ROLE_INDEX[newRole]);
+    rolesBox.style.setProperty("--i", newRole === "Buyer" ? 0 : 1);
 
     const text = "Login as " + newRole;
 
@@ -48,13 +46,13 @@ function setRole(newRole, animate = true) {
         title.textContent = text;
         title.classList.remove("swap");
     }, 200);
+
 }
 
 buyer.addEventListener("click",  () => setRole("Buyer"));
 seller.addEventListener("click", () => setRole("Seller"));
-admin.addEventListener("click",  () => setRole("Admin"));
 
-/* role coming from the home page (?role=buyer or localStorage) */
+/* role coming from the home page (?role=seller or localStorage) */
 
 (function initRole() {
 
@@ -64,9 +62,7 @@ admin.addEventListener("click",  () => setRole("Admin"));
 
     const wanted = (fromUrl || fromStore || "").toLowerCase();
 
-    if (wanted === "seller")      setRole("Seller", false);
-    else if (wanted === "admin")  setRole("Admin", false);
-    else if (wanted === "buyer")  setRole("Buyer", false);
+    setRole(wanted === "seller" ? "Seller" : "Buyer", false);
 
     if (fromStore) localStorage.removeItem("requestedRole");
 
@@ -113,33 +109,6 @@ passInput.addEventListener("input", clearError);
 
 
 /* =====================================================
-   DEMO ACCOUNTS (quick fill)
-===================================================== */
-
-document.querySelectorAll("[data-demo]").forEach(btn => {
-
-    btn.addEventListener("click", () => {
-
-        const type = btn.dataset.demo;
-
-        if (type === "seller") {
-            setRole("Seller");
-            emailInput.value = "seller@stockmind.com";
-            passInput.value  = "Seller123";
-        } else {
-            setRole("Buyer");
-            emailInput.value = "buyer@stockmind.com";
-            passInput.value  = "Buyer123";
-        }
-
-        clearError();
-
-    });
-
-});
-
-
-/* =====================================================
    BUTTON RIPPLE
 ===================================================== */
 
@@ -161,14 +130,51 @@ loginBtn.addEventListener("click", e => {
 
 
 /* =====================================================
-   LOGIN  (same logic as before)
+   DEFAULT ACCOUNTS
+   (للتجربة فقط — لما تربط الـ backend انقلهم للسيرفر)
+===================================================== */
+
+const DEFAULT_ACCOUNTS = [
+
+    {
+        name: "Stock Mind Admin",
+        username: "admin",
+        email: "admin@stockmind.com",
+        password: "StockMindAdmin123",
+        role: "Admin",
+        image: ""
+    },
+
+    {
+        name: "Default Seller",
+        username: "seller@stockmind.com",
+        email: "seller@stockmind.com",
+        password: "Seller123",
+        role: "Seller",
+        image: ""
+    },
+
+    {
+        name: "Default Buyer",
+        username: "buyer@stockmind.com",
+        email: "buyer@stockmind.com",
+        password: "Buyer123",
+        role: "Buyer",
+        image: ""
+    }
+
+];
+
+
+/* =====================================================
+   LOGIN
 ===================================================== */
 
 loginForm.addEventListener("submit", e => {
 
     e.preventDefault();
 
-    const email = emailInput.value.trim();
+    const email    = emailInput.value.trim();
     const password = passInput.value;
 
     if (!email || !password) {
@@ -176,124 +182,74 @@ loginForm.addEventListener("submit", e => {
         return;
     }
 
-
-    let account = null;
-
-    try {
-        account = JSON.parse(localStorage.getItem("stockMindAccount"));
-    } catch {
-        account = null;
-    }
-
-
     const emailLower = email.toLowerCase();
 
 
-    const isDefaultSeller =
-        emailLower === "seller@stockmind.com" &&
-        password === "Seller123";
+    /* 1) the account created from the sign up page */
 
+    let saved = null;
 
-    const isDefaultBuyer =
-        emailLower === "buyer@stockmind.com" &&
-        password === "Buyer123";
+    try {
+        saved = JSON.parse(localStorage.getItem("stockMindAccount"));
+    } catch {
+        saved = null;
+    }
 
-
-    const isDefaultAdmin =
-        emailLower === "admin@stockmind.com" &&
-        password === "StockMindAdmin123";
-
+    let account = null;
 
     if (
-        !account ||
-        !account.email ||
-        account.email.toLowerCase() !== emailLower ||
-        account.password !== password
+        saved &&
+        saved.email &&
+        saved.email.toLowerCase() === emailLower &&
+        saved.password === password
     ) {
 
+        account = saved;
 
-        if (isDefaultAdmin) {
+    } else {
 
-            account = {
-                name: "Stock Mind Admin",
-                username: "admin",
-                email: "admin@stockmind.com",
-                password: "StockMindAdmin123",
-                role: "Admin",
-                image: ""
-            };
+        /* 2) default accounts (admin / seller / buyer) */
 
-
-        } else if (isDefaultSeller) {
-
-            account = {
-                name: "Default Seller",
-                username: "seller@stockmind.com",
-                email: "seller@stockmind.com",
-                password: "Seller123",
-                role: "Seller",
-                image: ""
-            };
-
-
-        } else if (isDefaultBuyer) {
-
-            account = {
-                name: "Default Buyer",
-                username: "buyer@stockmind.com",
-                email: "buyer@stockmind.com",
-                password: "Buyer123",
-                role: "Buyer",
-                image: ""
-            };
-
-
-        } else {
-
-            showError("Invalid email or password.");
-            return;
-
-        }
+        account = DEFAULT_ACCOUNTS.find(a =>
+            a.email.toLowerCase() === emailLower &&
+            a.password === password
+        ) || null;
 
     }
 
+    if (!account) {
+        showError("Invalid email or password.");
+        return;
+    }
 
-    const userRole = String(account.role).toLowerCase();
+
+    const userRole = String(account.role || "").toLowerCase();
+
+    const isAdmin  = userRole === "admin";
+    const isSeller = userRole === "seller";
 
 
-    // السماح للـ Admin بالدخول دائماً
-    if (
-        userRole !== "admin" &&
-        userRole !== role.toLowerCase()
-    ) {
+    /* Admin can login from the page directly (no role tab),
+       Buyer / Seller must match the selected tab */
+
+    if (!isAdmin && userRole !== role.toLowerCase()) {
         showError("You cannot login with this role.");
         return;
     }
 
 
-    const loggedInUser = {
-        ...account,
-        loggedIn: true
-    };
-
-
     localStorage.setItem(
         "stockMindUser",
-        JSON.stringify(loggedInUser)
+        JSON.stringify({ ...account, loggedIn: true })
     );
 
 
     loginBtn.classList.add("loading");
 
 
-    const isSeller = userRole === "seller";
-    const isAdmin = userRole === "admin";
-
-
     setTimeout(() => {
 
         document.getElementById("success").classList.add("show");
-
 
         document.getElementById("successText").textContent =
             isAdmin
@@ -302,35 +258,26 @@ loginForm.addEventListener("submit", e => {
             ? "Taking you to your seller dashboard..."
             : "Taking you to the marketplace...";
 
-
     }, 600);
-
 
 
     setTimeout(() => {
 
-
         if (isAdmin) {
-    window.location.href =
-    "../admin/dashboard/dashboard.html";
-}
 
-         else if (isSeller) {
+            window.location.href = "../admin/dashboard/dashboard.html";
 
-    window.location.href =
-        "../seller/stockmind_seller_center/dashboard.html";
+        } else if (isSeller) {
 
-} 
-         else {
+            window.location.href = "../seller/stockmind_seller_center/dashboard.html";
 
-            window.location.href =
-            "../category/category.html";
+        } else {
+
+            window.location.href = "../category/category.html";
 
         }
 
-
     }, 1900);
-
 
 });
 

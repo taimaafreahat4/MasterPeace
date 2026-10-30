@@ -24,7 +24,7 @@
     if(!localStorage.getItem(LISTINGS_KEY)) write(LISTINGS_KEY,listings);
     return listings;
   }
-  function normalizeSellerProduct(p){return {id:p.id||`seller-${Date.now()}`,name:p.name||"Untitled product",category:p.category||"Other",condition:p.condition||"New",quantity:Number(p.quantity)||1,price:Number(p.price)||0,minOrder:1,description:p.description||"",location:p.location||"Amman, Jordan",seller:p.seller||"Stock Mind Seller",image:p.image||"",dateAdded:p.dateAdded||new Date().toISOString()}}
+  function normalizeSellerProduct(p){return {id:p.id||`seller-${Date.now()}`,name:p.name||"Untitled product",category:p.category||"Other",condition:p.condition||"New",quantity:Number(p.quantity)||1,price:Number(p.price)||0,minOrder:Math.max(1,Number(p.minOrder)||1),sellingMethod:p.sellingMethod==="whole_lot"?"whole_lot":"regular",lotPrice:p.sellingMethod==="whole_lot"?Number(p.lotPrice)||0:null,status:p.status||"available",sellerListed:Boolean(p.sellerListed),description:p.description||"",location:p.location||"Amman, Jordan",seller:p.seller||"Stock Mind Seller",image:p.image||"",dateAdded:p.dateAdded||new Date().toISOString()}}
   function saveListing(product){const rows=getListings();const clean=normalizeSellerProduct(product);const i=rows.findIndex(x=>x.id===clean.id);if(i>=0)rows[i]=clean;else rows.unshift(clean);write(LISTINGS_KEY,rows);return clean}
   function getInventory(){let rows=read(INVENTORY_KEY,null);if(!Array.isArray(rows)){rows=sampleInventory;write(INVENTORY_KEY,rows)}return rows}
   window.StockMindSellerData={LISTINGS_KEY,INVENTORY_KEY,money,read,write,getListings,getInventory,saveListing,normalizeSellerProduct};

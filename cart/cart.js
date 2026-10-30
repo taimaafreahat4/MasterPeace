@@ -30,21 +30,17 @@
 
             if (!Array.isArray(cart)) return [];
 
-            return cart.filter((item) =>
-                item &&
-                typeof item.id === "string" &&
-                typeof item.name === "string" &&
-                Number.isFinite(Number(item.price)) &&
-                Number(item.price) >= 0
-            ).map((item) => ({
-                ...item,
-                price: Number(item.price),
-                minimum: Math.max(20, Math.floor(Number(item.minimum) || 20)),
-                quantity: Math.max(
-                    Math.max(20, Math.floor(Number(item.minimum) || 20)),
-                    Math.floor(Number(item.quantity) || 20)
-                )
-            }));
+            return cart.filter(item => item && item.id != null && typeof item.name === "string" &&
+                Number.isFinite(Number(item.price)) && Number(item.price) >= 0)
+                .map(item => {
+                    const lot = item.sellingMethod === "whole_lot";
+                    const minimum = lot ? 1 : Math.max(1, Math.floor(Number(item.minimum) || 1));
+                    const maxQuantity = lot ? 1 : (Number.isFinite(Number(item.maxQuantity)) && Number(item.maxQuantity) > 0
+                        ? Math.floor(Number(item.maxQuantity)) : null);
+                    const quantity = lot ? 1 : Math.max(minimum, Math.floor(Number(item.quantity) || minimum));
+                    return {...item, id: String(item.id), price: Number(item.price), minimum,
+                        maxQuantity, quantity: maxQuantity ? Math.min(quantity, maxQuantity) : quantity};
+                });
         } catch (error) {
             console.error("Unable to read cart:", error);
             return [];
@@ -53,6 +49,7 @@
 
     function saveCart(cart) {
         sessionStorage.setItem(CART_KEY, JSON.stringify(cart));
+        window.dispatchEvent(new Event("cartUpdated"));
     }
 
     function money(value) {
@@ -143,7 +140,9 @@
                 createElement(
                     "p",
                     "cart-minimum",
-                    `Minimum order: ${product.minimum} units`
+                    product.sellingMethod === "whole_lot"
+                        ? `WHOLE LOT · ${product.lotUnits || 1} pieces sold together`
+                        : `Minimum order: ${product.minimum} units`
                 ),
                 createElement(
     "p",
@@ -155,7 +154,7 @@
             const right = createElement("div", "cart-item-right");
             const priceBox = createElement("div", "cart-unit-price");
             priceBox.append(
-                createElement("span", "", "Unit price"),
+                createElement("span", "", product.sellingMethod === "whole_lot" ? "Complete lot price" : "Unit price"),
                 createElement("strong", "", money(product.price))
             );
 
@@ -163,7 +162,7 @@
 
             const minus = createElement("button", "quantity-button", "−");
             minus.type = "button";
-            minus.disabled = product.quantity <= product.minimum;
+            minus.disabled = product.sellingMethod === "whole_lot" || product.quantity <= product.minimum;
             minus.setAttribute("aria-label", `Decrease ${product.name}`);
             minus.addEventListener("click", () => {
                 changeQuantity(product.id, -1);
@@ -177,12 +176,17 @@
 
             const plus = createElement("button", "quantity-button", "+");
             plus.type = "button";
+            plus.disabled = product.sellingMethod === "whole_lot" || (product.maxQuantity != null && product.quantity >= product.maxQuantity);
             plus.setAttribute("aria-label", `Increase ${product.name}`);
             plus.addEventListener("click", () => {
                 changeQuantity(product.id, 1);
             });
 
-            quantityBox.append(minus, quantity, plus);
+            if (product.sellingMethod === "whole_lot") {
+                quantityBox.append(createElement("span", "quantity-value", "1 complete lot · locked"));
+            } else {
+                quantityBox.append(minus, quantity, plus);
+            }
 
             const actions = createElement("div", "item-actions");
             actions.append(
@@ -227,10 +231,9 @@ totalElement.textContent = money(subtotal + commission);
 
         if (!product) return;
 
-        product.quantity = Math.max(
-            product.minimum,
-            product.quantity + direction
-        );
+        if (product.sellingMethod === "whole_lot") return;
+        product.quantity = Math.max(product.minimum, product.quantity + direction);
+        if (product.maxQuantity != null) product.quantity = Math.min(product.quantity, product.maxQuantity);
 
         saveCart(cart);
         renderCart();
@@ -284,12 +287,3 @@ checkoutButton.addEventListener("click", () => {
 
     renderCart();
 })();
-const checkoutButton = document.getElementById("checkoutButton");
-
-if (checkoutButton) {
-    checkoutButton.addEventListener("click", function () {
-
-
-        window.location.href = "../checkout/checkout.html";
-    });
-}

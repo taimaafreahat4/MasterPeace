@@ -69,6 +69,9 @@ function initStockMindNavbar() {
     if (guestButtons) guestButtons.hidden = isLoggedIn;
     if (userProfile)  userProfile.hidden  = !isLoggedIn;
 
+    // Keep Navbar cart working even when served from a nested project folder.
+    const cartLink = document.querySelector(".navbar-cart-link");
+    if (cartLink) cartLink.href = NAVBAR_ROOT + "cart/cart.html";
     updateNavbarCartCount();
     updateNavbarFavoriteCount();
     setupNavbarMobileMenu();
@@ -269,7 +272,9 @@ function setupNavbarLogout() {
 
 function updateNavbarCartCount() {
 
-    const cart  = readNavbarStorage("stockMindCart", []);
+    let cart = [];
+    try { cart = JSON.parse(sessionStorage.getItem("stockMindCart") || "[]"); }
+    catch { cart = []; }
     const badge = document.getElementById("cartCount");
 
     if (!badge) return;

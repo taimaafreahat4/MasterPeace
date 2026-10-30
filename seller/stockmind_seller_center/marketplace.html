@@ -12,6 +12,7 @@
     <!-- Seller page styles -->
     <link rel="stylesheet" href="seller-shared.css">
     <link rel="stylesheet" href="marketplace.css">
+    <link rel="stylesheet" href="marketplace-sale.css">
     <link rel="stylesheet" href="seller-tabs.css">
 
     <!-- Existing shared navbar and footer -->
@@ -111,8 +112,17 @@
                         </select>
                     </div>
 
+                    <div class="sm-field sm-field-full">
+                        <label for="m-method">Selling method *</label>
+                        <select id="m-method" name="sellingMethod">
+                            <option value="regular">Sell by quantity (buyer chooses quantity)</option>
+                            <option value="whole_lot">Sell entire lot (all pieces together)</option>
+                        </select>
+                        <p class="sm-muted" id="method-help">Buyers can choose any valid quantity.</p>
+                    </div>
+
                     <div class="sm-field">
-                        <label for="m-price">Price per unit (JOD) *</label>
+                        <label id="m-price-label" for="m-price">Price per unit (JOD) *</label>
 
                         <input
                             id="m-price"
@@ -125,7 +135,7 @@
                     </div>
 
                     <div class="sm-field">
-                        <label for="m-quantity">Available quantity *</label>
+                        <label id="m-quantity-label" for="m-quantity">Available quantity *</label>
 
                         <input
                             id="m-quantity"
@@ -137,7 +147,7 @@
                             placeholder="50">
                     </div>
 
-                    <div class="sm-field">
+                    <div class="sm-field" id="min-order-field">
                         <label for="m-min">Minimum order quantity</label>
 
                         <input
@@ -227,6 +237,8 @@
             </form>
         </section>
 
+        
+
         <!-- Search and category filter -->
         <section
             class="sm-grid sm-grid-2"
@@ -264,6 +276,12 @@
             </div>
 
         </section>
+
+        <div class="sm-lot-filter" aria-label="Filter selling method">
+            <button type="button" class="sm-lot-filter__btn is-active" data-method-filter="all">All products</button>
+            <button type="button" class="sm-lot-filter__btn" data-method-filter="regular">Buy by quantity</button>
+            <button type="button" class="sm-lot-filter__btn" data-method-filter="whole_lot">Whole lots</button>
+        </div>
 
         <!-- Product listings -->
         <div class="sm-section-head">

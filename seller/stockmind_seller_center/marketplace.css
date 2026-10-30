@@ -1,1 +1,11 @@
-/* Marketplace page-specific styles. Shared UI styles are in seller-shared.css. */
+/* Whole Lot selling method */
+.sm-lot-filter{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 22px}
+.sm-lot-filter__btn{border:1px solid #ded5fc;background:#fff;color:#594d88;border-radius:999px;padding:10px 18px;font-weight:700;cursor:pointer}
+.sm-lot-filter__btn.is-active{background:linear-gradient(110deg,#9251ff,#6826e8);color:white;border-color:transparent}
+.sm-sale-type{margin-left:6px;background:#f1e8ff;color:#6732ce}
+.sm-sale-type.lot-type{background:#ede1ff;color:#5e2ac2}
+.lot-locked{padding:8px 12px;background:#f4edff;color:#5925bd;border-radius:10px;font-size:12px;font-weight:700}
+#method-help{font-size:12px;margin-top:6px}
+#min-order-field[hidden]{display:none!important}
+.sm-market-actions button:disabled{opacity:.55;cursor:not-allowed}
+@media(max-width:620px){.sm-lot-filter__btn{flex:1;padding:9px 10px;font-size:12px}}

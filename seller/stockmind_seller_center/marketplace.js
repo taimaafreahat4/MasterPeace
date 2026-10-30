@@ -142,6 +142,87 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+    // Older listings have no sellingMethod; treat them as regular products.
+    const isLot = product => product?.sellingMethod === "whole_lot";
+    const stockOf = product => Math.max(0, Math.floor(Number(product?.quantity) || 0));
+    const minOf = product => Math.max(1, Math.floor(Number(product?.minOrder) || 1));
+    const lotTotal = product => Number(product?.lotPrice) || (Number(product?.price) * stockOf(product));
+    let methodFilter = "all";
+
+    function updateFormMethod() {
+        const lot = $("m-method")?.value === "whole_lot";
+        $("m-price-label").textContent = lot ? "Total lot price (JOD) *" : "Price per unit (JOD) *";
+        $("m-quantity-label").textContent = lot ? "Pieces included in this complete lot *" : "Available quantity *";
+        $("min-order-field").hidden = lot;
+        $("m-min").disabled = lot;
+        $("method-help").textContent = lot
+            ? "The buyer purchases every piece together, at one total price."
+            : "The buyer chooses a quantity, respecting the minimum order.";
+    }
+    $("m-method")?.addEventListener("change", updateFormMethod);
+    form.addEventListener("reset", () => setTimeout(updateFormMethod, 0));
+    updateFormMethod();
+
+    /* =========================================
+       SHARED NAVBAR CART — SAME AS CATEGORY
+       sessionStorage: stockMindCart
+    ========================================= */
+    const CART_KEY = "stockMindCart";
+    function readSharedCart() {
+        try {
+            const saved = JSON.parse(sessionStorage.getItem(CART_KEY) || "[]");
+            return Array.isArray(saved) ? saved : [];
+        } catch { return []; }
+    }
+    function saveSharedCart(cart) {
+        sessionStorage.setItem(CART_KEY, JSON.stringify(cart));
+        window.dispatchEvent(new Event("cartUpdated"));
+    }
+    function addToCart(product) {
+        const wholeLot = isLot(product);
+        const stock = stockOf(product);
+        const minimum = minOf(product);
+        if (product.status === "reserved" || stock < (wholeLot ? 1 : minimum)) {
+            toast("This listing is unavailable.");
+            return;
+        }
+        const id = String(product.id);
+        const cart = readSharedCart();
+        const existing = cart.find(item => String(item.id) === id);
+        if (wholeLot && existing) {
+            toast("This entire lot is already in your cart.");
+            return;
+        }
+        const quantity = wholeLot ? 1 : minimum;
+        if (existing) {
+            if (Number(existing.quantity) + quantity > stock) {
+                toast(`Only ${stock} units are available.`);
+                return;
+            }
+            existing.quantity += quantity;
+        } else {
+            cart.push({
+                id, name: product.name,
+                price: wholeLot ? lotTotal(product) : Number(product.price),
+                quantity, minimum: wholeLot ? 1 : minimum,
+                maxQuantity: wholeLot ? 1 : stock,
+                sellingMethod: wholeLot ? "whole_lot" : "regular",
+                lotUnits: wholeLot ? stock : null,
+                marketplaceListingId: id,
+                categoryName: product.category || "Marketplace",
+                seller: product.seller || "Stock Mind Seller",
+                image: product.image || defaultImage
+            });
+        }
+        try {
+            saveSharedCart(cart);
+            toast(wholeLot ? "Entire lot added to the main cart." : "Product added to the main cart.");
+        } catch (error) {
+            console.error(error);
+            toast("Unable to save the cart.");
+        }
+    }
+
     /* =========================================
        OPEN AND PREFILL LISTING FORM
     ========================================= */
@@ -150,6 +231,8 @@ document.addEventListener("DOMContentLoaded", () => {
         formCard.hidden = false;
 
         if (prefill) {
+            $("m-method").value = prefill.sellingMethod === "whole_lot" ? "whole_lot" : "regular";
+            updateFormMethod();
             $("m-name").value = prefill.name || "";
 
             setSelectValue(
@@ -157,7 +240,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 prefill.category || "Other"
             );
 
-            $("m-price").value = prefill.price ?? "";
+            $("m-price").value = prefill.sellingMethod === "whole_lot"
+                ? (prefill.lotPrice ?? prefill.price ?? "") : (prefill.price ?? "");
             $("m-quantity").value = prefill.quantity ?? 1;
             $("m-min").value = prefill.minOrder ?? 1;
             $("m-location").value =
@@ -203,6 +287,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const category = categoryFilter.value;
 
             rows = allListings.filter(product => {
+                if (methodFilter !== "all" && (isLot(product) ? "whole_lot" : "regular") !== methodFilter) return false;
                 const matchesCategory =
                     !category || product.category === category;
 
@@ -264,6 +349,8 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
             const id = escapeHTML(product.id);
+            const lot = isLot(product);
+            const reserved = product.status === "reserved";
 
             return `
                 <article class="sm-card sm-market-card">
@@ -283,7 +370,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             gap:7px;
                             align-items:center;
                         ">
-                            <span class="sm-pill">${category}</span>
+                            <span class="sm-pill">${category}</span><span class="sm-pill sm-sale-type ${lot ? 'lot-type' : ''}">${lot ? 'Whole Lot' : 'By Quantity'}</span>
                             <span class="sm-muted">${location}</span>
                         </div>
 
@@ -296,15 +383,15 @@ document.addEventListener("DOMContentLoaded", () => {
                         </p>
 
                         <div class="sm-market-price">
-                            ${money(price)}
+                            ${money(lot ? lotTotal(product) : price)}
                             <span class="sm-muted"
                                   style="font-size:11px;font-weight:500">
-                                / unit
+                                ${lot ? '/ entire lot' : '/ unit'}
                             </span>
                         </div>
 
                         <p class="sm-muted">
-                            ${quantity} units · Minimum order ${minOrder}
+                            ${lot ? `${quantity} pieces · Sold together only` : `${quantity} units · Minimum order ${minOrder}`}
                         </p>
 
                         <p class="sm-muted">${description}</p>
@@ -314,16 +401,17 @@ document.addEventListener("DOMContentLoaded", () => {
                             <button
                                 class="sm-btn sm-btn-primary request-btn"
                                 type="button"
-                                data-id="${id}">
-                                Request product
+                                data-id="${id}" ${reserved || quantity < 1 ? 'disabled' : ''}>
+                                ${reserved ? 'Reserved' : lot ? 'Add entire lot' : 'Add to cart'}
                             </button>
 
                             <button
                                 class="sm-btn sm-btn-secondary remove-btn"
                                 type="button"
                                 data-id="${id}"
-                                title="Remove demo listing"
-                                aria-label="Remove ${name}">
+                                title="Remove your listing"
+                                aria-label="Remove ${name}"
+                                ${product.sellerListed ? '' : 'hidden'}>
                                 ×
                             </button>
 
@@ -350,10 +438,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
 
-                toast(
-                    `Demo request selected: ${product.name}. ` +
-                    "Real orders require checkout and backend integration."
-                );
+                addToCart(product);
             });
         });
 
@@ -363,6 +448,12 @@ document.addEventListener("DOMContentLoaded", () => {
         grid.querySelectorAll(".remove-btn").forEach(button => {
             button.addEventListener("click", () => {
                 try {
+                    const selected = getListings().find(item => String(item.id) === button.dataset.id);
+                    if (!selected?.sellerListed) {
+                        toast("Only your own demo listings can be removed.");
+                        return;
+                    }
+                    if (!confirm(`Remove ${selected.name} from the Marketplace?`)) return;
                     const remaining = getListings().filter(
                         item => String(item.id) !== button.dataset.id
                     );
@@ -374,7 +465,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
 
                     D.write(D.LISTINGS_KEY, remaining);
-
+                    const old = JSON.parse(localStorage.getItem("sellerProducts") || "[]");
+                    if (Array.isArray(old)) localStorage.setItem("sellerProducts", JSON.stringify(old.filter(item => String(item.id) !== button.dataset.id)));
+                    const remainingCart = readSharedCart().filter(item => String(item.id) !== button.dataset.id);
+                    saveSharedCart(remainingCart);
                     render();
 
                     toast("Listing removed from this browser demo.");
@@ -405,6 +499,15 @@ document.addEventListener("DOMContentLoaded", () => {
        SEARCH AND CATEGORY FILTER
     ========================================= */
 
+    document.querySelectorAll("[data-method-filter]").forEach(button => {
+        button.addEventListener("click", () => {
+            methodFilter = button.dataset.methodFilter;
+            document.querySelectorAll("[data-method-filter]").forEach(b =>
+                b.classList.toggle("is-active", b === button));
+            render();
+        });
+    });
+
     search.addEventListener("input", render);
 
     categoryFilter.addEventListener("change", render);
@@ -425,9 +528,9 @@ document.addEventListener("DOMContentLoaded", () => {
             Number($("m-quantity").value)
         );
 
-        const minOrder = Math.floor(
-            Number($("m-min").value) || 1
-        );
+        const sellingMethod = $("m-method").value;
+        const wholeLot = sellingMethod === "whole_lot";
+        const minOrder = wholeLot ? quantity : Math.floor(Number($("m-min").value) || 1);
 
         const price = Number($("m-price").value);
 
@@ -454,7 +557,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             category: $("m-category").value,
 
-            price,
+            price: wholeLot ? Number((price / quantity).toFixed(6)) : price,
+            lotPrice: wholeLot ? price : null,
+            sellingMethod,
+            status: "available",
 
             quantity,
 

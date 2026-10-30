@@ -419,19 +419,30 @@ body.skipped .card-clip{ clip-path:none; }
 
 /* ---------- roles ---------- */
 
-.roles{
-    position:relative; --i:0;
-    display:grid; grid-template-columns:repeat(3,1fr); gap:6px;
-    margin:20px 0 14px; padding:6px;
-    background:#f1ebfd; border-radius:20px;
+.roles {
+    position: relative;
+    --i: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin: 20px 0 14px;
+    padding: 6px;
+    background: #f1ebfd;
+    border-radius: 20px;
 }
-.role-slider{
-    position:absolute; top:6px; bottom:6px; left:6px;
-    width:calc((100% - 24px) / 3);
-    background:#fff; border-radius:15px;
-    box-shadow:0 8px 22px rgba(113,53,232,.22),inset 0 0 0 2px var(--p);
-    transform:translateX(calc((100% + 6px) * var(--i)));
-    transition:transform .5s cubic-bezier(.65,-.2,.25,1.2);
+.role-slider {
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 6px;
+    width: calc((100% - 18px) / 2);
+    background: #fff;
+    border-radius: 15px;
+    box-shadow:
+        0 8px 22px rgba(113, 53, 232, .22),
+        inset 0 0 0 2px var(--p);
+    transform: translateX(calc(var(--i) * (100% + 6px)));
+    transition: transform .5s cubic-bezier(.65, -.2, .25, 1.2);
 }
 .role{
     position:relative; z-index:1; height:76px; border:0; background:transparent; cursor:pointer;

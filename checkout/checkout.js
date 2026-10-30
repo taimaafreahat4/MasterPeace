@@ -16,7 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const money = amount => `JOD ${Number(amount || 0).toFixed(2)}`;
   const cart = readCart();
   const subtotal = cart.reduce((sum, p) => sum + Number(p.price) * Number(p.quantity), 0);
-  const units = cart.reduce((sum, p) => sum + Number(p.quantity), 0);
+  const commission = subtotal * 0.05;
+  const grandTotal = subtotal + commission;
+  const units = cart.reduce((sum, p) => sum + (p.sellingMethod === "whole_lot" ? Number(p.lotUnits || 1) : Number(p.quantity)), 0);
 
   function renderSummary() {
     summaryItems.replaceChildren();
@@ -38,7 +40,9 @@ image.appendChild(img);
       name.textContent = product.name || "Wholesale product";
       const meta = document.createElement("div");
       meta.className = "summary-product-meta";
-      meta.textContent = `Qty: ${product.quantity} units`;
+      meta.textContent = product.sellingMethod === "whole_lot"
+        ? `Complete lot · ${product.lotUnits || 1} pieces (quantity locked)`
+        : `Qty: ${product.quantity} units`;
       info.append(name, meta);
       const price = document.createElement("strong");
       price.className = "summary-product-price";
@@ -50,7 +54,7 @@ image.appendChild(img);
     $("itemCount").textContent = `${units} unit${units === 1 ? "" : "s"}`;
     $("subtotal").textContent = money(subtotal);
     $("shipping").textContent = "Calculated later";
-    $("total").textContent = money(subtotal);
+    $("total").textContent = money(grandTotal);
     const submit = form.querySelector('button[type="submit"]');
     submit.disabled = cart.length === 0;
     submit.style.opacity = cart.length === 0 ? ".55" : "1";
@@ -85,6 +89,30 @@ image.appendChild(img);
       return;
     }
     if (!form.reportValidity()) return;
+    // Revalidate marketplace listings before the demo order is created.
+    let listingData = [];
+    try { listingData = JSON.parse(localStorage.getItem("stockMindMarketplaceListings") || "[]"); }
+    catch { formError.textContent = "Could not validate marketplace inventory."; return; }
+    for (const item of cart.filter(p => p.marketplaceListingId)) {
+      const product = listingData.find(p => String(p.id) === String(item.marketplaceListingId));
+      if (!product || product.status === "reserved") {
+        formError.textContent = `${item.name} is no longer available. Remove it from the cart.`;
+        return;
+      }
+      if (item.sellingMethod === "whole_lot") {
+        const lotPrice = Number(product.lotPrice) || Number(product.price) * Number(product.quantity);
+        if (product.sellingMethod !== "whole_lot" || Number(item.quantity) !== 1 ||
+            Number(item.lotUnits) !== Number(product.quantity) || Number(item.price) !== lotPrice) {
+          formError.textContent = `The complete lot ${item.name} has changed. Remove and add it again.`;
+          return;
+        }
+      } else if (Number(item.quantity) > Number(product.quantity) ||
+          Number(item.quantity) < Number(product.minOrder || 1) ||
+          Number(item.price) !== Number(product.price)) {
+        formError.textContent = `${item.name}: quantity or price has changed. Update your cart.`;
+        return;
+      }
+    }
 
     const method = form.querySelector('input[name="paymentMethod"]:checked')?.value || "card";
     if (method === "card") {
@@ -122,14 +150,36 @@ items: cart.map(p => ({
     name: p.name,
     image: p.image,
     price: Number(p.price),
-    quantity: Number(p.quantity)
+    quantity: Number(p.quantity),
+    sellingMethod: p.sellingMethod || "regular",
+    lotUnits: p.sellingMethod === "whole_lot" ? Number(p.lotUnits) : null,
+    marketplaceListingId: p.marketplaceListingId || null,
+    seller: p.seller || "Stock Mind Supplier"
 })),
       subtotal,
       shipping: null,
-      total: subtotal,
+      commission,
+      total: grandTotal,
       createdAt: new Date().toISOString(),
       status: "Demo order placed"
     };
+    // Demo only: persist the order for buyer/seller order history.
+    try {
+      const previous = JSON.parse(localStorage.getItem("stockMindOrders") || "[]");
+      const orders = Array.isArray(previous) ? previous : [];
+      localStorage.setItem("stockMindOrders", JSON.stringify([order, ...orders]));
+      const changed = listingData.map(product => {
+        const line = cart.find(item => String(item.marketplaceListingId) === String(product.id));
+        if (!line) return product;
+        if (line.sellingMethod === "whole_lot") return {...product, status: "reserved"};
+        return {...product, quantity: Math.max(0, Number(product.quantity) - Number(line.quantity))};
+      });
+      localStorage.setItem("stockMindMarketplaceListings", JSON.stringify(changed));
+    } catch (error) {
+      console.error("Demo order could not be saved:", error);
+      formError.textContent = "Could not save the order. Please try again.";
+      return;
+    }
     sessionStorage.setItem("stockMindLastOrder", JSON.stringify(order));
 sessionStorage.removeItem("stockMindCart");
 

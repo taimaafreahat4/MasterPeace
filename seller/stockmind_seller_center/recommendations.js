@@ -1,21 +1,56 @@
+/* =========================================================
+   STOCK MIND — RECOMMENDATIONS + DEMO FORECAST
+   Inventory actions + animated timeline + SVG chart
+   ========================================================= */
 
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
     const $ = id => document.getElementById(id);
 
-    const D = window.StockMindSellerData;
     const root = $("recommendations-list");
     const empty = $("rec-empty");
+    const D = window.StockMindSellerData;
 
-    if (!root || !empty) {
-        console.error("Recommendations HTML elements are missing.");
-        return;
-    }
+    let inventory = [];
+    let analyzedProducts = [];
+    let selectedDiscountProduct = null;
 
-    /* =========================================
-       LOAD SHARED NAVIGATION FOOTER
-    ========================================= */
+    /* =====================================================
+       HELPERS
+       ===================================================== */
+
+    const number = value => {
+        const parsed = Number(value);
+        return Number.isFinite(parsed) ? parsed : 0;
+    };
+
+    const esc = value =>
+        String(value ?? "").replace(/[&<>"']/g, character => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        })[character]);
+
+    const money = value => {
+        if (D && typeof D.money === "function") {
+            return D.money(value);
+        }
+
+        return `JOD ${number(value).toFixed(2)}`;
+    };
+
+    const wait = milliseconds =>
+        new Promise(resolve => setTimeout(resolve, milliseconds));
+
+    const formatNumber = value =>
+        Math.round(value).toLocaleString("en-US");
+
+    /* =====================================================
+       FOOTER
+       ===================================================== */
 
     async function loadFooter() {
         const footer = $("footer-container");
@@ -25,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const response = await fetch("../../components/footer.html");
 
             if (!response.ok) {
-                throw new Error(`Footer error: ${response.status}`);
+                throw new Error(`Footer loading failed: ${response.status}`);
             }
 
             footer.innerHTML = await response.text();
@@ -36,43 +71,604 @@ document.addEventListener("DOMContentLoaded", () => {
 
     loadFooter();
 
-    if (!D || typeof D.getInventory !== "function") {
-        root.innerHTML = `
-            <article class="rec-empty">
-                <h3>Inventory data is unavailable</h3>
-                <p>Check seller-data.js and refresh the page.</p>
-            </article>
+    /* =====================================================
+       FORECAST DEMO DATA
+       All forecast numbers below are simulated examples.
+       ===================================================== */
+
+    const FORECASTS = {
+        heater: {
+            name: "Electric Heater",
+            purchased: 100,
+            sold: 25,
+            remaining: 75,
+            stockAgeDays: 60,
+
+            demandMin: 10,
+            demandMax: 16,
+            risk: 78,
+
+            actual: [14, 12, 10, 8, 6, 4],
+            future: [4, 3, 3, 2],
+            futureLow: [3, 2, 2, 1],
+            futureHigh: [5, 4, 4, 3],
+
+            insight:
+                "Remaining stock is much higher than the simulated demand range for the next 30 days.",
+
+            actionTitle: "Review surplus stock",
+
+            action:
+                "Consider listing part of the surplus or testing a controlled discount. Review actual sales before changing prices or ordering more."
+        },
+
+        fan: {
+            name: "Electric Fan",
+            purchased: 90,
+            sold: 30,
+            remaining: 60,
+            stockAgeDays: 48,
+
+            demandMin: 20,
+            demandMax: 28,
+            risk: 42,
+
+            actual: [3, 4, 5, 6, 7, 8],
+            future: [8, 7, 6, 5],
+            futureLow: [6, 6, 5, 4],
+            futureHigh: [10, 9, 8, 7],
+
+            insight:
+                "The simulated sales pattern is improving, but remaining stock is still higher than estimated 30-day demand.",
+
+            actionTitle: "Monitor stock movement",
+
+            action:
+                "Review weekly sales and available stock before reordering. The example forecast is not proof that actual demand will continue to increase."
+        }
+    };
+
+    /* =====================================================
+       FORECAST REFERENCES
+       ===================================================== */
+
+    const forecastModule = $("demand-forecast");
+    const productSelect = $("fd-product-select");
+    const runButton = $("fd-run-button");
+    const chart = $("fd-chart");
+    const timeline = $("fd-timeline");
+    const progressTrack = $("fd-progress-track");
+
+    const timelineSteps = timeline
+        ? Array.from(timeline.querySelectorAll("[data-step]"))
+        : [];
+
+    let forecastRunId = 0;
+
+    function getSelectedForecast() {
+        if (!productSelect) return FORECASTS.heater;
+
+        return FORECASTS[productSelect.value] || FORECASTS.heater;
+    }
+
+    /* =====================================================
+       FORECAST RISK LABELS
+       ===================================================== */
+
+    function getForecastRisk(score) {
+        if (score >= 70) {
+            return {
+                label: "High risk",
+                heading: "High dead-stock risk",
+                className: "is-high"
+            };
+        }
+
+        if (score >= 40) {
+            return {
+                label: "Moderate risk",
+                heading: "Moderate dead-stock risk",
+                className: "is-medium"
+            };
+        }
+
+        return {
+            label: "Low risk",
+            heading: "Lower dead-stock risk",
+            className: "is-low"
+        };
+    }
+
+    /* =====================================================
+       DRAW THE FORECAST CHART
+       ===================================================== */
+
+    function drawForecastChart(product) {
+        if (!chart) return;
+
+        const width = 720;
+        const height = 260;
+
+        const left = 42;
+        const right = 700;
+        const top = 22;
+        const bottom = 194;
+
+        const plotHeight = bottom - top;
+
+        const allValues = [
+            ...product.actual,
+            ...product.futureHigh
+        ];
+
+        const maxValue = Math.max(
+            10,
+            Math.ceil(Math.max(...allValues) / 5) * 5
+        );
+
+        const x = index =>
+            left + ((right - left) * index) / 9;
+
+        const y = value =>
+            bottom - (value / maxValue) * plotHeight;
+
+        const actualPoints = product.actual.map((value, index) => ({
+            x: x(index),
+            y: y(value),
+            value
+        }));
+
+        const futurePoints = product.future.map((value, index) => ({
+            x: x(index + 6),
+            y: y(value),
+            value
+        }));
+
+        const lowPoints = product.futureLow.map((value, index) => ({
+            x: x(index + 6),
+            y: y(value),
+            value
+        }));
+
+        const highPoints = product.futureHigh.map((value, index) => ({
+            x: x(index + 6),
+            y: y(value),
+            value
+        }));
+
+        const linePath = points =>
+            points.map((point, index) =>
+                `${index === 0 ? "M" : "L"} ` +
+                `${point.x.toFixed(1)} ${point.y.toFixed(1)}`
+            ).join(" ");
+
+        const actualPath = linePath(actualPoints);
+
+        const lastActual = actualPoints[actualPoints.length - 1];
+
+        const forecastPath = linePath([
+            lastActual,
+            ...futurePoints
+        ]);
+
+        const bandPath = [
+            `M ${lastActual.x} ${lastActual.y}`,
+            ...highPoints.map(point => `L ${point.x} ${point.y}`),
+            ...lowPoints.slice().reverse().map(
+                point => `L ${point.x} ${point.y}`
+            ),
+            `L ${lastActual.x} ${lastActual.y}`,
+            "Z"
+        ].join(" ");
+
+        const grid = Array.from({ length: 5 }, (_, index) => {
+            const value = maxValue - (maxValue * index) / 4;
+            const yPosition = top + (plotHeight * index) / 4;
+
+            return `
+                <line
+                    class="fd-chart-grid"
+                    x1="${left}"
+                    y1="${yPosition}"
+                    x2="${right}"
+                    y2="${yPosition}"
+                />
+
+                <text
+                    class="fd-chart-label"
+                    x="${left - 10}"
+                    y="${yPosition + 3.5}"
+                    text-anchor="end"
+                >${Math.round(value)}</text>
+            `;
+        }).join("");
+
+        const labels = [
+            "-5w", "-4w", "-3w", "-2w", "-1w",
+            "Today", "+1w", "+2w", "+3w", "+4w"
+        ].map((label, index) => `
+            <text
+                class="fd-chart-label"
+                x="${x(index)}"
+                y="${bottom + 22}"
+                text-anchor="middle"
+            >${label}</text>
+        `).join("");
+
+        const actualDots = actualPoints.map(point => `
+            <circle
+                class="fd-chart-point"
+                cx="${point.x}"
+                cy="${point.y}"
+                r="4"
+            >
+                <title>${point.value} simulated sales units</title>
+            </circle>
+        `).join("");
+
+        const forecastDots = futurePoints.map(point => `
+            <circle
+                class="fd-chart-future-point"
+                cx="${point.x}"
+                cy="${point.y}"
+                r="4"
+            >
+                <title>${point.value} simulated forecast units</title>
+            </circle>
+        `).join("");
+
+        chart.innerHTML = `
+            <svg
+                viewBox="0 0 ${width} ${height}"
+                role="img"
+                aria-label="Simulated past and future sales for ${esc(product.name)}"
+            >
+                <defs>
+                    <linearGradient
+                        id="fdBandGradient"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                    >
+                        <stop offset="0%"
+                              stop-color="#e86fa9"
+                              stop-opacity=".22" />
+
+                        <stop offset="100%"
+                              stop-color="#e86fa9"
+                              stop-opacity=".025" />
+                    </linearGradient>
+                </defs>
+
+                ${grid}
+
+                <path class="fd-chart-band" d="${bandPath}"></path>
+
+                <path class="fd-chart-actual" d="${actualPath}"></path>
+
+                <path class="fd-chart-forecast"
+                      d="${forecastPath}"></path>
+
+                <line class="fd-chart-divider"
+                      x1="${x(5.5)}"
+                      y1="${top}"
+                      x2="${x(5.5)}"
+                      y2="${bottom}"></line>
+
+                ${actualDots}
+                ${forecastDots}
+
+                <text
+                    class="fd-chart-future-label"
+                    x="${x(6) + 8}"
+                    y="${top + 12}"
+                >FORECAST →</text>
+
+                ${labels}
+            </svg>
         `;
+    }
+
+    /* =====================================================
+       UPDATE FORECAST CARDS
+       ===================================================== */
+
+    function updateForecastDisplay(product) {
+        if (!forecastModule) return;
+
+        const risk = getForecastRisk(product.risk);
+
+        const midpoint =
+            (product.demandMin + product.demandMax) / 2;
+
+        const excess = Math.max(
+            0,
+            Math.round(product.remaining - midpoint)
+        );
+
+        const comparisonMaximum = Math.max(
+            product.remaining,
+            midpoint,
+            1
+        );
+
+        $("fd-demand-value").textContent =
+            `${product.demandMin}–${product.demandMax} units`;
+
+        $("fd-stock-value").textContent =
+            `${formatNumber(product.remaining)} units`;
+
+        $("fd-stock-caption").textContent =
+            `${formatNumber(product.purchased)} purchased · ` +
+            `${formatNumber(product.sold)} sold`;
+
+        $("fd-risk-value").textContent =
+            `${product.risk}%`;
+
+        $("fd-risk-caption").textContent =
+            `${risk.label} · demo score`;
+
+        $("fd-excess-value").textContent =
+            `${formatNumber(excess)} units`;
+
+        $("fd-compare-stock").textContent =
+            `${formatNumber(product.remaining)} units`;
+
+        $("fd-compare-demand").textContent =
+            `${formatNumber(midpoint)} units`;
+
+        $("fd-stock-bar").style.width =
+            `${(product.remaining / comparisonMaximum) * 100}%`;
+
+        $("fd-demand-bar").style.width =
+            `${(midpoint / comparisonMaximum) * 100}%`;
+
+        const riskStrip = $("fd-risk-strip");
+
+        riskStrip.classList.remove("is-high", "is-medium", "is-low");
+        riskStrip.classList.add(risk.className);
+
+        $("fd-risk-strip-icon").textContent =
+            product.risk >= 70 ? "!" :
+            product.risk >= 40 ? "~" : "✓";
+
+        $("fd-risk-heading").textContent = risk.heading;
+        $("fd-risk-detail").textContent = product.insight;
+
+        $("fd-action-title").textContent = product.actionTitle;
+        $("fd-action-description").textContent = product.action;
+
+        $("fd-chart-summary").textContent =
+            `${product.name}: the solid purple line represents simulated ` +
+            "past sales; the dashed pink line represents simulated future demand.";
+
+        drawForecastChart(product);
+    }
+
+    /* =====================================================
+       RESET TIMELINE
+       ===================================================== */
+
+    function resetTimeline() {
+        timelineSteps.forEach(step => {
+            step.classList.remove("is-active", "is-complete");
+        });
+
+        $("fd-timeline-status").textContent = "Preparing demo…";
+        $("fd-status-dot").classList.add("is-running");
+
+        $("fd-progress-label").textContent = "0%";
+        $("fd-progress-fill").style.width = "0%";
+
+        progressTrack.setAttribute("aria-valuenow", "0");
+
+        $("fd-stage-description").textContent =
+            "Starting the simulated forecasting workflow.";
+
+        $("fd-stage-counter").textContent =
+            `0 / ${timelineSteps.length} stages complete`;
+
+        timeline.style.setProperty("--fd-line-progress", "0%");
+        timeline.style.setProperty("--fd-mobile-line-progress", "0px");
+    }
+
+    /* =====================================================
+       ANIMATE FORECAST TIMELINE
+       ===================================================== */
+
+    async function runForecast() {
+        if (!forecastModule || !productSelect || !runButton || !timeline) {
+            return;
+        }
+
+        const runId = ++forecastRunId;
+        const product = getSelectedForecast();
+
+        const stageNames = [
+            "Collecting inventory data…",
+            "Analyzing sales movement…",
+            "Estimating future demand…",
+            "Evaluating dead-stock risk…",
+            "Generating recommendation…"
+        ];
+
+        const stageDescriptions = [
+            `Loading the simulated stock details for ${product.name}: ${product.remaining} units remain.`,
+            `Reviewing six illustrative weekly sales values for ${product.name}.`,
+            `Showing a simulated 30-day demand range of ${product.demandMin}–${product.demandMax} units.`,
+            `Comparing remaining stock with the demo demand range and a simulated risk score of ${product.risk}%.`,
+            `Preparing the illustrative recommendation: ${product.actionTitle.toLowerCase()}.`
+        ];
+
+        runButton.disabled = true;
+        runButton.classList.add("is-running");
+        forecastModule.classList.add("is-processing");
+
+        $("fd-run-label").textContent = "Running…";
+
+        resetTimeline();
+
+        updateForecastDisplay(product);
+
+        for (let index = 0; index < timelineSteps.length; index++) {
+            if (runId !== forecastRunId) return;
+
+            timelineSteps.forEach((step, stepIndex) => {
+                step.classList.toggle("is-active", stepIndex === index);
+                step.classList.toggle("is-complete", stepIndex < index);
+            });
+
+            const progress = Math.round(
+                (index / Math.max(1, timelineSteps.length)) * 100
+            );
+
+            $("fd-timeline-status").textContent = stageNames[index];
+
+            $("fd-stage-description").textContent =
+                stageDescriptions[index];
+
+            $("fd-progress-label").textContent =
+                `${progress}%`;
+
+            $("fd-progress-fill").style.width =
+                `${progress}%`;
+
+            progressTrack.setAttribute(
+                "aria-valuenow",
+                String(progress)
+            );
+
+            $("fd-stage-counter").textContent =
+                `${index} / ${timelineSteps.length} stages complete`;
+
+            timeline.style.setProperty(
+                "--fd-line-progress",
+                `${(index / Math.max(1, timelineSteps.length - 1)) * 82}%`
+            );
+
+            const timelineRect = timeline.getBoundingClientRect();
+
+            const node = timelineSteps[index].querySelector(".fd-step-node");
+            const nodeRect = node.getBoundingClientRect();
+
+            const mobileProgress = Math.max(
+                0,
+                nodeRect.top + nodeRect.height / 2 -
+                    timelineRect.top - 18
+            );
+
+            timeline.style.setProperty(
+                "--fd-mobile-line-progress",
+                `${mobileProgress}px`
+            );
+
+            await wait(720);
+        }
+
+        if (runId !== forecastRunId) return;
+
+        timelineSteps.forEach(step => {
+            step.classList.remove("is-active");
+            step.classList.add("is-complete");
+        });
+
+        $("fd-timeline-status").textContent = "Demo forecast complete";
+        $("fd-status-dot").classList.remove("is-running");
+
+        $("fd-progress-label").textContent = "100%";
+        $("fd-progress-fill").style.width = "100%";
+
+        progressTrack.setAttribute("aria-valuenow", "100");
+
+        $("fd-stage-description").textContent =
+            `The demo workflow for ${product.name} is complete. ` +
+            "Validate all figures against real dated sales before making business decisions.";
+
+        $("fd-stage-counter").textContent =
+            `${timelineSteps.length} / ${timelineSteps.length} stages complete`;
+
+        timeline.style.setProperty("--fd-line-progress", "82%");
+
+        if (timelineSteps.length) {
+            const lastNode =
+                timelineSteps[timelineSteps.length - 1]
+                    .querySelector(".fd-step-node");
+
+            const timelineRect = timeline.getBoundingClientRect();
+            const nodeRect = lastNode.getBoundingClientRect();
+
+            timeline.style.setProperty(
+                "--fd-mobile-line-progress",
+                `${Math.max(
+                    0,
+                    nodeRect.top + nodeRect.height / 2 -
+                    timelineRect.top - 18
+                )}px`
+            );
+        }
+
+        runButton.classList.remove("is-running");
+        runButton.disabled = false;
+        $("fd-run-label").textContent = "Run again";
+
+        forecastModule.classList.remove("is-processing");
+    }
+
+    /* Start the demo timeline once when the page opens. */
+    if (forecastModule && productSelect && runButton && chart && timeline) {
+        productSelect.addEventListener("change", runForecast);
+        runButton.addEventListener("click", runForecast);
+
+        updateForecastDisplay(getSelectedForecast());
+        runForecast();
+    } else {
+        console.warn("Forecast demo HTML is incomplete.");
+    }
+
+    /* =====================================================
+       INVENTORY RECOMMENDATION ENGINE
+       ===================================================== */
+
+    if (!root || !empty) {
+        console.error("Recommendation HTML elements are missing.");
         return;
     }
 
-    /* =========================================
-       HELPERS
-    ========================================= */
+    if (!D || typeof D.getInventory !== "function") {
+        $("rec-data-title").textContent = "Inventory data unavailable";
 
-    const money = value => {
-        if (typeof D.money === "function") return D.money(value);
-        return `JOD ${Number(value || 0).toFixed(2)}`;
-    };
+        $("rec-data-description").textContent =
+            "Check seller-data.js and the saved inventory records.";
 
-    const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-    })[c]);
+        $("rec-data-badge").textContent = "LOAD ERROR";
 
-    const number = value => {
-        const n = Number(value);
-        return Number.isFinite(n) ? n : 0;
-    };
+        root.innerHTML = `
+            <div class="rec-empty">
+                <h3>Inventory data unavailable</h3>
+                <p>Refresh the page after checking seller-data.js.</p>
+            </div>
+        `;
+
+        $("metric-products").textContent = "—";
+        $("metric-attention").textContent = "—";
+        $("metric-units").textContent = "—";
+        $("metric-capital").textContent = "—";
+
+        $("rec-count").textContent = "0 products";
+        empty.hidden = true;
+        return;
+    }
+
+    /* =====================================================
+       INVENTORY DATA HELPERS
+       ===================================================== */
 
     function getRemaining(product) {
         return Math.max(
             0,
             number(product.purchased ?? product.quantity) -
-            number(product.sold)
+                number(product.sold)
         );
     }
 
@@ -84,15 +680,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /*
-     * Optional dated history format:
-     *
-     * product.salesHistory = [
-     *   { date: "2026-09-01", quantity: 5 },
-     *   { date: "2026-09-14", quantity: 3 }
-     * ]
-     *
-     * Also supports salesRecords or history arrays.
-     */
+      Optional sales-history format:
+      product.salesHistory = [
+        { date: "2026-09-01", quantity: 5 },
+        { date: "2026-09-14", quantity: 3 }
+      ]
+
+      Aliases supported: salesRecords or history.
+    */
 
     function getDatedSales(product) {
         const records =
@@ -170,9 +765,9 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     }
 
-    /* =========================================
-       BUILD DATA-BASED PRODUCT INDICATORS
-    ========================================= */
+    /* =====================================================
+       PRODUCT ANALYSIS
+       ===================================================== */
 
     function analyzeProduct(product) {
         const purchased = Math.max(
@@ -198,10 +793,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ? Math.min(100, (sold / purchased) * 100)
             : 0;
 
-        /*
-         * This velocity uses aggregate units sold divided by
-         * recorded holding age. It is not a recent sales trend.
-         */
+        /* Aggregate historical average, not a recent trend. */
         const dailyVelocity = days > 0 ? sold / days : 0;
 
         const daysCover = dailyVelocity > 0
@@ -216,7 +808,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const datedHistory = getDatedSales(product);
 
-        /* Calculate an explainable stock-risk score. */
+        /* Explainable rule-based stock risk score. */
         let risk = 0;
 
         if (days >= 60) risk += 32;
@@ -263,17 +855,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (remaining === 0) {
             actionTitle = "Review replenishment";
+
             recommendation =
                 "No units remain. Review recent demand and supplier lead time before deciding whether to reorder.";
+
             reason = "Current recorded stock is depleted.";
-        } else if (
-            days >= 45 &&
-            sellThrough < 40
-        ) {
+        } else if (days >= 45 && sellThrough < 40) {
             actionType = "marketplace";
             actionTitle = "List surplus stock";
+
             recommendation =
                 "Consider listing part of the remaining stock on the marketplace to reach buyers beyond your store.";
+
             reason =
                 `Only ${Math.round(sellThrough)}% of the recorded purchase has sold after ${days} days.`;
         } else if (
@@ -283,53 +876,55 @@ document.addEventListener("DOMContentLoaded", () => {
         ) {
             actionType = "discount";
             actionTitle = "Evaluate a controlled discount";
+
             recommendation =
                 "Simulate a small markdown and review the remaining gross margin before changing the actual selling price.";
+
             reason =
-                `Sales have reached ${Math.round(sellThrough)}% of the purchase, and the product has an estimated gross margin of ${marginPct.toFixed(1)}% at its current price.`;
+                `Sales have reached ${Math.round(sellThrough)}% of the purchase, and estimated gross margin is ${marginPct.toFixed(1)}%.`;
         } else if (
             days >= 35 &&
             (sellThrough < 50 || daysCover > 45)
         ) {
             actionType = "branch";
             actionTitle = "Review transfer options";
+
             recommendation =
-                "Compare actual sales and available stock by branch. Transfer only if another branch has evidence of stronger demand.";
+                "Compare actual sales and available stock by branch. Transfer only if another branch shows stronger demand.";
+
             reason =
-                "Stock age or estimated remaining coverage suggests comparing other sales channels before applying a markdown.";
+                "Stock age or estimated coverage suggests comparing other sales channels before applying a markdown.";
         } else if (priority === "high" || priority === "medium") {
             actionType = marginPct >= 15 ? "discount" : "marketplace";
+
             actionTitle = marginPct >= 15
                 ? "Review pricing options"
                 : "Consider listing surplus";
+
             recommendation = marginPct >= 15
-                ? "Compare a discounted-price scenario against current gross margin before deciding."
+                ? "Compare a discounted-price scenario against the current gross margin before deciding."
                 : "Since price reductions may leave little margin, consider a marketplace listing or bundle instead.";
+
             reason =
-                `Remaining stock is ${remaining} units and the recorded holding age is ${days} days.`;
-        } else if (
-            sellThrough >= 70 &&
-            days < 30
-        ) {
+                `Remaining stock is ${remaining} units and recorded holding age is ${days} days.`;
+        } else if (sellThrough >= 70 && days < 30) {
             actionType = "monitor";
             actionTitle = "Keep monitoring demand";
+
             recommendation =
-                "Sell-through appears strong against this purchase. Maintain visibility and review replenishment against actual sales.";
+                "Sell-through looks strong for this purchase. Monitor sales and check replenishment against actual demand.";
+
             reason =
                 `${Math.round(sellThrough)}% of the recorded purchase has sold within ${days} days.`;
         } else {
             actionType = "monitor";
             actionTitle = "Continue monitoring";
+
             recommendation =
-                "The available data does not indicate an immediate high-priority action. Review stock and sales again as new records come in.";
+                "Available data does not indicate an immediate high-priority action. Review stock and sales as new records arrive.";
+
             reason =
                 `The product has ${remaining} units remaining and ${days} recorded holding days.`;
-        }
-
-        let trendLabel = "No dated sales history";
-
-        if (datedHistory) {
-            trendLabel = datedHistory.trend;
         }
 
         return {
@@ -361,62 +956,19 @@ document.addEventListener("DOMContentLoaded", () => {
             reason,
 
             datedHistory,
-            trendLabel,
             raw: product
         };
     }
 
-    /* =========================================
-       HUMAN-READABLE DATA EVIDENCE
-    ========================================= */
-
-    function getEvidenceText(product) {
-        const soldText =
-            `${product.sold} of ${product.purchased} units sold`;
-
-        const ageText = product.days > 0
-            ? `Recorded age: ${product.days} days`
-            : "Holding age not recorded";
-
-        let coverageText;
-
-        if (product.dailyVelocity > 0) {
-            coverageText =
-                `Approx. ${Math.round(product.daysCover)} days of stock at the recorded average pace`;
-        } else {
-            coverageText =
-                "Coverage cannot be estimated because recorded sales are zero";
-        }
-
-        return {
-            soldText,
-            ageText,
-            coverageText
-        };
-    }
-
-    function priorityLabel(priority) {
-        return {
-            high: "High priority",
-            medium: "Needs attention",
-            low: "Monitor"
-        }[priority] || "Monitor";
-    }
-
-    function formatDays(value) {
-        return Number.isFinite(value)
-            ? `${Math.round(value)} days`
-            : "Not estimable";
-    }
-
-    /* =========================================
-       SUMMARY METRICS
-    ========================================= */
+    /* =====================================================
+       SUMMARY METRICS AND DATA NOTE
+       ===================================================== */
 
     function renderMetrics(allProducts, stockProducts) {
         const flagged = stockProducts.filter(
-            product => product.priority === "high" ||
-                       product.priority === "medium"
+            product =>
+                product.priority === "high" ||
+                product.priority === "medium"
         );
 
         const capitalAtRisk = flagged.reduce(
@@ -441,45 +993,65 @@ document.addEventListener("DOMContentLoaded", () => {
         $("metric-capital").textContent = money(capitalAtRisk);
     }
 
-    /* =========================================
-       DISPLAY DATA SOURCE TRANSPARENCY
-    ========================================= */
-
     function renderDataSource(allProducts) {
         const datedCount = allProducts.filter(
             product => product.datedHistory
         ).length;
 
-        const title = $("rec-data-title");
-        const description = $("rec-data-description");
-        const badge = $("rec-data-badge");
-
         if (datedCount > 0) {
-            title.textContent = "Historical sales records detected";
+            $("rec-data-title").textContent =
+                "Historical sales records detected";
 
-            description.textContent =
-                `${datedCount} product records include dated sales entries. ` +
-                "Recent and preceding 30-day activity can be compared where data exists. " +
-                "Other products use aggregate inventory totals.";
+            $("rec-data-description").textContent =
+                `${datedCount} product record(s) contain dated sales. ` +
+                "Where available, the page can compare recent and preceding 30-day activity. " +
+                "The Forecast module below still uses separate demo values.";
 
-            badge.textContent = "DATED HISTORY";
+            $("rec-data-badge").textContent = "DATED HISTORY";
         } else {
-            title.textContent = "Recommendations based on recorded inventory";
+            $("rec-data-title").textContent =
+                "Recommendations based on recorded inventory";
 
-            description.textContent =
-                "This data currently contains cumulative purchased/sold quantities and stock age. " +
-                "The page uses these figures to calculate risk; it will not invent monthly sales trends.";
+            $("rec-data-description").textContent =
+                "Your current inventory records contain cumulative quantities and stock age. " +
+                "The page calculates inventory risk without inventing monthly sales trends. " +
+                "The separate Forecast module uses labelled simulated data.";
 
-            badge.textContent = "AGGREGATE DATA";
+            $("rec-data-badge").textContent = "AGGREGATE DATA";
         }
     }
 
-    /* =========================================
-       RENDER PRODUCT CARDS
-    ========================================= */
+    function priorityLabel(priority) {
+        return {
+            high: "High priority",
+            medium: "Needs attention",
+            low: "Monitor"
+        }[priority] || "Monitor";
+    }
 
-    let analyzedProducts = [];
-    let selectedDiscountProduct = null;
+    function formatDays(value) {
+        return Number.isFinite(value)
+            ? `${Math.round(value)} days`
+            : "Not estimable";
+    }
+
+    function getEvidenceText(product) {
+        return {
+            soldText: `${product.sold} of ${product.purchased} units sold`,
+
+            ageText: product.days > 0
+                ? `Recorded age: ${product.days} days`
+                : "Holding age not recorded",
+
+            coverageText: product.dailyVelocity > 0
+                ? `Approximately ${Math.round(product.daysCover)} days of stock at the recorded average sales pace`
+                : "Coverage cannot be estimated because recorded sales are zero"
+        };
+    }
+
+    /* =====================================================
+       RENDER INVENTORY RECOMMENDATION CARDS
+       ===================================================== */
 
     function renderCards() {
         const query = $("rec-search").value.trim().toLowerCase();
@@ -518,6 +1090,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         root.innerHTML = filtered.map(product => {
             const evidence = getEvidenceText(product);
+
             const imageHTML = product.image
                 ? `<img src="${esc(product.image)}" alt="${esc(product.name)}" loading="lazy">`
                 : "📦";
@@ -527,11 +1100,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 Math.min(100, product.sellThrough)
             );
 
-            const salesHistoryHTML = product.datedHistory
+            const historyHTML = product.datedHistory
                 ? `
                     <div class="rec-evidence-item">
                         <span>Recent vs previous 30 days</span>
-                        <strong>${esc(product.trendLabel)}</strong>
+                        <strong>${esc(product.datedHistory.trend)}</strong>
                         <small>
                             Recent: ${product.datedHistory.recent} units ·
                             Previous: ${product.datedHistory.previous} units
@@ -552,7 +1125,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 <article class="rec-card priority-${product.priority}">
 
                     <div class="rec-card-head">
-
                         <div class="rec-product-image">
                             ${imageHTML}
                         </div>
@@ -581,7 +1153,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         </span>
 
                         <h4>${esc(product.actionTitle)}</h4>
-
                         <p>${esc(product.recommendation)}</p>
                     </div>
 
@@ -615,16 +1186,17 @@ document.addEventListener("DOMContentLoaded", () => {
                             <small>Uses cumulative sales divided by holding days</small>
                         </div>
 
-                        ${salesHistoryHTML}
+                        ${historyHTML}
 
                         <div class="rec-evidence-item">
                             <span>Recorded gross margin</span>
-                            <strong>${product.sellPrice > 0
-                                ? `${product.marginPct.toFixed(1)}%`
-                                : "Unavailable"}</strong>
+                            <strong>${
+                                product.sellPrice > 0
+                                    ? `${product.marginPct.toFixed(1)}%`
+                                    : "Unavailable"
+                            }</strong>
                             <small>Before operating costs and fees</small>
                         </div>
-
                     </div>
 
                     <div class="rec-sellthrough">
@@ -633,21 +1205,17 @@ document.addEventListener("DOMContentLoaded", () => {
                             <strong>${product.sellThrough.toFixed(1)}%</strong>
                         </div>
 
-                        <div
-                            class="rec-progress"
-                            role="progressbar"
-                            aria-label="Purchase sell-through"
-                            aria-valuemin="0"
-                            aria-valuemax="100"
-                            aria-valuenow="${Math.round(product.sellThrough)}">
-
+                        <div class="rec-progress"
+                             role="progressbar"
+                             aria-label="Purchase sell-through"
+                             aria-valuemin="0"
+                             aria-valuemax="100"
+                             aria-valuenow="${Math.round(product.sellThrough)}">
                             <span style="width:${sellThroughWidth}%"></span>
                         </div>
                     </div>
 
-                    <p class="rec-card-footnote">
-                        ${esc(product.reason)}
-                    </p>
+                    <p class="rec-card-footnote">${esc(product.reason)}</p>
 
                     <div class="rec-card-actions">
 
@@ -667,11 +1235,10 @@ document.addEventListener("DOMContentLoaded", () => {
                             Simulate discount
                         </button>
 
-                        <a
-                            class="rec-action-button"
-                            href="inventory.html">
+                        <a class="rec-action-button" href="inventory.html">
                             Review inventory
                         </a>
+
                     </div>
 
                 </article>
@@ -679,13 +1246,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }).join("");
     }
 
-    /* =========================================
-       MARKETPLACE DRAFT
-    ========================================= */
+    /* =====================================================
+       MARKETPLACE LISTING DRAFT
+       ===================================================== */
 
     function createMarketplaceDraft(product) {
         if (product.remaining <= 0) {
-            alert("No remaining stock is available to list.");
+            showMessage("No remaining stock is available to list.");
             return;
         }
 
@@ -716,24 +1283,28 @@ document.addEventListener("DOMContentLoaded", () => {
             window.location.href = "marketplace.html?newListing=1";
         } catch (error) {
             console.error("Could not prepare marketplace listing:", error);
-            alert("Could not prepare the listing. Please check browser storage.");
+            showMessage(
+                "Could not prepare the listing. Please check browser storage."
+            );
         }
     }
 
-    /* =========================================
+    /* =====================================================
        DISCOUNT SIMULATOR
-    ========================================= */
+       ===================================================== */
 
     function updateDiscountScenario() {
         if (!selectedDiscountProduct) return;
 
         const product = selectedDiscountProduct;
         const rate = number($("discount-rate").value);
+
         const currentPrice = product.sellPrice;
         const cost = product.unitCost;
 
         const newPrice = currentPrice * (1 - rate / 100);
         const profit = newPrice - cost;
+
         const margin = newPrice > 0
             ? (profit / newPrice) * 100
             : -Infinity;
@@ -743,23 +1314,28 @@ document.addEventListener("DOMContentLoaded", () => {
         $("discount-profit").textContent = money(profit);
 
         $("discount-margin").textContent =
-            Number.isFinite(margin) ? `${margin.toFixed(1)}%` : "Unavailable";
+            Number.isFinite(margin)
+                ? `${margin.toFixed(1)}%`
+                : "Unavailable";
 
         const warning = $("discount-warning");
 
         if (newPrice < cost) {
             warning.textContent =
                 "Warning: this price is below recorded unit cost and would create a gross loss per unit before other costs.";
+
             warning.style.background = "#fff0f2";
             warning.style.color = "#b52f48";
         } else if (margin < 10) {
             warning.textContent =
                 "Caution: the remaining gross margin is below 10%. Review fees and operating costs before applying this discount.";
+
             warning.style.background = "#fff5e5";
             warning.style.color = "#916019";
         } else {
             warning.textContent =
-                "Scenario only. This calculates the price and gross margin; it does not predict how many extra units the discount will sell.";
+                "Scenario only. This calculates price and gross margin; it does not predict how many extra units a discount will sell.";
+
             warning.style.background = "#f7f4ff";
             warning.style.color = "#66548f";
         }
@@ -767,7 +1343,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function openDiscountSimulator(product) {
         if (product.sellPrice <= 0) {
-            alert("A valid selling price is needed to simulate a discount.");
+            showMessage("A valid selling price is needed to simulate a discount.");
             return;
         }
 
@@ -787,32 +1363,33 @@ document.addEventListener("DOMContentLoaded", () => {
         selectedDiscountProduct = null;
     }
 
-    /* =========================================
-       EVENT DELEGATION FOR CARD ACTIONS
-    ========================================= */
+    /* =====================================================
+       RECOMMENDATION CARD BUTTONS
+       ===================================================== */
 
-    root.addEventListener("click", event => {
-        const button = event.target.closest("[data-action]");
+    if (root) {
+        root.addEventListener("click", event => {
+            const button = event.target.closest("[data-action]");
+            if (!button) return;
 
-        if (!button) return;
+            const product = analyzedProducts.find(
+                item => String(item.id) === button.dataset.id
+            );
 
-        const product = analyzedProducts.find(
-            item => String(item.id) === button.dataset.id
-        );
+            if (!product) {
+                showMessage("The product was not found in inventory.");
+                return;
+            }
 
-        if (!product) {
-            alert("Product was not found in the current inventory.");
-            return;
-        }
+            if (button.dataset.action === "marketplace") {
+                createMarketplaceDraft(product);
+            }
 
-        if (button.dataset.action === "marketplace") {
-            createMarketplaceDraft(product);
-        }
-
-        if (button.dataset.action === "discount") {
-            openDiscountSimulator(product);
-        }
-    });
+            if (button.dataset.action === "discount") {
+                openDiscountSimulator(product);
+            }
+        });
+    }
 
     $("discount-rate").addEventListener(
         "change",
@@ -832,9 +1409,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    /* =========================================
+    /* =====================================================
        SEARCH AND FILTERS
-    ========================================= */
+       ===================================================== */
 
     $("rec-search").addEventListener("input", renderCards);
     $("rec-priority").addEventListener("change", renderCards);
@@ -848,13 +1425,11 @@ document.addEventListener("DOMContentLoaded", () => {
         renderCards();
     });
 
-    /* =========================================
-       INITIAL DATA LOAD
-    ========================================= */
+    /* =====================================================
+       INITIALIZE INVENTORY DATA
+       ===================================================== */
 
     function initialize() {
-        let inventory;
-
         try {
             inventory = D.getInventory();
 
@@ -865,6 +1440,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Inventory loading failed:", error);
 
             $("rec-data-title").textContent = "Could not load inventory";
+
             $("rec-data-description").textContent =
                 "Check seller-data.js and your saved inventory data.";
 
@@ -873,7 +1449,7 @@ document.addEventListener("DOMContentLoaded", () => {
             root.innerHTML = `
                 <div class="rec-empty">
                     <h3>Inventory data unavailable</h3>
-                    <p>Refresh the page after checking seller-data.js.</p>
+                    <p>Refresh after checking seller-data.js.</p>
                 </div>
             `;
 
@@ -882,17 +1458,23 @@ document.addEventListener("DOMContentLoaded", () => {
             $("metric-units").textContent = "—";
             $("metric-capital").textContent = "—";
 
+            $("rec-count").textContent = "0 products";
             empty.hidden = true;
             return;
         }
 
         const analyzed = inventory.map(analyzeProduct);
 
-        /* Only products with available stock belong in surplus actions. */
-        const inStock = analyzed.filter(product => product.remaining > 0);
+        const inStock = analyzed.filter(
+            product => product.remaining > 0
+        );
 
         inStock.sort((a, b) => {
-            const priorityOrder = { high: 3, medium: 2, low: 1 };
+            const priorityOrder = {
+                high: 3,
+                medium: 2,
+                low: 1
+            };
 
             return (
                 priorityOrder[b.priority] - priorityOrder[a.priority] ||

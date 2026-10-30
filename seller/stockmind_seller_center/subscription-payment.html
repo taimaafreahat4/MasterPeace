@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Stock Mind | Subscription Checkout</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../components/navbar.css">
+  <link rel="stylesheet" href="../../components/footer.css">
+  <link rel="stylesheet" href="subscription-payment.css">
+</head>
+<body>
+  <div id="navbar-container"></div>
+  <main class="pay-page">
+    <div class="pay-heading"><span class="eyebrow">STOCK MIND PREMIUM</span><h1>Complete your subscription</h1><p>Review your plan and continue to secure payment.</p></div>
+    <div class="pay-grid">
+      <section class="pay-card" aria-label="Subscription checkout">
+        <div class="section-heading"><span class="step">1</span><h2>Choose access period</h2></div>
+        <div class="period-grid" id="period-options"></div>
+        <div class="section-heading payment-heading"><span class="step">2</span><h2>Payment method</h2></div>
+        <div class="method"><span class="method-icon">▣</span><div><strong>Credit or debit card</strong><small>Secure payment through an approved gateway</small></div><span class="methods">VISA · MC</span></div>
+        <div class="notice"><strong>Card security</strong><p>Real card details must be entered only on the payment provider's secure checkout page. This website does not collect or store card numbers or CVC.</p></div>
+        <button id="continue-pay" class="primary" type="button">Continue to secure payment →</button>
+        <button id="demo-pay" class="secondary" type="button">Complete demo checkout (test only)</button>
+        <p class="status" id="pay-status" role="status" aria-live="polite"></p>
+        <p class="fine-print">The demo option activates a local test subscription without charging money. Real payment requires an integrated backend and payment provider.</p>
+      </section>
+      <aside class="pay-card summary"><h2>Order summary</h2>
+        <div class="service"><span class="service-icon">✦</span><div><strong>Stock Mind Premium</strong><small>AI buying analysis & recommendations</small></div></div>
+        <div class="summary-line"><span>Access period</span><strong id="selected-period">—</strong></div>
+        <div class="summary-line"><span>Service price</span><strong id="service-price">—</strong></div>
+        <div class="summary-total"><strong>Total due</strong><strong id="total-due">—</strong></div>
+        <a href="subscription.html" class="back">← Back to plans</a>
+      </aside>
+    </div>
+  </main>
+  <div id="footer-container"></div>
+  <script src="../../components/navbar.js"></script>
+  <script src="../../components/load-navbar.js"></script>
+  <script>if(typeof loadStockMindNavbar === 'function') loadStockMindNavbar('navbar-container','../../components/');</script>
+  <script src="subscription-payment.js"></script>
+</body>
+</html>
