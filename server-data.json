@@ -1,0 +1,88 @@
+{
+  "users": [
+    {
+      "id": "seller@stockmind.com",
+      "email": "seller@stockmind.com",
+      "name": "Seller One",
+      "role": "Seller",
+      "salt": "220ab6c4866b29711025ed6129812e5d",
+      "hash": "a1e2c6b9cf451d8d3efe0a83b3fd0064c7d8164da36981fbd5455420dca04d62"
+    },
+    {
+      "id": "seller2@stockmind.com",
+      "email": "seller2@stockmind.com",
+      "name": "Seller Two",
+      "role": "Seller",
+      "salt": "ac7a963e7a1a0ab8f80bb372daabb650",
+      "hash": "76f60bb695760fbac1699daea210da8b96bda7d1a6d8bf4dc1e885a11b956962"
+    },
+    {
+      "id": "buyer@stockmind.com",
+      "email": "buyer@stockmind.com",
+      "name": "Default Buyer",
+      "role": "Buyer",
+      "salt": "6367e862546dbddbf0cd85e94703a75b",
+      "hash": "7db8e2f0f2e1643cd1245bbe8695ca28b0765da4fbecf51466a4acb9d16c4def"
+    }
+  ],
+  "listings": [
+    {
+      "id": "19223eea-256b-48ca-9288-ca144f05416a",
+      "ownerId": "seller@stockmind.com",
+      "seller": "Seller One",
+      "sellerListed": true,
+      "name": "bootle",
+      "category": "Home & Living",
+      "condition": "New",
+      "quantity": 77,
+      "minOrder": 77,
+      "sellingMethod": "whole_lot",
+      "price": 5,
+      "lotPrice": 385,
+      "description": "",
+      "location": "ajloun, Jordan",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZL0BU22koehhhcJ21mS5tDaY9xCD51I5550XALsPyHA&s=10",
+      "status": "available",
+      "dateAdded": "2026-10-31T11:19:11.575Z"
+    },
+    {
+      "id": "d2bea970-a9e8-488a-a7cf-5c5ce5f978c1",
+      "ownerId": "seller2@stockmind.com",
+      "seller": "Seller Two",
+      "sellerListed": true,
+      "name": "pincle",
+      "category": "Bags & Accessories",
+      "condition": "New",
+      "quantity": 33,
+      "minOrder": 33,
+      "sellingMethod": "whole_lot",
+      "price": 0.015152,
+      "lotPrice": 0.5,
+      "description": "this is a beuatiful pincle",
+      "location": "irbid, Jordan",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdpe8j75B2z4LdVWfWM4Fp-DORRwn0gVeUt97sjWCN0g&s=10",
+      "status": "available",
+      "dateAdded": "2026-10-31T10:50:45.841Z"
+    },
+    {
+      "id": "cd5ef750-bbf3-41f9-a9e0-49e246bb1aba",
+      "ownerId": "seller@stockmind.com",
+      "seller": "Seller One",
+      "sellerListed": true,
+      "name": "bag",
+      "category": "Bags & Accessories",
+      "condition": "New",
+      "quantity": 70,
+      "minOrder": 1,
+      "sellingMethod": "regular",
+      "price": 12,
+      "lotPrice": null,
+      "description": "",
+      "location": "Amman, Jordan",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOtF7LWMLjutPt-UfWrUMMTuRG02nRtiXwjPizZ0eWkg&s=10",
+      "status": "available",
+      "dateAdded": "2026-10-31T10:44:14.529Z"
+    }
+  ],
+  "orders": []
+}

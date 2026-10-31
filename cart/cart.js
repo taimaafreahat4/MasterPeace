@@ -3,10 +3,9 @@
     "use strict";
 
     const CART_KEY = "stockMindCart";
-    const USER_KEY = "stockMindUser";
-    const RETURN_KEY = "stockMindReturnTo";
+    const COMMISSION_RATE = 0.05;
 
-    const $ = (selector) => document.querySelector(selector);
+    const $ = selector => document.querySelector(selector);
 
     const itemsElement = $("#cartItems");
     const emptyElement = $("#emptyCart");
@@ -16,33 +15,75 @@
     const shippingElement = $("#shipping");
     const totalElement = $("#total");
     const checkoutButton = $("#checkoutButton");
-    const browseButton = $("#browseProducts");
 
     if (!itemsElement || !emptyElement || !checkoutButton) {
-        console.error("Cart HTML is missing required elements.");
+        console.error("Cart HTML elements are missing.");
         return;
+    }
+
+    function money(value) {
+        return `JOD ${Number(value || 0).toFixed(2)}`;
+    }
+
+    function element(tag, className = "", text) {
+        const node = document.createElement(tag);
+        if (className) node.className = className;
+        if (text !== undefined) node.textContent = text;
+        return node;
     }
 
     function getCart() {
         try {
-            const value = sessionStorage.getItem(CART_KEY);
-            const cart = value ? JSON.parse(value) : [];
+            const data = JSON.parse(
+                sessionStorage.getItem(CART_KEY) || "[]"
+            );
 
-            if (!Array.isArray(cart)) return [];
+            if (!Array.isArray(data)) return [];
 
-            return cart.filter(item => item && item.id != null && typeof item.name === "string" &&
-                Number.isFinite(Number(item.price)) && Number(item.price) >= 0)
-                .map(item => {
-                    const lot = item.sellingMethod === "whole_lot";
-                    const minimum = lot ? 1 : Math.max(1, Math.floor(Number(item.minimum) || 1));
-                    const maxQuantity = lot ? 1 : (Number.isFinite(Number(item.maxQuantity)) && Number(item.maxQuantity) > 0
-                        ? Math.floor(Number(item.maxQuantity)) : null);
-                    const quantity = lot ? 1 : Math.max(minimum, Math.floor(Number(item.quantity) || minimum));
-                    return {...item, id: String(item.id), price: Number(item.price), minimum,
-                        maxQuantity, quantity: maxQuantity ? Math.min(quantity, maxQuantity) : quantity};
-                });
+            return data.filter(item =>
+                item &&
+                item.id != null &&
+                typeof item.name === "string" &&
+                Number.isFinite(Number(item.price)) &&
+                Number(item.price) >= 0
+            ).map(item => {
+                const lot = item.sellingMethod === "whole_lot";
+                const minimum = lot
+                    ? 1
+                    : Math.max(1, Math.floor(Number(item.minimum) || 1));
+
+                const maxQuantity = lot
+                    ? 1
+                    : Number(item.maxQuantity) > 0
+                      ? Math.floor(Number(item.maxQuantity))
+                      : null;
+
+                let quantity = lot
+                    ? 1
+                    : Math.max(
+                        minimum,
+                        Math.floor(Number(item.quantity) || minimum)
+                    );
+
+                if (maxQuantity !== null) {
+                    quantity = Math.min(quantity, maxQuantity);
+                }
+
+                return {
+                    ...item,
+                    id: String(item.id),
+                    price: Number(item.price),
+                    sellingMethod: lot ? "whole_lot" : "regular",
+                    lotUnits: lot
+                        ? Math.max(1, Math.floor(Number(item.lotUnits) || 1))
+                        : null,
+                    minimum,
+                    maxQuantity,
+                    quantity
+                };
+            });
         } catch (error) {
-            console.error("Unable to read cart:", error);
+            console.error("Cart reading error:", error);
             return [];
         }
     }
@@ -52,17 +93,11 @@
         window.dispatchEvent(new Event("cartUpdated"));
     }
 
-    function money(value) {
-        return `JOD ${Number(value || 0).toFixed(2)}`;
-    }
-
-    function createElement(tag, className, text) {
-        const node = document.createElement(tag);
-
-        if (className) node.className = className;
-        if (text !== undefined) node.textContent = text;
-
-        return node;
+    function addInfoRow(container, label, value) {
+        const row = element("span");
+        const strong = element("strong", "", value);
+        row.append(label + " ", strong);
+        container.append(row);
     }
 
     function renderCart() {
@@ -70,39 +105,37 @@
 
         itemsElement.replaceChildren();
 
-        const isEmpty = cart.length === 0;
+        const empty = cart.length === 0;
 
-        emptyElement.classList.toggle("hidden", !isEmpty);
-        itemsElement.classList.toggle("hidden", isEmpty);
-        checkoutButton.disabled = isEmpty;
+        emptyElement.classList.toggle("hidden", !empty);
+        itemsElement.classList.toggle("hidden", empty);
+        checkoutButton.disabled = empty;
 
         if (countElement) {
-    countElement.textContent =
-        `${cart.length} ${cart.length === 1 ? "product" : "products"}`;
-}
-
-        if (isEmpty) {
-
-    subtotalElement.textContent = money(0);
-
-    if (commissionElement) {
-        commissionElement.textContent = money(0);
-    }
-
-    shippingElement.textContent = "Calculated at checkout";
-
-    totalElement.textContent = money(0);
-
-    return;
-}
+            countElement.textContent =
+                `${cart.length} ${cart.length === 1 ? "product" : "products"}`;
+        }
 
         let subtotal = 0;
 
-        cart.forEach((product) => {
-            subtotal += product.price * product.quantity;
+        cart.forEach(product => {
+            const lot = product.sellingMethod === "whole_lot";
 
-            const card = createElement("article", "cart-item");
-            const imageBox = createElement("div", "cart-item-image");
+            // For whole lots, price is the COMPLETE lot price.
+            const lineTotal = product.price * product.quantity;
+
+            const units = lot ? product.lotUnits : product.quantity;
+
+            const unitPrice = lot
+                ? product.price / product.lotUnits
+                : product.price;
+
+            subtotal += lineTotal;
+
+            const card = element("article", "cart-item");
+
+            // Product image
+            const imageBox = element("div", "cart-item-image");
 
             if (product.image) {
                 const image = document.createElement("img");
@@ -110,180 +143,166 @@
                 image.alt = product.name;
                 image.loading = "lazy";
 
-                image.addEventListener("error", () => {
+                image.onerror = () => {
                     image.remove();
                     imageBox.append(
-                        createElement("span", "image-fallback", "🛍️")
+                        element("span", "image-fallback", "🛍️")
                     );
-                }, { once: true });
+                };
 
                 imageBox.append(image);
             } else {
                 imageBox.append(
-                    createElement("span", "image-fallback", "🛍️")
+                    element("span", "image-fallback", "🛍️")
                 );
             }
 
-            const info = createElement("div", "cart-item-info");
+            // Product information
+            const info = element("div", "cart-item-info");
+
             info.append(
-                createElement("h3", "cart-item-name", product.name),
-                createElement(
+                element("h3", "cart-item-name", product.name),
+                element(
                     "p",
                     "cart-item-seller",
-                    product.seller || "Stock Mind Supplier"
+                    product.seller || "Stock Mind Seller"
                 ),
-                createElement(
+                element(
                     "span",
                     "cart-item-category",
-                    product.categoryName || "Wholesale"
-                ),
-                createElement(
-                    "p",
-                    "cart-minimum",
-                    product.sellingMethod === "whole_lot"
-                        ? `WHOLE LOT · ${product.lotUnits || 1} pieces sold together`
-                        : `Minimum order: ${product.minimum} units`
-                ),
-                createElement(
-    "p",
-    "cart-commission",
-    "Platform Commission: 5%"
-),
-            );
-
-            const right = createElement("div", "cart-item-right");
-            const priceBox = createElement("div", "cart-unit-price");
-            priceBox.append(
-                createElement("span", "", product.sellingMethod === "whole_lot" ? "Complete lot price" : "Unit price"),
-                createElement("strong", "", money(product.price))
-            );
-
-            const quantityBox = createElement("div", "cart-quantity");
-
-            const minus = createElement("button", "quantity-button", "−");
-            minus.type = "button";
-            minus.disabled = product.sellingMethod === "whole_lot" || product.quantity <= product.minimum;
-            minus.setAttribute("aria-label", `Decrease ${product.name}`);
-            minus.addEventListener("click", () => {
-                changeQuantity(product.id, -1);
-            });
-
-            const quantity = createElement(
-                "span",
-                "quantity-value",
-                String(product.quantity)
-            );
-
-            const plus = createElement("button", "quantity-button", "+");
-            plus.type = "button";
-            plus.disabled = product.sellingMethod === "whole_lot" || (product.maxQuantity != null && product.quantity >= product.maxQuantity);
-            plus.setAttribute("aria-label", `Increase ${product.name}`);
-            plus.addEventListener("click", () => {
-                changeQuantity(product.id, 1);
-            });
-
-            if (product.sellingMethod === "whole_lot") {
-                quantityBox.append(createElement("span", "quantity-value", "1 complete lot · locked"));
-            } else {
-                quantityBox.append(minus, quantity, plus);
-            }
-
-            const actions = createElement("div", "item-actions");
-            actions.append(
-                createElement(
-                    "strong",
-                    "line-total",
-                    money(product.price * product.quantity)
+                    product.categoryName || "Marketplace"
                 )
             );
 
-            const remove = createElement("button", "remove-button", "Remove");
-            remove.type = "button";
-            remove.addEventListener("click", () => removeProduct(product.id));
+            if (lot) {
+                info.append(
+                    element("div", "lot-label", "WHOLE LOT · SOLD TOGETHER")
+                );
+            }
 
-            actions.append(remove);
-            right.append(priceBox, quantityBox, actions);
+            const details = element("div", "cart-product-details");
+
+            addInfoRow(details, "Pieces:", String(units));
+            addInfoRow(details, "Price / piece:", money(unitPrice));
+
+            info.append(details);
+
+            // Right column
+            const right = element("div", "cart-item-right");
+
+            right.append(
+                element("span", "item-price-label", "Products subtotal"),
+                element("strong", "item-price", money(lineTotal))
+            );
+
+            if (lot) {
+                right.append(
+                    element(
+                        "div",
+                        "locked-lot",
+                        "Complete lot · fixed quantity"
+                    )
+                );
+            } else {
+                const quantityBox = element("div", "cart-quantity");
+
+                const minus = element("button", "quantity-button", "−");
+                minus.type = "button";
+                minus.disabled = product.quantity <= product.minimum;
+                minus.onclick = () => changeQuantity(product.id, -1);
+
+                const quantity = element(
+                    "span",
+                    "quantity-value",
+                    String(product.quantity)
+                );
+
+                const plus = element("button", "quantity-button", "+");
+                plus.type = "button";
+                plus.disabled =
+                    product.maxQuantity !== null &&
+                    product.quantity >= product.maxQuantity;
+
+                plus.onclick = () => changeQuantity(product.id, 1);
+
+                quantityBox.append(minus, quantity, plus);
+                right.append(quantityBox);
+            }
+
+            const remove = element(
+                "button",
+                "remove-button",
+                "Remove item"
+            );
+
+            remove.type = "button";
+            remove.onclick = () => removeProduct(product.id);
+
+            right.append(remove);
             card.append(imageBox, info, right);
             itemsElement.append(card);
         });
 
-       const commission = subtotal * 0.05;
+        const commission = Math.round(subtotal * COMMISSION_RATE * 100) / 100;
+        const total = subtotal + commission;
 
-
-subtotalElement.textContent = money(subtotal);
-
-
-if (commissionElement) {
-    commissionElement.textContent = money(commission);
-}
-
-
-shippingElement.textContent = "Calculated at checkout";
-
-
-// إذا بدك العمولة تنضاف على المجموع:
-totalElement.textContent = money(subtotal + commission);
+        subtotalElement.textContent = money(subtotal);
+        commissionElement.textContent = money(commission);
+        shippingElement.textContent = "Calculated at checkout";
+        totalElement.textContent = money(total);
     }
 
     function changeQuantity(productId, direction) {
         const cart = getCart();
-        const product = cart.find((item) => item.id === productId);
+        const item = cart.find(product => product.id === productId);
 
-        if (!product) return;
+        if (!item || item.sellingMethod === "whole_lot") return;
 
-        if (product.sellingMethod === "whole_lot") return;
-        product.quantity = Math.max(product.minimum, product.quantity + direction);
-        if (product.maxQuantity != null) product.quantity = Math.min(product.quantity, product.maxQuantity);
+        const nextQuantity = item.quantity + direction;
+
+        item.quantity = Math.max(item.minimum, nextQuantity);
+
+        if (item.maxQuantity !== null) {
+            item.quantity = Math.min(item.quantity, item.maxQuantity);
+        }
 
         saveCart(cart);
         renderCart();
     }
 
     function removeProduct(productId) {
-        const cart = getCart().filter((item) => item.id !== productId);
+        const cart = getCart().filter(item => item.id !== productId);
 
         saveCart(cart);
         renderCart();
     }
 
-    
-function isBuyerLoggedIn() {
-    try {
-        const rawUser = localStorage.getItem("stockMindUser");
-        if (!rawUser) return false;
+    checkoutButton.addEventListener("click", () => {
+        if (!getCart().length) return;
+        window.location.href = "../checkout/checkout.html";
+    });
 
-        const user = JSON.parse(rawUser);
+    async function loadFooter() {
+        const footer = $("#footer-container");
 
-        return (
-            user &&
-            user.loggedIn === true &&
-            String(user.role || "").toLowerCase() === "buyer"
-        );
-    } catch (error) {
-        console.error("Could not check login status:", error);
-        return false;
-    }
-}
+        if (!footer) return;
 
+        try {
+            const response = await fetch(
+                "../components/footer.html"
+            );
 
-checkoutButton.addEventListener("click", () => {
-    if (getCart().length === 0) return;
-
-    // Go directly to checkout without redirecting to login.
-    window.location.href = "../checkout/checkout.html";
-});
-
-
-
-
-    if (browseButton) {
-        browseButton.addEventListener("click", () => {
-            window.location.href = "../category/category.html";
-        });
+            if (response.ok) {
+                footer.innerHTML = await response.text();
+            }
+        } catch (error) {
+            console.warn("Footer loading failed:", error);
+        }
     }
 
-    // Update if the cart changes in this tab.
     window.addEventListener("pageshow", renderCart);
+    window.addEventListener("cartUpdated", renderCart);
 
     renderCart();
+    loadFooter();
 })();

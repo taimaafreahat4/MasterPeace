@@ -256,11 +256,12 @@ function setupNavbarLogout() {
     logoutButton.addEventListener("click", () => {
 
         /* بنمسح بيانات الدخول بس. الحساب المحفوظ والسلة والمفضلة بيضلوا */
-        ["stockMindUser", "user"].forEach(key => {
+        ["stockMindUser", "user", "stockMindServerToken"].forEach(key => {
             localStorage.removeItem(key);
             sessionStorage.removeItem(key);
         });
 
+        sessionStorage.removeItem("stockMindCart");
         window.location.href = NAVBAR_ROOT + "home/index.html";
     });
 }

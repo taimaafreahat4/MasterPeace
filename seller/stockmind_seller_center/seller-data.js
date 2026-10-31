@@ -14,18 +14,19 @@
     {id:"inv-3",name:"LED Bulbs",category:"Electronics",condition:"New",purchased:200,sold:110,unitCost:1.1,sellPrice:2,days:35,location:"Zarqa, Jordan",image:"https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=700&q=80"},
     {id:"inv-4",name:"Electric Fan",category:"Home & Living",condition:"New",purchased:90,sold:30,unitCost:8,sellPrice:12,days:48,location:"Amman, Jordan",image:"https://images.unsplash.com/photo-1581279797859-5f5a8d3c1b6d?auto=format&fit=crop&w=700&q=80"}
   ];
-  function read(key, fallback){try{const value=localStorage.getItem(key);return value?JSON.parse(value):fallback}catch{return fallback}}
-  function write(key, value){localStorage.setItem(key, JSON.stringify(value))}
-  function getListings(){
-    const marketplace=read(LISTINGS_KEY,null); const oldSeller=read("sellerProducts",[]);
-    let listings=Array.isArray(marketplace)?marketplace:null;
-    if(!listings){listings=sampleListings.slice();}
-    if(Array.isArray(oldSeller)) oldSeller.forEach(p=>{if(p && p.name && !listings.some(x=>x.id===p.id)) listings.unshift(normalizeSellerProduct(p));});
-    if(!localStorage.getItem(LISTINGS_KEY)) write(LISTINGS_KEY,listings);
-    return listings;
-  }
-  function normalizeSellerProduct(p){return {id:p.id||`seller-${Date.now()}`,name:p.name||"Untitled product",category:p.category||"Other",condition:p.condition||"New",quantity:Number(p.quantity)||1,price:Number(p.price)||0,minOrder:Math.max(1,Number(p.minOrder)||1),sellingMethod:p.sellingMethod==="whole_lot"?"whole_lot":"regular",lotPrice:p.sellingMethod==="whole_lot"?Number(p.lotPrice)||0:null,status:p.status||"available",sellerListed:Boolean(p.sellerListed),description:p.description||"",location:p.location||"Amman, Jordan",seller:p.seller||"Stock Mind Seller",image:p.image||"",dateAdded:p.dateAdded||new Date().toISOString()}}
-  function saveListing(product){const rows=getListings();const clean=normalizeSellerProduct(product);const i=rows.findIndex(x=>x.id===clean.id);if(i>=0)rows[i]=clean;else rows.unshift(clean);write(LISTINGS_KEY,rows);return clean}
-  function getInventory(){let rows=read(INVENTORY_KEY,null);if(!Array.isArray(rows)){rows=sampleInventory;write(INVENTORY_KEY,rows)}return rows}
-  window.StockMindSellerData={LISTINGS_KEY,INVENTORY_KEY,money,read,write,getListings,getInventory,saveListing,normalizeSellerProduct};
+  const currentUser = () => {try {return JSON.parse(localStorage.getItem("stockMindUser")||"null")}catch{return null}};
+  const owner = () => String(currentUser()?.email||"guest").toLowerCase();
+  const actualKey = key => key===INVENTORY_KEY ? key+"::"+owner() : key;
+  function read(key,fallback){try{const value=localStorage.getItem(actualKey(key));return value?JSON.parse(value):fallback}catch{return fallback}}
+  function write(key,value){localStorage.setItem(actualKey(key),JSON.stringify(value))}
+  const token=()=>localStorage.getItem("stockMindServerToken")||"";
+  async function api(url,opts={}){const r=await fetch(url,{...opts,headers:{"Content-Type":"application/json","Authorization":"Bearer "+token(),...(opts.headers||{})}});const j=await r.json();if(!r.ok)throw Error(j.error||"Request failed");return j;}
+  let remoteListings=[];
+  function getListings(){return remoteListings;}
+  async function refreshListings(){const result=await api('/api/listings');remoteListings=result.listings;return remoteListings;}
+  function normalizeSellerProduct(p){return {...p,sellingMethod:p.sellingMethod==="whole_lot"?"whole_lot":"regular"}}
+  async function saveListing(product){const response=await api('/api/listings',{method:'POST',body:JSON.stringify(product)});await refreshListings();return response.listing;}
+  async function removeListing(id){await api('/api/listings/'+encodeURIComponent(id),{method:'DELETE'});await refreshListings();}
+  function getInventory(){let rows=read(INVENTORY_KEY,null);if(!Array.isArray(rows)){rows=sampleInventory.map(x=>({...x}));write(INVENTORY_KEY,rows)}return rows}
+  window.StockMindSellerData={LISTINGS_KEY,INVENTORY_KEY,money,read,write,getListings,getInventory,saveListing,removeListing,refreshListings,api,currentUser,normalizeSellerProduct};
 })();

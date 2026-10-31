@@ -146,17 +146,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const isLot = product => product?.sellingMethod === "whole_lot";
     const stockOf = product => Math.max(0, Math.floor(Number(product?.quantity) || 0));
     const minOf = product => Math.max(1, Math.floor(Number(product?.minOrder) || 1));
-    const lotTotal = product => Number(product?.lotPrice) || (Number(product?.price) * stockOf(product));
+    const lotTotal = product => {
+        // For every NEW listing, product.price is the per-piece price.
+        // The complete lot is sold as one cart line for this total.
+        const unitPrice = Number(product?.price) || 0;
+        return Math.round(unitPrice * stockOf(product) * 100) / 100;
+    };
     let methodFilter = "all";
 
     function updateFormMethod() {
         const lot = $("m-method")?.value === "whole_lot";
-        $("m-price-label").textContent = lot ? "Total lot price (JOD) *" : "Price per unit (JOD) *";
+        $("m-price-label").textContent = lot ? "Price per piece (JOD) *" : "Price per unit (JOD) *";
         $("m-quantity-label").textContent = lot ? "Pieces included in this complete lot *" : "Available quantity *";
         $("min-order-field").hidden = lot;
         $("m-min").disabled = lot;
         $("method-help").textContent = lot
-            ? "The buyer purchases every piece together, at one total price."
+            ? "All pieces are sold together. Total lot price = price per piece × pieces included."
             : "The buyer chooses a quantity, respecting the minimum order.";
     }
     $("m-method")?.addEventListener("change", updateFormMethod);
@@ -186,6 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
             toast("This listing is unavailable.");
             return;
         }
+        if (product.ownerId === String(D.currentUser()?.email||"").toLowerCase()) {toast("You cannot buy your own listing.");return;}
         const id = String(product.id);
         const cart = readSharedCart();
         const existing = cart.find(item => String(item.id) === id);
@@ -240,8 +246,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 prefill.category || "Other"
             );
 
-            $("m-price").value = prefill.sellingMethod === "whole_lot"
-                ? (prefill.lotPrice ?? prefill.price ?? "") : (prefill.price ?? "");
+            $("m-price").value = prefill.price ?? "";
             $("m-quantity").value = prefill.quantity ?? 1;
             $("m-min").value = prefill.minOrder ?? 1;
             $("m-location").value =
@@ -391,7 +396,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
 
                         <p class="sm-muted">
-                            ${lot ? `${quantity} pieces · Sold together only` : `${quantity} units · Minimum order ${minOrder}`}
+                            ${lot ? `${quantity} pieces × ${money(price)} each · Sold together only` : `${quantity} units · Minimum order ${minOrder}`}
                         </p>
 
                         <p class="sm-muted">${description}</p>
@@ -401,8 +406,8 @@ document.addEventListener("DOMContentLoaded", () => {
                             <button
                                 class="sm-btn sm-btn-primary request-btn"
                                 type="button"
-                                data-id="${id}" ${reserved || quantity < 1 ? 'disabled' : ''}>
-                                ${reserved ? 'Reserved' : lot ? 'Add entire lot' : 'Add to cart'}
+                                data-id="${id}" ${reserved || quantity < 1 || product.ownerId === String(D.currentUser()?.email||"").toLowerCase() ? 'disabled' : ''}>
+                                ${reserved ? 'Reserved' : product.ownerId === String(D.currentUser()?.email||"").toLowerCase() ? 'Your listing' : lot ? 'Add entire lot' : 'Add to cart'}
                             </button>
 
                             <button
@@ -411,7 +416,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 data-id="${id}"
                                 title="Remove your listing"
                                 aria-label="Remove ${name}"
-                                ${product.sellerListed ? '' : 'hidden'}>
+                                ${product.ownerId === String(D.currentUser()?.email||"").toLowerCase() ? '' : 'hidden'}>
                                 ×
                             </button>
 
@@ -446,41 +451,15 @@ document.addEventListener("DOMContentLoaded", () => {
         /* Remove demo listing */
 
         grid.querySelectorAll(".remove-btn").forEach(button => {
-            button.addEventListener("click", () => {
-                try {
-                    const selected = getListings().find(item => String(item.id) === button.dataset.id);
-                    if (!selected?.sellerListed) {
-                        toast("Only your own demo listings can be removed.");
-                        return;
-                    }
-                    if (!confirm(`Remove ${selected.name} from the Marketplace?`)) return;
-                    const remaining = getListings().filter(
-                        item => String(item.id) !== button.dataset.id
-                    );
-
-                    if (typeof D.write !== "function" || !D.LISTINGS_KEY) {
-                        throw new Error(
-                            "Marketplace storage functions are unavailable."
-                        );
-                    }
-
-                    D.write(D.LISTINGS_KEY, remaining);
-                    const old = JSON.parse(localStorage.getItem("sellerProducts") || "[]");
-                    if (Array.isArray(old)) localStorage.setItem("sellerProducts", JSON.stringify(old.filter(item => String(item.id) !== button.dataset.id)));
-                    const remainingCart = readSharedCart().filter(item => String(item.id) !== button.dataset.id);
-                    saveSharedCart(remainingCart);
-                    render();
-
-                    toast("Listing removed from this browser demo.");
-
-                } catch (error) {
-                    console.error("Could not remove listing:", error);
-                    toast("Could not remove this listing.");
-                }
+            button.addEventListener("click", async () => {
+                const listing = getListings().find(x => String(x.id) === button.dataset.id);
+                if (!listing || listing.ownerId !== String(D.currentUser()?.email||"").toLowerCase()) return toast("Only your own listing can be removed.");
+                if (!confirm(`Remove ${listing.name}?`)) return;
+                try {await D.removeListing(listing.id);render();toast("Listing removed.");}
+                catch(error){toast(error.message);}
             });
         });
     }
-
 
     /* =========================================
        OPEN / CLOSE FORM
@@ -517,7 +496,7 @@ document.addEventListener("DOMContentLoaded", () => {
        PUBLISH PRODUCT
     ========================================= */
 
-    form.addEventListener("submit", event => {
+    form.addEventListener("submit", async event => {
         event.preventDefault();
 
         if (!form.reportValidity()) {
@@ -557,8 +536,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             category: $("m-category").value,
 
-            price: wholeLot ? Number((price / quantity).toFixed(6)) : price,
-            lotPrice: wholeLot ? price : null,
+            price: price,
+            lotPrice: wholeLot ? Number((price * quantity).toFixed(2)) : null,
             sellingMethod,
             status: "available",
 
@@ -590,7 +569,7 @@ document.addEventListener("DOMContentLoaded", () => {
             /* Save using the existing seller data component */
 
             if (typeof D.saveListing === "function") {
-                D.saveListing(product);
+                await D.saveListing(product);
 
             } else if (
                 typeof D.write === "function" &&
@@ -606,37 +585,6 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 throw new Error(
                     "Marketplace save function is unavailable."
-                );
-            }
-
-            /*
-             * Maintain the existing sellerProducts key used by
-             * the project's other product/category code.
-             */
-
-            try {
-                const oldProducts = JSON.parse(
-                    localStorage.getItem("sellerProducts") || "[]"
-                );
-
-                if (Array.isArray(oldProducts)) {
-                    const exists = oldProducts.some(
-                        item => String(item.id) === product.id
-                    );
-
-                    if (!exists) {
-                        oldProducts.unshift(product);
-
-                        localStorage.setItem(
-                            "sellerProducts",
-                            JSON.stringify(oldProducts)
-                        );
-                    }
-                }
-            } catch (storageError) {
-                console.warn(
-                    "Could not update sellerProducts:",
-                    storageError
                 );
             }
 
@@ -658,7 +606,7 @@ document.addEventListener("DOMContentLoaded", () => {
             render();
 
             toast(
-                "Product published to this browser's Marketplace demo."
+                "Product published for both sellers."
             );
 
             window.scrollTo({
@@ -701,6 +649,10 @@ document.addEventListener("DOMContentLoaded", () => {
        INITIALIZE
     ========================================= */
 
-    render();
+    D.refreshListings().then(render).catch(error=>{
+        console.error(error);
+        toast("Please sign in using a demo seller account and start the Node server: " + error.message);
+    });
+    window.addEventListener("focus",()=>D.refreshListings().then(render).catch(()=>{}));
 
 });

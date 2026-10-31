@@ -81,7 +81,7 @@ image.appendChild(img);
     event.target.value = event.target.value.replace(/\D/g, "").slice(0, 4);
   });
 
-  form.addEventListener("submit", event => {
+  form.addEventListener("submit", async event => {
     event.preventDefault();
     formError.textContent = "";
     if (!cart.length) {
@@ -89,31 +89,7 @@ image.appendChild(img);
       return;
     }
     if (!form.reportValidity()) return;
-    // Revalidate marketplace listings before the demo order is created.
-    let listingData = [];
-    try { listingData = JSON.parse(localStorage.getItem("stockMindMarketplaceListings") || "[]"); }
-    catch { formError.textContent = "Could not validate marketplace inventory."; return; }
-    for (const item of cart.filter(p => p.marketplaceListingId)) {
-      const product = listingData.find(p => String(p.id) === String(item.marketplaceListingId));
-      if (!product || product.status === "reserved") {
-        formError.textContent = `${item.name} is no longer available. Remove it from the cart.`;
-        return;
-      }
-      if (item.sellingMethod === "whole_lot") {
-        const lotPrice = Number(product.lotPrice) || Number(product.price) * Number(product.quantity);
-        if (product.sellingMethod !== "whole_lot" || Number(item.quantity) !== 1 ||
-            Number(item.lotUnits) !== Number(product.quantity) || Number(item.price) !== lotPrice) {
-          formError.textContent = `The complete lot ${item.name} has changed. Remove and add it again.`;
-          return;
-        }
-      } else if (Number(item.quantity) > Number(product.quantity) ||
-          Number(item.quantity) < Number(product.minOrder || 1) ||
-          Number(item.price) !== Number(product.price)) {
-        formError.textContent = `${item.name}: quantity or price has changed. Update your cart.`;
-        return;
-      }
-    }
-
+    // Backend validates ownership, stock and lot integrity atomically.
     const method = form.querySelector('input[name="paymentMethod"]:checked')?.value || "card";
     if (method === "card") {
       const digits = $("cardNumber").value.replace(/\D/g, "");
@@ -163,26 +139,14 @@ items: cart.map(p => ({
       createdAt: new Date().toISOString(),
       status: "Demo order placed"
     };
-    // Demo only: persist the order for buyer/seller order history.
     try {
-      const previous = JSON.parse(localStorage.getItem("stockMindOrders") || "[]");
-      const orders = Array.isArray(previous) ? previous : [];
-      localStorage.setItem("stockMindOrders", JSON.stringify([order, ...orders]));
-      const changed = listingData.map(product => {
-        const line = cart.find(item => String(item.marketplaceListingId) === String(product.id));
-        if (!line) return product;
-        if (line.sellingMethod === "whole_lot") return {...product, status: "reserved"};
-        return {...product, quantity: Math.max(0, Number(product.quantity) - Number(line.quantity))};
-      });
-      localStorage.setItem("stockMindMarketplaceListings", JSON.stringify(changed));
-    } catch (error) {
-      console.error("Demo order could not be saved:", error);
-      formError.textContent = "Could not save the order. Please try again.";
-      return;
-    }
-    sessionStorage.setItem("stockMindLastOrder", JSON.stringify(order));
-sessionStorage.removeItem("stockMindCart");
-
+      const token=localStorage.getItem("stockMindServerToken");
+      const res=await fetch("/api/orders",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+token},body:JSON.stringify(order)});
+      const data=await res.json();if(!res.ok)throw Error(data.error||"Order could not be placed");
+      sessionStorage.setItem("stockMindLastOrder",JSON.stringify(data.order));
+      sessionStorage.removeItem("stockMindCart");
+      window.dispatchEvent(new Event("cartUpdated"));
+    } catch(error){formError.textContent=error.message;return;}
 window.location.href = "confirmation/confirmation.html";  });
 
   renderSummary();

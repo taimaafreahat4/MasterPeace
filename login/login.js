@@ -155,6 +155,15 @@ const DEFAULT_ACCOUNTS = [
     },
 
     {
+        name: "Seller Two",
+        username: "seller2@stockmind.com",
+        email: "seller2@stockmind.com",
+        password: "Seller2@123",
+        role: "Seller",
+        image: ""
+    },
+
+    {
         name: "Default Buyer",
         username: "buyer@stockmind.com",
         email: "buyer@stockmind.com",
@@ -170,7 +179,7 @@ const DEFAULT_ACCOUNTS = [
    LOGIN
 ===================================================== */
 
-loginForm.addEventListener("submit", e => {
+loginForm.addEventListener("submit", async e => {
 
     e.preventDefault();
 
@@ -238,9 +247,36 @@ loginForm.addEventListener("submit", e => {
     }
 
 
+    // Admin demo access does not depend on the Buyer/Seller selection.
+    // Buyer and Seller still authenticate with the shared trading server.
+    if (isAdmin) {
+        localStorage.removeItem("stockMindServerToken");
+    } else {
+        try {
+            const response = await fetch("/api/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
+            });
+
+            if (!response.ok) {
+                throw new Error(
+                    "Could not sign in to the shared trading server. Check your account and run node server.js on port 3000."
+                );
+            }
+
+            const auth = await response.json();
+            if (!auth.token) throw new Error("Server did not return a login token.");
+            localStorage.setItem("stockMindServerToken", auth.token);
+        } catch (error) {
+            showError(error.message);
+            return;
+        }
+    }
+    sessionStorage.removeItem("stockMindCart"); // prevent carts carrying across accounts
     localStorage.setItem(
         "stockMindUser",
-        JSON.stringify({ ...account, loggedIn: true })
+        JSON.stringify({ name: account.name, username: account.username, email: account.email, role: account.role, image: account.image, loggedIn: true })
     );
 
 
