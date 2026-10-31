@@ -31,9 +31,7 @@
                 <h1>Make the next move <span>count.</span></h1>
 
                 <p>
-                    Understand slow-moving stock, explore possible future
-                    demand, and choose your next action using inventory
-                    indicators and clearly labelled demo scenarios.
+                    See inventory risks, decide what to do next, and explore an optional 30-day demand demo.
                 </p>
             </div>
 
@@ -98,6 +96,74 @@
 
         </section>
 
+        <nav class="rec-quick-nav" aria-label="Recommendations sections">
+            <a href="#action-center" class="rec-quick-link">Recommended actions <span>→</span></a>
+            <a href="#demand-forecast" class="rec-quick-link">Demand forecast demo <span>→</span></a>
+            <a href="inventory.html" class="rec-quick-link rec-quick-link-light">Manage inventory <span>↗</span></a>
+        </nav>
+
+        <!-- RECOMMENDATIONS WORKSPACE -->
+        <section class="rec-workspace" id="action-center">
+
+            <div class="rec-workspace-heading">
+                <div>
+                    <span class="rec-eyebrow">ACTION CENTER</span>
+                    <h2>Recommended actions</h2>
+                    <p>
+                        Recommendations based on recorded stock, stock age,
+                        sales quantities, and gross margin.
+                    </p>
+                </div>
+
+                <span class="rec-total-badge" id="rec-count">Loading...</span>
+            </div>
+
+            <div class="rec-toolbar">
+                <label class="rec-search">
+                    <span aria-hidden="true">⌕</span>
+                    <input id="rec-search" type="search"
+                           placeholder="Search products or categories..."
+                           aria-label="Search recommendations">
+                </label>
+
+                <label class="rec-filter">
+                    <span>Priority</span>
+                    <select id="rec-priority">
+                        <option value="all">All priorities</option>
+                        <option value="high">High priority</option>
+                        <option value="medium">Needs attention</option>
+                        <option value="low">Monitor</option>
+                    </select>
+                </label>
+
+                <label class="rec-filter">
+                    <span>Action</span>
+                    <select id="rec-action">
+                        <option value="all">All actions</option>
+                        <option value="marketplace">List surplus</option>
+                        <option value="discount">Test discount</option>
+                        <option value="branch">Review stock transfer</option>
+                        <option value="monitor">Monitor stock</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="rec-list" id="recommendations-list"
+                 aria-live="polite"></div>
+
+            <div class="rec-empty" id="rec-empty" hidden>
+                <div class="rec-empty-icon">⌕</div>
+                <h3>No matching recommendations</h3>
+                <p>Change the search or filter options to view other products.</p>
+
+                <button type="button" id="rec-reset-filters"
+                        class="rec-outline-button">
+                    Reset filters
+                </button>
+            </div>
+
+        </section>
+
         <!-- AI DEMAND FORECASTING -->
         <section class="fd-module" id="demand-forecast"
                  aria-labelledby="fd-title">
@@ -109,7 +175,7 @@
                         PREDICTIVE ANALYTICS · DEMO
                     </span>
 
-                    <h2 id="fd-title">AI Demand Forecasting</h2>
+                    <h2 id="fd-title">Demand forecast <span class="rec-subtle-label">Interactive demo</span></h2>
 
                     <p>
                         Explore a 30-day demand scenario, compare it with
@@ -293,7 +359,7 @@
 
             </div>
 
-            <!-- ANIMATED TIMELINE -->
+            <!-- ANIMATED TIMELINE: optional technical details -->
             <section class="fd-timeline-panel"
                      aria-labelledby="fd-timeline-title">
 
@@ -397,68 +463,6 @@
                 </div>
 
             </section>
-        </section>
-
-        <!-- RECOMMENDATIONS WORKSPACE -->
-        <section class="rec-workspace">
-
-            <div class="rec-workspace-heading">
-                <div>
-                    <span class="rec-eyebrow">ACTION CENTER</span>
-                    <h2>Recommended actions</h2>
-                    <p>
-                        Recommendations based on recorded stock, stock age,
-                        sales quantities, and gross margin.
-                    </p>
-                </div>
-
-                <span class="rec-total-badge" id="rec-count">Loading...</span>
-            </div>
-
-            <div class="rec-toolbar">
-                <label class="rec-search">
-                    <span aria-hidden="true">⌕</span>
-                    <input id="rec-search" type="search"
-                           placeholder="Search products or categories..."
-                           aria-label="Search recommendations">
-                </label>
-
-                <label class="rec-filter">
-                    <span>Priority</span>
-                    <select id="rec-priority">
-                        <option value="all">All priorities</option>
-                        <option value="high">High priority</option>
-                        <option value="medium">Needs attention</option>
-                        <option value="low">Monitor</option>
-                    </select>
-                </label>
-
-                <label class="rec-filter">
-                    <span>Action</span>
-                    <select id="rec-action">
-                        <option value="all">All actions</option>
-                        <option value="marketplace">List surplus</option>
-                        <option value="discount">Test discount</option>
-                        <option value="branch">Review stock transfer</option>
-                        <option value="monitor">Monitor stock</option>
-                    </select>
-                </label>
-            </div>
-
-            <div class="rec-list" id="recommendations-list"
-                 aria-live="polite"></div>
-
-            <div class="rec-empty" id="rec-empty" hidden>
-                <div class="rec-empty-icon">⌕</div>
-                <h3>No matching recommendations</h3>
-                <p>Change the search or filter options to view other products.</p>
-
-                <button type="button" id="rec-reset-filters"
-                        class="rec-outline-button">
-                    Reset filters
-                </button>
-            </div>
-
         </section>
 
         <section class="rec-method">

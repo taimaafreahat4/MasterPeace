@@ -621,7 +621,8 @@ document.addEventListener("DOMContentLoaded", () => {
         runButton.addEventListener("click", runForecast);
 
         updateForecastDisplay(getSelectedForecast());
-        runForecast();
+        // Run the animated demo only when the seller requests it.
+        // This keeps the overview calm and avoids surprise animations.
     } else {
         console.warn("Forecast demo HTML is incomplete.");
     }
