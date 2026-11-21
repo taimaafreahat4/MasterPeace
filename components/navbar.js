@@ -58,6 +58,10 @@ function getNavbarUser() {
 ===================================================== */
 
 function initStockMindNavbar() {
+    const brand = document.querySelector(".navbar-logo");
+    const logo = brand?.querySelector(".navbar-logo-image");
+    if (brand) brand.href = NAVBAR_ROOT + "home/index.html";
+    if (logo) logo.src = NAVBAR_DEFAULT_AVATAR;
 
     const user       = getNavbarUser();
     const isLoggedIn = Boolean(user);

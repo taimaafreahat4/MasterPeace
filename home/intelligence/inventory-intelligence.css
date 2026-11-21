@@ -46,19 +46,18 @@
     z-index: 8;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     gap: 10px;
     padding: 14px clamp(16px,4.4vw,70px);
     background: linear-gradient(#07112bcc, transparent);
 }
-.stock-intel .intel-logo, .stock-intel .intel-skip {
+.stock-intel .intel-skip {
     display: inline-flex;
     align-items: center;
     gap: 8px;
     color: var(--ink);
     font-weight: 700;
 }
-.stock-intel .intel-logo img { border-radius: 8px; }
 .stock-intel .intel-skip { border: 1px solid var(--line); border-radius: 100px; padding: 7px 11px; background: var(--glass); font-size: .78rem; }
 .stock-intel .intel-skip:hover { border-color: var(--lav); }
 .stock-intel .copy {
