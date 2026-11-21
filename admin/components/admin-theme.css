@@ -1,0 +1,48 @@
+:root{--admin-theme-bg:#f5f6fb;--admin-theme-ink:#142345;--admin-theme-muted:#687792;--admin-theme-line:#e5e9f2;--admin-theme-purple:#7545e9;--admin-theme-radius:20px;--admin-theme-shadow:0 12px 32px rgba(20,35,69,.055)}
+body.admin-theme{min-width:320px;background:var(--admin-theme-bg);color:var(--admin-theme-ink);font-family:Inter,Manrope,system-ui,sans-serif;font-size:16px;-webkit-font-smoothing:antialiased}
+body.admin-theme :is(.content,.dashboard,.moderation-content){padding:clamp(25px,3vw,40px) clamp(20px,2.5vw,36px)}
+body.admin-theme :is(.page-header,.top-header){align-items:center;gap:22px;margin-bottom:28px}
+body.admin-theme :is(.page-header,.top-header){padding:0 0 18px;border-bottom:1px solid var(--admin-theme-line)}
+body.admin-theme .admin-page-eyebrow{display:flex;align-items:center;gap:9px;margin:0 0 9px;color:#7545e9;font-size:11px;font-weight:800;letter-spacing:1.45px;line-height:1.2}
+body.admin-theme .admin-page-eyebrow:before{width:8px;height:8px;flex:none;border-radius:50%;background:#20b783;box-shadow:0 0 0 4px #e2f7ee;content:""}
+body.admin-theme :is(.page-header h1,.top-header h1){margin:0;color:#102143;font-size:clamp(30px,2.7vw,37px);font-weight:800;line-height:1.2;letter-spacing:-1.05px}
+body.admin-theme :is(.page-header p,.top-header p){margin-top:8px;color:var(--admin-theme-muted);font-size:15px;line-height:1.65}
+body.admin-theme .admin-profile,body.admin-theme .admin-top{gap:12px;color:#52617a;font-size:15px;font-weight:700}
+body.admin-theme .admin-avatar{display:grid;width:42px;height:42px;flex:none;place-items:center;border:1px solid #dfd5ff;border-radius:13px;background:linear-gradient(145deg,#f4efff,#fff);box-shadow:0 5px 14px rgba(117,69,233,.08);color:#7545e9;font-size:12px;font-weight:850}
+body.admin-theme .controls{gap:14px;margin-bottom:24px}
+body.admin-theme .controls input,body.admin-theme .controls select{min-height:52px;padding:13px 17px;border:1px solid var(--admin-theme-line);border-radius:13px;background:#fff;box-shadow:0 5px 18px rgba(20,35,69,.035);color:#263650;font:500 15px Inter,Manrope,system-ui,sans-serif}
+body.admin-theme .stats{gap:16px;margin-bottom:24px}
+body.admin-theme .stat-card,body.admin-theme .moderation-stat,body.admin-theme .dashboard .card{min-height:104px;padding:20px;border:1px solid var(--admin-theme-line);border-radius:17px;background:#fff;box-shadow:var(--admin-theme-shadow)}
+body.admin-theme .stat-card h2,body.admin-theme .moderation-stat strong{color:#132546;font-size:28px;font-weight:800;line-height:1.15;letter-spacing:-.5px}
+body.admin-theme .stat-card p,body.admin-theme .moderation-stat>div span{color:var(--admin-theme-muted);font-size:13px;line-height:1.5}
+body.admin-theme .stat-icon,body.admin-theme .icon,body.admin-theme .card-icon{width:46px;height:46px;border:1px solid #ece6ff;border-radius:14px;background:#f1ebff;color:var(--admin-theme-purple)}
+body.admin-theme .table-container,body.admin-theme .setting-card,body.admin-theme .profile-card,body.admin-theme .overview-panel,body.admin-theme .moderation-workspace{border:1px solid var(--admin-theme-line);border-radius:var(--admin-theme-radius);background:#fff;box-shadow:var(--admin-theme-shadow)}
+body.admin-theme .table-container{margin-top:26px;padding:24px}
+body.admin-theme :is(.table-header h2,.card-title h2,.profile-info h2,.panel-heading h2,.moderation-toolbar h2){color:#142345;font-size:20px;font-weight:750;line-height:1.35;letter-spacing:-.3px}
+body.admin-theme :is(.table-container th,.table-container td,.overview-panel th,.overview-panel td,.moderation-table th,.moderation-table td){font-size:14px;line-height:1.5}
+body.admin-theme :is(.table-container th,.overview-panel th,.moderation-table th){padding:13px 15px;color:#64728b;font-weight:750}
+body.admin-theme :is(.table-container td,.overview-panel td,.moderation-table td){padding:15px;color:#35435d}
+body.admin-theme :is(.table-header button,.setting-card button,.profile-card button,.queue-action,.moderation-tab){font-family:Inter,Manrope,system-ui,sans-serif;font-size:14px}
+body.admin-theme :is(.setting-card,.profile-card){padding:26px}
+body.admin-theme :is(.setting-card label,.profile-card label){color:#35435d;font-size:14px;font-weight:650}
+body.admin-theme :is(.setting-card input,.setting-card select,.setting-card textarea,.profile-card input,.profile-card select,.profile-card textarea){min-height:48px;border:1px solid var(--admin-theme-line);border-radius:12px;font:15px Inter,Manrope,system-ui,sans-serif}
+body.admin-theme .card-icon .bi,body.admin-theme .stat-icon .bi,body.admin-theme .icon .bi{color:var(--admin-theme-purple);font-size:19px;line-height:1}
+body.admin-theme :is(.admin-profile,.admin-top) .bi{color:var(--admin-theme-purple);font-size:19px}
+body.admin-theme .panel-heading>div>span,body.admin-theme .toolbar-eyebrow{font-size:10px;letter-spacing:1.35px}
+body.admin-theme .panel-heading{padding:20px 22px 16px}
+body.admin-theme .panel-heading h2{margin-top:7px}
+body.admin-theme .panel-heading>a{font-size:13px}
+body.admin-theme .dashboard :is(.card strong){font-size:25px}
+body.admin-theme .dashboard .card small{font-size:13px;font-weight:600}
+body.admin-theme .dashboard th{font-size:11px}
+body.admin-theme .dashboard td{font-size:13px}
+body.admin-theme .dashboard-empty,body.admin-theme .dashboard-note,body.admin-theme .moderation-storage-note{font-size:13px}
+body.admin-theme .moderation-stat>div span{font-size:13px}
+body.admin-theme .moderation-toolbar p{font-size:14px}
+body.admin-theme .moderation-tab{min-height:42px;font-size:14px}
+body.admin-theme .moderation-panel{padding:20px 24px 24px}
+body.admin-theme .queue-search,body.admin-theme .queue-filter{min-height:48px}
+body.admin-theme .queue-search input,body.admin-theme .queue-filter select{font-size:14px}
+@media(max-width:1150px){body.admin-theme :is(.content,.dashboard,.moderation-content){width:calc(100% - var(--admin-side-width) - 24px);margin-left:calc(var(--admin-side-width) + 24px);padding:28px 22px}}
+@media(max-width:800px){body.admin-theme :is(.content,.dashboard,.moderation-content){width:100%;margin:0;padding:24px 18px 34px}body.admin-theme .stats{grid-template-columns:repeat(2,minmax(0,1fr))}body.admin-theme :is(.page-header,.top-header){align-items:flex-start}}
+@media(max-width:520px){body.admin-theme :is(.page-header h1,.top-header h1){font-size:28px}body.admin-theme :is(.page-header p,.top-header p){font-size:14px}body.admin-theme .stats{gap:11px}body.admin-theme .stat-card{gap:12px;padding:15px}body.admin-theme .table-container{padding:16px}body.admin-theme .setting-card,body.admin-theme .profile-card{padding:19px}}

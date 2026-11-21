@@ -19,10 +19,13 @@ Stock Mind | Orders Management
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 
+    <link rel="stylesheet" href="../../responsive.css?v=site-responsive-2">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../components/admin-theme.css">
 </head>
 
 
-<body>
+<body class="admin-theme">
 
 
 <div id="sidebar"></div>
@@ -39,8 +42,9 @@ Stock Mind | Orders Management
 
 <div>
 
+<span class="admin-page-eyebrow">ORDER OPERATIONS</span>
 <h1>
-Orders Management 🛒
+Orders Management
 </h1>
 
 
@@ -53,18 +57,7 @@ Track and manage customer orders
 
 
 
-<div class="admin-profile">
-
-🔔
-
-<img src="../../components/logo.png">
-
-<span>
-Admin
-</span>
-
-
-</div>
+<div class="admin-profile"><span class="admin-avatar" aria-hidden="true">SM</span><span>Administrator</span></div>
 
 
 </header>
@@ -116,7 +109,7 @@ Shipped
 
 
 <option value="completed">
-Completed
+Delivered
 </option>
 
 
@@ -148,7 +141,7 @@ Cancelled
 
 
 <div class="icon">
-    <i data-lucide="shopping-cart"></i>
+    <i class="bi bi-cart3" aria-hidden="true"></i>
 </div>
 
 
@@ -184,7 +177,7 @@ Total Orders
 
 
 <div class="icon">
-    <i data-lucide="clock-3"></i>
+    <i class="bi bi-clock" aria-hidden="true"></i>
 
 </div>
 
@@ -221,7 +214,7 @@ Need Action
 
 
 <div class="icon">
-    <i data-lucide="truck"></i>
+    <i class="bi bi-truck" aria-hidden="true"></i>
 
 </div>
 
@@ -258,7 +251,7 @@ On Delivery
 
 
 <div class="icon">
-    <i data-lucide="circle-check"></i>
+    <i class="bi bi-check-circle" aria-hidden="true"></i>
 
 </div>
 
@@ -443,12 +436,12 @@ Cancelled
 
 
 <button class="view">
-👁
+<i class="bi bi-eye" aria-hidden="true"></i>
 </button>
 
 
 <button class="delete">
-🗑
+<i class="bi bi-trash3" aria-hidden="true"></i>
 </button>
 
 
@@ -533,12 +526,12 @@ Cancelled
 
 
 <button class="view">
-👁
+<i class="bi bi-eye" aria-hidden="true"></i>
 </button>
 
 
 <button class="delete">
-🗑
+<i class="bi bi-trash3" aria-hidden="true"></i>
 </button>
 
 
@@ -578,6 +571,7 @@ Cancelled
 
 
 
+<script src="../../components/navbar.js?v=subscription-notification-1"></script>
 <script src="orders.js"></script>
 
 
@@ -590,19 +584,22 @@ fetch("../components/sidebar.html")
 .then(data => {
 
     document.getElementById("sidebar").innerHTML = data;
+    document.dispatchEvent(new Event("adminSidebarReady"));
 
 
-    lucide.createIcons();
+
 
 });
 
 </script>
 
 
-<script src="https://unpkg.com/lucide@latest"></script>
+
 <script src="../components/sidebar.js"></script>
 
 
+
+<script src="../../components/site-validation.js"></script>
 </body>
 
 </html>

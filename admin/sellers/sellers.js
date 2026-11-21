@@ -194,8 +194,8 @@ button.addEventListener("click",()=>{
         "status approved";
 
 
-        button.innerText =
-        "🚫";
+        button.innerHTML =
+        "<i class=\"bi bi-slash-circle\" aria-hidden=\"true\"></i>";
 
 
     }
@@ -211,8 +211,8 @@ button.addEventListener("click",()=>{
         "status suspended";
 
 
-        button.innerText =
-        "✅";
+        button.innerHTML =
+        "<i class=\"bi bi-check2-circle\" aria-hidden=\"true\"></i>";
 
 
     }

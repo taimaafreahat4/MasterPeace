@@ -16,8 +16,9 @@
     <link rel="stylesheet" href="seller-tabs.css">
 
     <!-- Existing shared navbar and footer -->
-    <link rel="stylesheet" href="../../components/navbar.css">
+    <link rel="stylesheet" href="../../components/navbar.css?v=navbar-links-glow-1">
     <link rel="stylesheet" href="../../components/footer.css">
+    <link rel="stylesheet" href="../../responsive.css?v=site-responsive-2">
 </head>
 
 <body data-seller-page="marketplace">
@@ -104,6 +105,7 @@
                             <option>Home &amp; Living</option>
                             <option>Clothes</option>
                             <option>Books</option>
+                            <option>Toys &amp; Baby</option>
                             <option>Cosmetics</option>
                             <option>Bags &amp; Accessories</option>
                             <option>Sports</option>
@@ -166,7 +168,9 @@
                             id="m-location"
                             name="location"
                             value="Amman, Jordan"
-                            maxlength="100">
+                            minlength="3"
+                            maxlength="100"
+                            required>
                     </div>
 
                     <div class="sm-field">
@@ -176,7 +180,9 @@
                             id="m-seller"
                             name="seller"
                             value="My Store"
-                            maxlength="100">
+                            minlength="2"
+                            maxlength="100"
+                            required>
                     </div>
 
                     <div class="sm-field">
@@ -189,14 +195,27 @@
                         </select>
                     </div>
 
-                    <div class="sm-field">
-                        <label for="m-image">Image URL (optional)</label>
-
-                        <input
-                            id="m-image"
-                            name="image"
-                            type="url"
-                            placeholder="https://example.com/product.jpg">
+                    <div class="sm-field sm-field-full">
+                        <label for="m-image-file">Product photo</label>
+                        <div class="market-image-picker">
+                            <div class="market-image-preview" id="m-image-preview" aria-live="polite">
+                                <span>Product photo preview</span>
+                            </div>
+                            <div class="market-image-controls">
+                                <input
+                                    id="m-image-file"
+                                    name="imageFile"
+                                    type="file"
+                                    accept="image/png,image/jpeg,image/webp,image/gif">
+                                <small>Choose a photo from your device (PNG, JPG, WEBP or GIF, up to 5 MB).</small>
+                                <label for="m-image">Or paste an image URL</label>
+                                <input
+                                    id="m-image"
+                                    name="image"
+                                    type="url"
+                                    placeholder="https://example.com/product.jpg">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="sm-field">
@@ -212,7 +231,8 @@
                 </div>
 
                 <p class="sm-notice" style="margin-top:15px">
-                    Shared local demo: listings are available to both seller accounts when running the included Node server.
+                    Demo version: listings are saved in this browser.
+                    A production marketplace needs a shared backend and database.
                 </p>
 
                 <div
@@ -260,11 +280,12 @@
                     id="market-category-filter"
                     class="sm-search">
 
-                    <option value="">All categories</option>
+                    <option value="">All relevant categories</option>
                     <option>Electronics</option>
                     <option>Home &amp; Living</option>
                     <option>Clothes</option>
                     <option>Books</option>
+                    <option>Toys &amp; Baby</option>
                     <option>Cosmetics</option>
                     <option>Bags &amp; Accessories</option>
                     <option>Sports</option>
@@ -275,6 +296,8 @@
             </div>
 
         </section>
+
+        <div class="sm-notice marketplace-store-context" id="store-market-context" role="status"></div>
 
         <div class="sm-lot-filter" aria-label="Filter selling method">
             <button type="button" class="sm-lot-filter__btn is-active" data-method-filter="all">All products</button>
@@ -308,7 +331,7 @@
             class="sm-card sm-empty"
             id="market-empty"
             hidden>
-            No listings found. Try another search or add a product.
+            No matching listings found for your store category. Try another search, or update your Store Profile.
         </div>
 
     </main>
@@ -317,7 +340,7 @@
     <div id="footer-container"></div>
 
     <!-- Main navbar -->
-    <script src="../../components/navbar.js"></script>
+    <script src="../../components/navbar.js?v=subscription-notification-1"></script>
     <script src="../../components/load-navbar.js"></script>
 
     <script>
@@ -330,9 +353,11 @@
     </script>
 
     <!-- Seller navigation and data -->
+    <script src="store-profile-data.js?v=store-category-filter-1"></script>
     <script src="seller-data.js"></script>
     <script src="seller-tabs.js"></script>
-    <script src="marketplace.js"></script>
+    <script src="../../components/site-validation.js"></script>
+    <script src="marketplace.js?v=toys-baby-category-1"></script>
 
 </body>
 </html>

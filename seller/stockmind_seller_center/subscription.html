@@ -4,14 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#061735">
-  <title>Stock Mind | Plans</title>
+  <title>Stock Mind | Choose your plan</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="subscription.css">
-  <link rel="stylesheet" href="../../components/navbar.css">
+    <link rel="stylesheet" href="subscription.css">
+    <link rel="stylesheet" href="subscription-access.css?v=freemium-1">
+  <link rel="stylesheet" href="../../components/navbar.css?v=navbar-links-glow-1">
   <link rel="stylesheet" href="../../components/footer.css">
+    <link rel="stylesheet" href="../../responsive.css?v=site-responsive-2">
 </head>
 <body>
 
@@ -25,29 +27,34 @@
       <div class="hero__inner">
         <div class="pill">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>
-          PREMIUM · SELLER CENTER
+          STOCK MIND · FREEMIUM
         </div>
-        <h1>Unlock <span>AI Recommendations</span><br>for your store.</h1>
-        <p>Subscribe to analyze products before you buy and get smart purchase guidance based on your location, customers, season and stock.</p>
+        <h1>Start free. <span>Grow with Premium.</span></h1>
+        <p>Use Stock Mind’s marketplace and dashboard for free. Try all three AI tools, then upgrade when your store needs deeper, more frequent analysis.</p>
       </div>
     </section>
 
     <!-- PLANS (rendered by subscription.js) -->
     <section class="plans">
+      <div class="subscription-status" id="subscription-status" role="status" aria-live="polite" hidden></div>
+      <section class="freemium-overview" aria-labelledby="freemium-title">
+        <div><span class="free-plan-label">FREE PLAN · JOD 0</span><h2 id="freemium-title">Try each AI tool once for free</h2><p>Marketplace and seller dashboard stay free. Marketplace commission is separate.</p></div>
+        <a href="ai-tools.html" class="free-plan-button">Continue with the Free plan <span aria-hidden="true">→</span></a>
+      </section>
       <div class="plans__grid" id="plans" aria-live="polite"></div>
 
       <ul class="trust">
         <li>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>
-          Secure checkout
+          Clear pricing in JOD
         </li>
         <li>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 4v5h-5"/></svg>
-          Renews at the end of your plan
+          One-time plan · no auto-renewal
         </li>
         <li>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 8l8 8M16 8l-8 8"/></svg>
-          Cancel anytime
+          Access begins after checkout
         </li>
       </ul>
     </section>
@@ -59,7 +66,7 @@
         <h2>Questions before you subscribe</h2>
         <details class="faq__item" open>
           <summary>What do I get with a subscription?</summary>
-          <p>Full access to the AI Recommendations page and product analysis tools in your Seller Center for the length of your plan.</p>
+          <p>Each AI tool includes one free first analysis without checkout. Premium provides continued access across Before You Buy, AI Recommendations and Demand Forecast for the selected period.</p>
         </details>
         <details class="faq__item">
           <summary>Can I switch plans later?</summary>
@@ -67,7 +74,7 @@
         </details>
         <details class="faq__item">
           <summary>What happens when my plan ends?</summary>
-          <p>Your data stays saved. You will be asked to renew before opening the AI page again.</p>
+          <p>Your AI access returns to the Free plan allowances. Your reports and product data stay saved in this browser. Plans are one-time purchases and do not renew automatically.</p>
         </details>
       </div>
     </section>
@@ -78,7 +85,7 @@
   <div id="footer-container"></div>
 
   <!-- Existing Stock Mind navbar (same as ai-advisor.html) -->
-  <script src="../../components/navbar.js"></script>
+  <script src="../../components/navbar.js?v=subscription-notification-1"></script>
   <script src="../../components/load-navbar.js"></script>
   <script>
     if (typeof loadStockMindNavbar === "function") {
@@ -86,6 +93,7 @@
     }
   </script>
 
+  <script src="subscription-access.js?v=freemium-1"></script>
   <script src="subscription.js"></script>
 </body>
 </html>

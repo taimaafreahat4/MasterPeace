@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="../responsive.css?v=site-responsive-2">
 </head>
 
 <body>
@@ -150,13 +151,13 @@
                 <form id="loginForm" novalidate>
 
                     <div class="field">
-                        <input type="email" id="email" placeholder=" " autocomplete="email">
+                        <input type="email" id="email" placeholder=" " autocomplete="email" required>
                         <label for="email">Email</label>
                         <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m3 7 9 6 9-6"/></svg>
                     </div>
 
                     <div class="field">
-                        <input type="password" id="password" placeholder=" " autocomplete="current-password">
+                        <input type="password" id="password" placeholder=" " autocomplete="current-password" minlength="6" required>
                         <label for="password">Password</label>
                         <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="10" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
 
@@ -175,8 +176,6 @@
                     </button>
 
                 </form>
-
-                
 
 <p class="signup-line">
     New here? <a href="signup.html">Create an account</a>
@@ -208,6 +207,8 @@
 <script>
     lucide.createIcons();
 </script>
-<script src="login.js"></script>
+<script src="../components/site-validation.js"></script>
+<script src="../seller/stockmind_seller_center/store-profile-data.js?v=store-category-filter-1"></script>
+<script src="login.js?v=demo-accounts-local-3"></script>
 </body>
 </html>

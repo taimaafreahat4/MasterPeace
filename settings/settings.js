@@ -116,10 +116,7 @@ function settingsCheckSession() {
 function getDefaultPreferences() {
     return {
         notifyOrders: true,
-        notifyShipping: true,
-        notifyOffers: false,
-        preferredLanguage: "en",
-        preferredCurrency: "JOD"
+        notifyShipping: true
     };
 }
 
@@ -140,69 +137,50 @@ function loadPreferences() {
     document.getElementById("notifyShipping").checked =
         Boolean(preferences.notifyShipping);
 
-    document.getElementById("notifyOffers").checked =
-        Boolean(preferences.notifyOffers);
-
-    document.getElementById("preferredLanguage").value =
-        ["en", "ar"].includes(preferences.preferredLanguage)
-            ? preferences.preferredLanguage
-            : "en";
-
-    const allowedCurrencies = ["JOD", "USD", "SAR", "AED"];
-
-    document.getElementById("preferredCurrency").value =
-        allowedCurrencies.includes(preferences.preferredCurrency)
-            ? preferences.preferredCurrency
-            : "JOD";
 }
 
 function collectPreferences() {
     return {
         notifyOrders: document.getElementById("notifyOrders").checked,
-        notifyShipping: document.getElementById("notifyShipping").checked,
-        notifyOffers: document.getElementById("notifyOffers").checked,
-        preferredLanguage:
-            document.getElementById("preferredLanguage").value,
-        preferredCurrency:
-            document.getElementById("preferredCurrency").value
+        notifyShipping: document.getElementById("notifyShipping").checked
     };
 }
 
 function setupSavePreferences() {
-    document.getElementById("savePreferences").addEventListener(
-        "click",
-        () => {
-            try {
-                const preferences = collectPreferences();
-
-                localStorage.setItem(
-                    preferencesKey,
-                    JSON.stringify(preferences)
-                );
-
-                settingsShowMessage(
-                    "preferencesMessage",
-                    "Your preferences have been saved successfully."
-                );
-
-                const button = document.getElementById("savePreferences");
-                button.innerHTML = "<span>✓</span> Saved!";
-
-                setTimeout(() => {
-                    button.innerHTML =
-                        "<span>✓</span> Save Preferences";
-                }, 1600);
-            } catch (error) {
-                console.error("Could not save preferences", error);
-
-                settingsShowMessage(
-                    "preferencesMessage",
-                    "Unable to save preferences. Browser storage may be full.",
-                    "error"
-                );
-            }
+    const save = () => {
+        try {
+            localStorage.setItem(preferencesKey, JSON.stringify(collectPreferences()));
+            settingsShowMessage("preferencesMessage", "Saved.");
+        } catch (error) {
+            console.error("Could not save preferences", error);
+            settingsShowMessage("preferencesMessage", "Could not save settings in this browser.", "error");
         }
-    );
+    };
+
+    ["notifyOrders", "notifyShipping"].forEach(id => {
+        document.getElementById(id).addEventListener("change", save);
+    });
+}
+
+function setupRoleSettings() {
+    const role = String(settingsUser?.role || "buyer").trim().toLowerCase();
+    const isSeller = role === "seller";
+
+    document.getElementById("settingsRoleLabel").textContent =
+        isSeller ? "SELLER ACCOUNT" : "BUYER ACCOUNT";
+    document.getElementById("sellerStoreRow").hidden = !isSeller;
+    document.getElementById("notificationIntro").textContent = isSeller
+        ? "Choose the order and delivery updates for your store."
+        : "Choose the order and delivery updates you want to receive.";
+    document.getElementById("orderNotificationTitle").textContent = isSeller
+        ? "Store Order Updates"
+        : "Order Updates";
+    document.getElementById("orderNotificationDescription").textContent = isSeller
+        ? "Updates about purchases and activity on your listings."
+        : "Order confirmations and changes to your purchases.";
+    document.getElementById("accountIntro").textContent = isSeller
+        ? "Manage your personal profile and store details."
+        : "Manage your profile and account session.";
 }
 
 
@@ -408,6 +386,7 @@ async function initSettingsPage() {
     if (!settingsCheckSession()) return;
 
     loadPreferences();
+    setupRoleSettings();
     setupSavePreferences();
     setupShowPasswords();
     setupPasswordForm();

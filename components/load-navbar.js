@@ -9,7 +9,7 @@ function loadStockMindNavbar(
         return;
     }
 
-    fetch(componentPath + "navbar.html")
+    fetch(componentPath + "navbar.html", { cache: "no-store" })
         .then((response) => {
             if (!response.ok) {
                 throw new Error("Could not load navbar.html");

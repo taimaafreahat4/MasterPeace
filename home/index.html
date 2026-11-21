@@ -20,164 +20,40 @@
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     >
-    <link rel="stylesheet" href="../components/navbar.css">
+    <link rel="stylesheet" href="../components/navbar.css?v=navbar-links-glow-1">
     <link rel="stylesheet" href="../components/footer.css">
     <!-- Main CSS -->
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="intelligence/inventory-intelligence.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="../responsive.css?v=site-responsive-2">
 </head>
 
 <body>
 
 <div id="navbar-container"></div>
-    <!-- =========================
-         HERO
-    ========================== -->
-<section class="hero" id="home">
-
-    <!-- BACKGROUND VIDEO -->
-<video 
-    class="hero-bg-video"
-    id="heroVideo"
-    autoplay
-    muted
-    loop
-    playsinline
->
-
-    <source src="videos/warehouse.mp4" type="video/mp4">
-
-</video>
-
-    <div class="hero-overlay"></div>
-
-
-    <div class="hero-container">
-
-
-        <div class="hero-content">
-
-
-            <div class="hero-label">
-                AI-POWERED INVENTORY SOLUTIONS
-            </div>
-
-
-            <h1>
-                Smarter Decisions.<br>
-                <span>Less Dead Stock.</span>
-            </h1>
-
-
-            <p class="hero-description">
-
-                StockMind helps you predict product demand,
-                find the right products, and get smart
-                recommendations — before you buy and after you sell.
-
-            </p>
-
-            <div class="hero-buttons">
-
-
-                <button
-                class="primary-btn"
-                onclick="window.location.href='../login/login.html?role=buyer'">
-
-                    Start Buying
-                    <i class="fa-solid fa-arrow-right"></i>
-
-                </button>
-
-                <button
-                type="button"
-                class="primary-btn"
-                onclick="startSelling()">
-
-                    Start Selling
-                    <i class="fa-solid fa-arrow-right"></i>
-
-                </button>
-<a href="videos/warehouse.mp4" class="video-btn" target="_blank">
-    <div class="play-circle">
-        <i class="fa-solid fa-play"></i>
-    </div>
-    Watch Video
-</a>
-
-            </div>
-            <div class="hero-features">
-
-                <div class="hero-feature">
-
-                    <div class="feature-icon">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                    </div>
-
-                    <span>
-                        AI Predictions<br>
-                        for Better Buying
-                    </span>
-
-                </div>
-
-
-
-
-                <div class="hero-feature">
-
-                    <div class="feature-icon">
-                        <i class="fa-solid fa-tag"></i>
-                    </div>
-
-                    <span>
-                        Reduce<br>
-                        Dead Stock
-                    </span>
-
-                </div>
-
-
-
-
-
-                <div class="hero-feature">
-
-                    <div class="feature-icon">
-                        <i class="fa-solid fa-chart-column"></i>
-                    </div>
-
-                    <span>
-                        Smart<br>
-                        Recommendations
-                    </span>
-
-                </div>
-
-
-
-
-
-                <div class="hero-feature">
-
-                    <div class="feature-icon">
-                        <i class="fa-solid fa-store"></i>
-                    </div>
-
-                    <span>
-                        Marketplace<br>
-                        for Buyers & Sellers
-                    </span>
-
-                </div>
-
-
-            </div>
-
+    <!-- Public cinematic homepage hero. The fixed navbar remains above this pinned scene. -->
+    <section class="stock-intel" id="stock-intel-track" aria-label="Stock Mind inventory intelligence" data-start="../login/login.html" data-market="../category/category.html">
+    <span id="home"></span>
+    <div id="stock-intel-app">
+        <div id="stock-intel-stage"></div>
+        <svg id="stock-intel-lines" aria-hidden="true"></svg>
+        <div id="stock-intel-cards"></div>
+        <div class="intel-tools">
+            <a href="index.html" class="intel-logo" aria-label="Stock Mind home">
+                <img src="../components/logo.png" alt="" width="34" height="34">
+                <span>Stock Mind</span>
+            </a>
+            <a href="#categories" class="intel-skip">Skip to categories &#8595;</a>
         </div>
- 
+        <div class="copy" id="stock-intel-copy" aria-live="polite">
+            <p class="eye" id="stock-intel-ce">StockMind / Inventory Intelligence</p>
+            <h1 id="stock-intel-ch">Smarter inventory.<br><em>Stronger business.</em></h1>
+            <p class="sub" id="stock-intel-cs">Predict demand. Manage smarter. Turn surplus into opportunity.</p>
+            <div class="cta" id="stock-intel-cc"><a href="../category/category.html">Explore Marketplace</a></div>
+        </div>
+        <p class="hint" id="stock-intel-hint">Scroll to follow the journey</p>
     </div>
-
-
 </section>
     <!-- =========================
          CATEGORIES
@@ -511,30 +387,30 @@ onclick="openCategory('clothing')">
                     <div class="am-stat">
                         <div class="am-stat-icon"><i class="fa-solid fa-user-group"></i></div>
                         <div>
-                            <strong><span class="am-count" data-to="10" data-suffix="K+">10K+</span></strong>
-                            <small>Active Merchants</small>
+                            <strong>Stock</strong>
+                            <small>Inventory visibility</small>
                         </div>
                     </div>
 
                     <div class="am-stat">
                         <div class="am-stat-icon"><i class="fa-solid fa-cube"></i></div>
                         <div>
-                            <strong><span class="am-count" data-to="500" data-suffix="K+">500K+</span></strong>
-                            <small>Products Analyzed</small>
+                            <strong>Market</strong>
+                            <small>Seller-to-buyer connection</small>
                         </div>
                     </div>
 
                     <div class="am-stat">
                         <div class="am-stat-icon"><i class="fa-solid fa-bullseye"></i></div>
                         <div>
-                            <strong><span class="am-count" data-to="98" data-suffix="%">98%</span></strong>
-                            <small>Prediction Accuracy</small>
+                            <strong>Insights</strong>
+                            <small>Evidence-led decisions</small>
                         </div>
                     </div>
 
                 </div>
 
-                <a href="#" class="am-btn am-reveal" style="--d:.32s">
+                <a href="about.html" class="am-btn am-reveal" style="--d:.32s">
                     Learn More About Us
                     <i class="fa-solid fa-arrow-right"></i>
                 </a>
@@ -723,11 +599,11 @@ onclick="openCategory('clothing')">
             <div class="section-label">WHAT OUR USERS SAY</div>
 
             <h2 class="section-title">
-                Trusted by <span>Thousands</span> of Merchants
+                What merchants <span>say</span>
             </h2>
 
             <p class="section-subtitle">
-                Real people. Real results. See what our users have to say about StockMind.
+                Merchant and customer feedback appears here after review and approval.
             </p>
         </div>
 
@@ -817,17 +693,38 @@ onclick="openCategory('clothing')">
 
     <div class="toast" id="toast"></div>
     <!-- Main JavaScript -->
-<script src="../components/navbar.js"></script>
+<script src="../components/navbar.js?v=subscription-notification-1"></script>
+
 <script>
-fetch("../components/navbar.html")
-    .then(r => r.text())
-    .then(html => {
+async function loadStockMindNavbar() {
+    try {
+        const response = await fetch(
+            "../components/navbar.html",
+            { cache: "no-store" }
+        );
+
+        if (!response.ok) {
+            throw new Error("Navbar failed");
+        }
+
+        const html = await response.text();
+
         document.getElementById("navbar-container").innerHTML = html;
-    })
-    .catch(e => console.error("Navbar failed to load:", e));
+
+        initStockMindNavbar();
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+loadStockMindNavbar();
 </script>
 
+<script src="../components/site-validation.js"></script>
 <script src="script.js"></script>
+<script defer src="intelligence/three.min.js"></script>
+<script defer src="intelligence/inventory-intelligence.js"></script>
 
 <!-- FOOTER COMPONENT -->
 <div id="footer-container"></div>

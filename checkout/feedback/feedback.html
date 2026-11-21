@@ -1,170 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Rate Your Order - Stock Mind</title>
-
-    <link rel="stylesheet" href="feedback.css">
-    <link rel="stylesheet" href="../../components/navbar.css">
-    <link rel="stylesheet" href="../../components/footer.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071735">
+  <title>Share your experience | Stock Mind</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../components/navbar.css?v=navbar-links-glow-1">
+  <link rel="stylesheet" href="../../components/footer.css">
+  <link rel="stylesheet" href="feedback.css">
+    <link rel="stylesheet" href="../../responsive.css?v=site-responsive-2">
 </head>
-
 <body>
+  <div id="navbar-container"></div>
+  <main class="feedback-page">
+    <a class="feedback-back" id="backToTracking" href="../tracking/tracking.html">← Back to order tracking</a>
+    <header class="feedback-heading">
+      <span class="feedback-eyebrow"><i></i> ORDER COMPLETE</span>
+      <h1>Your delivery made it.<br><span>How was your experience?</span></h1>
+      <p>Your feedback helps other shoppers and helps us make Stock Mind better.</p>
+      <div class="feedback-order-ref">Order <strong id="orderNumber">—</strong><span id="deliveryDate"></span></div>
+    </header>
 
-<div id="navbar-container"></div>
+    <div class="feedback-layout">
+      <aside class="feedback-order-card" aria-label="Delivered order summary">
+        <div class="order-card-top"><span class="order-check">✓</span><div><strong>Delivered</strong><small>Your order is complete</small></div></div>
+        <div class="feedback-product" id="feedbackProducts"></div>
+        <div class="feedback-total"><span>Order total</span><strong id="orderTotal">—</strong></div>
+        <p class="feedback-private">Your review is saved with this order in your Stock Mind account on this browser.</p>
+      </aside>
 
-
-<main class="feedback-page">
-
-
-    <h1>Rate your order</h1>
-
-    <p class="subtitle">
-        Tell us what you think about your order
-        <span id="orderNumber">#SM123456</span>
-    </p>
-
-
-    <section class="feedback-card">
-
-
-        <div class="product-box">
-
-            <img id="productImage"
-            src="../Images/clothes/product.jpg">
-
-            <div>
-                <h3 id="productName">
-                    Product Name
-                </h3>
-
-                <p>
-                    Delivered successfully
-                </p>
+      <section class="feedback-form-card">
+        <div class="feedback-form-heading"><span>YOUR REVIEW</span><h2>Tell us how it went</h2><p>A quick rating is all it takes. Add a few details if you like.</p></div>
+        <div id="feedbackUnavailable" class="feedback-unavailable" role="status" hidden>This feedback form is available after the order is marked as delivered.</div>
+        <form id="feedbackForm" novalidate>
+          <fieldset class="rating-field">
+            <legend>Overall experience <em>Required</em></legend>
+            <div class="rating-stars" role="radiogroup" aria-label="Rate your experience">
+              <button type="button" role="radio" aria-checked="false" data-rating="1" aria-label="1 star">★</button>
+              <button type="button" role="radio" aria-checked="false" data-rating="2" aria-label="2 stars">★</button>
+              <button type="button" role="radio" aria-checked="false" data-rating="3" aria-label="3 stars">★</button>
+              <button type="button" role="radio" aria-checked="false" data-rating="4" aria-label="4 stars">★</button>
+              <button type="button" role="radio" aria-checked="false" data-rating="5" aria-label="5 stars">★</button>
+              <span id="ratingLabel">Select a rating</span>
             </div>
+          </fieldset>
 
-        </div>
+          <fieldset class="tag-field">
+            <legend>What stood out? <em>Optional</em></legend>
+            <div class="feedback-tags">
+              <button type="button" data-tag="Fast delivery">Fast delivery</button>
+              <button type="button" data-tag="Good packaging">Good packaging</button>
+              <button type="button" data-tag="Product quality">Product quality</button>
+              <button type="button" data-tag="As described">As described</button>
+            </div>
+          </fieldset>
 
-
-
-        <hr>
-
-
-        <h4>
-            How was the product?
-        </h4>
-
-
-        <div class="stars">
-
-            <span data-star="1">★</span>
-            <span data-star="2">★</span>
-            <span data-star="3">★</span>
-            <span data-star="4">★</span>
-            <span data-star="5">★</span>
-
-        </div>
-
-
-        <p class="hint">
-            Tap a star to rate
-        </p>
-
-
-        <hr>
-
-
-
-        <h4>
-            What did you like?
-        </h4>
-
-
-        <div class="tags">
-
-            <button>
-                Fast delivery
-            </button>
-
-            <button>
-                Good packaging
-            </button>
-
-            <button>
-                Product quality
-            </button>
-
-            <button>
-                As described
-            </button>
-
-        </div>
-
-
-
-        <hr>
-
-
-
-        <h4>
-            Write a review
-        </h4>
-
-
-        <textarea
-        id="review"
-        placeholder="Share details of your experience with this product..."
-        ></textarea>
-
-
-
-    </section>
-
-
-
-    <button id="submitReview">
-        Submit review
-    </button>
-
-
-
-    <p class="skip">
-        You can skip this and rate later from your order history
-    </p>
-
-
-</main>
-
-
-<div id="footer-container"></div>
-
-
-
-<script>
-
-fetch("../../components/navbar.html")
-.then(res => res.text())
-.then(data=>{
-    document.getElementById("navbar-container").innerHTML=data;
-});
-
-
-fetch("../../components/footer.html")
-.then(res=>res.text())
-.then(data=>{
-    document.getElementById("footer-container").innerHTML=data;
-});
-
-
-</script>
-
-
-<script src="feedback.js"></script>
-
-
+          <label class="review-label" for="reviewText">Your review <span>Optional</span></label>
+          <textarea id="reviewText" name="review" maxlength="500" placeholder="Share a little more about the product or delivery…" aria-describedby="reviewHint"></textarea>
+          <div class="review-meta"><small id="reviewHint">At least 5 characters if you choose to write a review.</small><span id="reviewCount">0 / 500</span></div>
+          <p id="feedbackError" class="feedback-error" role="alert" aria-live="assertive"></p>
+          <p id="feedbackSuccess" class="feedback-success" role="status" aria-live="polite" hidden></p>
+          <div class="feedback-actions">
+            <button class="feedback-submit" id="submitReview" type="submit">Submit feedback <span aria-hidden="true">→</span></button>
+            <a id="continueTracking" href="../tracking/tracking.html">Back to tracking</a>
+          </div>
+        </form>
+      </section>
+    </div>
+  </main>
+  <div id="footer-container"></div>
+  <script src="../../components/navbar.js?v=subscription-notification-1"></script>
+  <script src="../../components/load-navbar.js"></script>
+  <script>loadStockMindNavbar("navbar-container", "../../components/"); fetch("../../components/footer.html").then(r=>r.ok?r.text():"").then(html=>{if(html)document.getElementById("footer-container").innerHTML=html;}).catch(()=>{});</script>
+  <script src="../../components/site-validation.js"></script>
+  <script src="feedback.js"></script>
 </body>
 </html>

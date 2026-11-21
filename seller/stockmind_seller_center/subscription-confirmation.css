@@ -1,0 +1,40 @@
+:root{--confirm-ink:#101936;--confirm-muted:#68738c;--confirm-purple:#7037ed;--confirm-line:#e9e5f0}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 50% -10%,#eee7ff 0%,#f7f8fc 48%,#f7f8fc 100%);font-family:Inter,system-ui,sans-serif;color:var(--confirm-ink)}
+.confirmation-page{width:min(760px,calc(100% - 32px));min-height:68vh;margin:0 auto;padding:32px 0 72px}
+.confirmation-back{display:inline-flex;gap:9px;align-items:center;color:#606c85;text-decoration:none;font-size:12px;font-weight:650}
+.confirmation-back:hover{color:var(--confirm-purple)}
+.confirmation-card{max-width:610px;margin:28px auto 0;padding:38px 42px 32px;border:1px solid #e7e2f0;border-radius:22px;background:#fff;box-shadow:0 25px 70px #1f17440d;text-align:center}
+.confirmation-mark{display:grid;place-items:center;width:64px;height:64px;margin:0 auto 18px;border-radius:50%;background:linear-gradient(135deg,#8e5af3,#6330d5);color:#fff;box-shadow:0 12px 24px #6736cf37}
+.confirmation-mark span{font-size:27px;font-weight:800}
+.confirmation-eyebrow{color:#6c39d2;font-size:9px;font-weight:800;letter-spacing:.18em}
+.confirmation-card h1{margin:10px 0 8px;font-size:clamp(28px,5vw,39px);line-height:1.1;letter-spacing:-.045em}
+.confirmation-lead{margin:0;color:var(--confirm-muted);font-size:13px;line-height:1.55}
+.demo-banner{display:flex;gap:11px;align-items:flex-start;margin:22px 0 20px;padding:13px 15px;border:1px solid #d9cef5;border-radius:11px;background:#f9f6ff;color:#5e31bd;text-align:left}
+.demo-banner>span:first-child{font-size:15px}.demo-banner strong,.demo-banner small{display:block}.demo-banner strong{font-size:11px}.demo-banner small{margin-top:4px;color:#6b6880;font-size:10px;line-height:1.5}
+.receipt{margin-top:22px;padding:18px 20px;border:1px solid var(--confirm-line);border-radius:13px;background:#fdfcff;text-align:left}
+.receipt__head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:13px;border-bottom:1px solid var(--confirm-line)}
+.receipt__head strong{font-size:12px}.receipt__head span{padding:5px 8px;border-radius:999px;background:#eee7ff;color:#5e31bd;font-size:8px;font-weight:800;letter-spacing:.07em}
+.receipt__line,.receipt__total{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:8px 0;font-size:10px}.receipt__line span,.receipt__total span{color:var(--confirm-muted)}.receipt__line strong{max-width:60%;overflow-wrap:anywhere;text-align:right;font-size:10px}
+.receipt__total{margin-top:8px;padding-top:14px;border-top:1px solid var(--confirm-line);font-size:12px;font-weight:750}.receipt__total strong{font-size:17px;letter-spacing:-.03em}
+.confirmation-actions{display:grid;gap:10px;margin-top:22px}.confirmation-button,.confirmation-secondary{display:flex;justify-content:center;align-items:center;gap:12px;min-height:46px;padding:11px 15px;border-radius:10px;text-decoration:none;font-size:11px;font-weight:750;transition:transform .16s,box-shadow .16s}.confirmation-button{background:linear-gradient(110deg,#8148ed,#622bd2);color:#fff;box-shadow:0 8px 18px #6c36d42e}.confirmation-button:hover{transform:translateY(-1px);box-shadow:0 12px 22px #6c36d438}.confirmation-secondary{border:1px solid #e4dfec;color:#4c5670;background:#fff}.confirmation-secondary:hover{border-color:#bca6ee;color:#5d2ec0}
+.confirmation-help{margin:19px 0 0;color:#838b9d;font-size:10px}.confirmation-help a{color:#6433cb;text-decoration:none;font-weight:700}
+/* Improve readability of the confirmation details without changing the layout. */
+.confirmation-back{font-size:14px}
+.confirmation-eyebrow{font-size:11px}
+.confirmation-lead{font-size:15px}
+.demo-banner{padding:15px 16px}
+.demo-banner>span:first-child{font-size:18px}
+.demo-banner strong{font-size:13px}
+.demo-banner small{font-size:12px}
+.receipt{padding:20px 22px}
+.receipt__head strong{font-size:15px}
+.receipt__head span{font-size:10px}
+.receipt__line,.receipt__total{font-size:13px}
+.receipt__line strong{font-size:13px}
+.receipt__total{font-size:14px}
+.receipt__total strong{font-size:20px}
+.confirmation-button,.confirmation-secondary{min-height:52px;font-size:14px}
+.confirmation-help{font-size:12px}
+@media(max-width:520px){.confirmation-page{padding-top:23px}.confirmation-card{margin-top:21px;padding:30px 20px 24px;border-radius:18px}.receipt{padding:15px}.confirmation-mark{width:58px;height:58px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}

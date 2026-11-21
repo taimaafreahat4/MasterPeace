@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#061735">
+  <title>Store Profile | Stock Mind</title>
+  <link rel="stylesheet" href="seller-shared.css">
+  <link rel="stylesheet" href="seller-tabs.css">
+  <link rel="stylesheet" href="store-profile.css?v=store-category-filter-1">
+  <link rel="stylesheet" href="../../components/navbar.css?v=navbar-links-glow-1">
+    <link rel="stylesheet" href="../../responsive.css?v=site-responsive-2">
+</head>
+<body data-seller-page="store-profile">
+  <div id="navbar-container"></div>
+  <div id="seller-tabs-mount"></div>
+  <main class="sm-page store-page">
+    <section class="store-intro">
+      <div>
+        <span class="sm-eyebrow">SELLER CENTER / STORE PROFILE</span>
+        <h1>Set up your store</h1>
+        <p>This page is for your business only: its name, location, customers, and what it offers. Your personal name and contact details remain separate under Edit Profile.</p>
+      </div>
+      <div class="store-mark" aria-hidden="true">▦</div>
+    </section>
+    <section class="sm-card store-card" aria-labelledby="storeFormTitle">
+      <div class="store-card-heading">
+        <div><span class="sm-pill">YOUR BUSINESS PROFILE</span><h2 id="storeFormTitle">Store information</h2><p>Required fields are marked with an asterisk.</p></div>
+      </div>
+      <div id="storeMessage" class="store-message" role="status" aria-live="polite" hidden></div>
+      <form id="storeProfileForm" novalidate>
+        <div class="store-form-grid">
+          <label class="store-field"><span>Store name <i>*</i></span><input id="storeName" name="storeName" type="text" placeholder="e.g. Ahmad Fashion" required minlength="2" maxlength="80" autocomplete="organization"><small>Use the name customers and partners recognize.</small></label>
+          <label class="store-field"><span>What does your store sell? <i>*</i></span><select id="businessCategory" name="businessCategory" required><option value="">Select your business category</option><option value="electronics">Phones &amp; Electronics</option><option value="home">Home &amp; Living</option><option value="clothes">Clothes &amp; Fashion</option><option value="books">Books &amp; Stationery</option><option value="toys_baby">Toys &amp; Baby</option><option value="cosmetics">Cosmetics &amp; Beauty</option><option value="accessories">Bags &amp; Accessories</option><option value="sports">Sports</option><option value="grocery">Grocery</option><option value="other">Other</option></select><small>This determines which other sellers’ listings appear in your Marketplace.</small></label>
+          <label class="store-field"><span>Precise location (street, neighborhood, or landmark) <i>*</i></span><input id="locationDetails" name="locationDetails" type="text" placeholder="e.g. University Street, near the north gate" required minlength="4" maxlength="180" autocomplete="street-address"><small>Be specific so the analysis uses your actual market area.</small></label>
+          <label class="store-field"><span>City <i>*</i></span><input id="city" name="city" type="text" placeholder="e.g. Amman" required minlength="2" maxlength="80" autocomplete="address-level2"></label>
+          <label class="store-field"><span>Country <i>*</i></span><input id="country" name="country" type="text" placeholder="e.g. Jordan" required minlength="2" maxlength="80" autocomplete="country-name"></label>
+          <label class="store-field"><span>Store area type <i>*</i></span><select id="storeType" name="storeType" required><option value="">Select an area type</option><option value="residential">Residential area</option><option value="commercial">Commercial shopping area</option><option value="mall">Mall</option><option value="online">Online store</option><option value="other">Other</option></select><small>This describes the area, not the products you sell.</small></label>
+          <label class="store-field"><span>Target customers <i>*</i></span><select id="targetCustomers" name="targetCustomers" required><option value="">Select your main customers</option><option value="youngAdults">Young adults</option><option value="families">Families and mixed ages</option><option value="students">University students</option><option value="professionals">Professionals</option><option value="general">General customers</option><option value="other">Other</option></select></label>
+          <label class="store-field"><span>Average visitors per day <i>*</i></span><input id="averageVisitorsPerDay" name="averageVisitorsPerDay" type="number" min="0" max="1000000" step="1" inputmode="numeric" placeholder="e.g. 50" required><small>Enter an estimate, including 0 if you have no walk-in visitors.</small></label>
+          <label class="store-field store-field--full"><span>Store description <small>(Optional)</small></span><textarea id="description" name="description" rows="4" maxlength="500" placeholder="Tell us what you sell and what makes your store unique."></textarea><small><span id="descriptionCount">0</span>/500 characters</small></label>
+        </div>
+        <div class="store-form-footer"><p>Your profile is saved to this browser and linked to your seller account.</p><button id="saveStoreButton" class="sm-btn sm-btn-primary" type="submit"><span>Save &amp; Continue</span><span aria-hidden="true">→</span></button></div>
+      </form>
+    </section>
+  </main>
+  <script src="../../components/navbar.js?v=subscription-notification-1"></script>
+  <script src="../../components/load-navbar.js"></script>
+  <script>loadStockMindNavbar("navbar-container", "../../components/");</script>
+  <script src="store-profile-data.js?v=store-category-filter-1"></script>
+  <script src="seller-tabs.js"></script>
+  <script src="store-profile.js?v=store-category-filter-1"></script>
+</body>
+</html>

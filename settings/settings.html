@@ -7,9 +7,10 @@
 
     <title>Settings | Stock Mind</title>
 
-    <link rel="stylesheet" href="settings.css">
-    <link rel="stylesheet" href="../components/navbar.css">
+    <link rel="stylesheet" href="settings.css?v=essential-settings-2">
+    <link rel="stylesheet" href="../components/navbar.css?v=navbar-links-glow-1">
     <link rel="stylesheet" href="../components/footer.css">
+    <link rel="stylesheet" href="../responsive.css?v=site-responsive-2">
 </head>
 
 <body>
@@ -25,10 +26,10 @@
             </div>
 
             <div>
-                <p class="settings-eyebrow">ACCOUNT CENTER</p>
+                <p class="settings-eyebrow" id="settingsRoleLabel">ACCOUNT CENTER</p>
                 <h1>Settings</h1>
                 <p class="settings-subtitle">
-                    Manage your preferences, notifications, and account security.
+                    The essentials for your account, notifications, and security.
                 </p>
             </div>
         </section>
@@ -42,19 +43,14 @@
                     Notifications
                 </a>
 
-                <a href="#preferences" class="settings-nav-link">
-                    <span>☷</span>
-                    Shopping Preferences
+                <a href="#account" class="settings-nav-link">
+                    <span>♙</span>
+                    Account
                 </a>
 
                 <a href="#security" class="settings-nav-link">
                     <span>♙</span>
-                    Security
-                </a>
-
-                <a href="#privacy" class="settings-nav-link">
-                    <span>♧</span>
-                    Privacy & Account
+                    Password
                 </a>
             </aside>
 
@@ -67,14 +63,14 @@
 
                         <div>
                             <h2>Notifications</h2>
-                            <p>Choose which updates you want to receive.</p>
+                            <p id="notificationIntro">Choose the order updates that matter to you.</p>
                         </div>
                     </div>
 
                     <div class="setting-row">
                         <div class="setting-description">
-                            <h3>Order Updates</h3>
-                            <p>Updates when an order is placed or its status changes.</p>
+                            <h3 id="orderNotificationTitle">Order Updates</h3>
+                            <p id="orderNotificationDescription">Order confirmations and status changes.</p>
                         </div>
 
                         <label class="toggle-switch">
@@ -85,8 +81,8 @@
 
                     <div class="setting-row">
                         <div class="setting-description">
-                            <h3>Shipping Notifications</h3>
-                            <p>Updates about shipping and delivery progress.</p>
+                            <h3 id="shippingNotificationTitle">Delivery Updates</h3>
+                            <p id="shippingNotificationDescription">Shipping and delivery progress for your orders.</p>
                         </div>
 
                         <label class="toggle-switch">
@@ -95,59 +91,45 @@
                         </label>
                     </div>
 
-                    <div class="setting-row">
-                        <div class="setting-description">
-                            <h3>Offers & Promotions</h3>
-                            <p>News about discounts, deals, and special offers.</p>
-                        </div>
-
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="notifyOffers">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-
                     <p class="section-note">
-                        These switches save your preferences in this browser.
-                        Actual email or push notifications require a notification service.
+                        Preferences are saved to this browser.
                     </p>
+                    <p id="preferencesMessage" class="inline-message" role="status" aria-live="polite"></p>
                 </section>
 
-                <!-- SHOPPING PREFERENCES -->
-                <section class="settings-card" id="preferences">
+                <!-- ACCOUNT -->
+                <section class="settings-card" id="account">
                     <div class="settings-section-heading">
-                        <div class="section-icon blue-icon">☷</div>
+                        <div class="section-icon blue-icon">♙</div>
 
                         <div>
-                            <h2>Shopping Preferences</h2>
-                            <p>Personalize how Stock Mind is displayed.</p>
+                            <h2>Account</h2>
+                            <p id="accountIntro">Manage your personal profile and session.</p>
                         </div>
                     </div>
 
-                    <div class="preference-grid">
-                        <label class="settings-field">
-                            <span>Preferred Language</span>
+                    <div class="setting-row">
+                        <div class="setting-description">
+                            <h3>Personal Profile</h3>
+                            <p>Update your name, contact details, and profile photo.</p>
+                        </div>
+                        <a href="../profile/profile.html" class="secondary-button">Edit Profile</a>
+                    </div>
 
-                            <select id="preferredLanguage">
-                                <option value="en">English</option>
-                                <option value="ar">العربية</option>
-                            </select>
+                    <div class="setting-row" id="sellerStoreRow" hidden>
+                        <div class="setting-description">
+                            <h3>Store Profile</h3>
+                            <p>Update your store name, category, location, and details.</p>
+                        </div>
+                        <a href="../seller/stockmind_seller_center/store-profile.html" class="secondary-button">Edit Store</a>
+                    </div>
 
-                            <small>Saved as a preference; translation is not enabled automatically.</small>
-                        </label>
-
-                        <label class="settings-field">
-                            <span>Preferred Currency</span>
-
-                            <select id="preferredCurrency">
-                                <option value="JOD">Jordanian Dinar (JOD)</option>
-                                <option value="USD">US Dollar (USD)</option>
-                                <option value="SAR">Saudi Riyal (SAR)</option>
-                                <option value="AED">UAE Dirham (AED)</option>
-                            </select>
-
-                            <small>This saves your choice; it does not convert product prices.</small>
-                        </label>
+                    <div class="setting-row">
+                        <div class="setting-description">
+                            <h3>Sign Out</h3>
+                            <p>End your current session on this browser.</p>
+                        </div>
+                        <button type="button" id="settingsLogout" class="danger-button">Log Out</button>
                     </div>
                 </section>
 
@@ -155,10 +137,9 @@
                 <section class="settings-card" id="security">
                     <div class="settings-section-heading">
                         <div class="section-icon orange-icon">♙</div>
-
                         <div>
-                            <h2>Security</h2>
-                            <p>Manage your account password.</p>
+                            <h2>Password</h2>
+                            <p>Change the password for your account.</p>
                         </div>
                     </div>
 
@@ -209,67 +190,10 @@
                            role="status" aria-live="polite"></p>
                     </form>
 
-                    <div class="security-warning">
-                        <strong>Prototype security notice</strong>
-                        <p>
-                            This project currently uses browser storage.
-                            Changing a password here is only a local demonstration,
-                            not secure production-grade account security.
-                        </p>
-                    </div>
-                </section>
-
-                <!-- PRIVACY & ACCOUNT -->
-                <section class="settings-card" id="privacy">
-                    <div class="settings-section-heading">
-                        <div class="section-icon green-icon">♧</div>
-
-                        <div>
-                            <h2>Privacy & Account</h2>
-                            <p>Review your account and session options.</p>
-                        </div>
-                    </div>
-
-                    <div class="setting-row">
-                        <div class="setting-description">
-                            <h3>Account Information</h3>
-                            <p>Review or update your name, location, and profile photo.</p>
-                        </div>
-
-                        <a href="../profile/profile.html" class="secondary-button">
-                            Edit Profile
-                        </a>
-                    </div>
-
-                    <div class="setting-row">
-                        <div class="setting-description">
-                            <h3>Sign Out</h3>
-                            <p>End your current session on this browser.</p>
-                        </div>
-
-                        <button type="button" id="settingsLogout"
-                                class="danger-button">
-                            Log Out
-                        </button>
-                    </div>
-
                     <p class="section-note">
-                        Your settings are stored locally in this browser.
-                        Clearing browser storage may remove saved preferences.
+                        This demo saves password changes in this browser only.
                     </p>
                 </section>
-
-                <!-- SAVE PREFERENCES -->
-                <div class="settings-save-bar">
-                    <p id="preferencesMessage" class="inline-message"
-                       role="status" aria-live="polite"></p>
-
-                    <button type="button" id="savePreferences"
-                            class="primary-button">
-                        <span>✓</span>
-                        Save Preferences
-                    </button>
-                </div>
 
             </div>
         </div>
@@ -278,7 +202,8 @@
     <!-- Shared Footer -->
     <div id="footer-container"></div>
 
-    <script src="../components/navbar.js"></script>
-    <script src="settings.js"></script>
+    <script src="../components/navbar.js?v=subscription-notification-1"></script>
+    <script src="../components/site-validation.js"></script>
+    <script src="settings.js?v=essential-settings-2"></script>
 </body>
 </html>

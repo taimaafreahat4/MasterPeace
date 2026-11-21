@@ -1,82 +1,27 @@
-<aside class="admin-sidebar">
+<aside class="admin-sidebar" aria-label="Administrator navigation">
+  <a href="../../home/index.html" class="admin-logo">
+    <img src="../../components/logo.png" alt="">
+    <span class="admin-brand-copy"><span class="admin-brand-name">Stock <b>Mind</b></span><small>ADMIN CONSOLE</small></span>
+  </a>
 
+  <div class="sidebar-section-label">WORKSPACE</div>
+  <nav class="sidebar-menu">
+    <a href="../dashboard/dashboard.html" data-admin-link="dashboard"><i class="bi bi-grid-1x2" aria-hidden="true"></i><span>Overview</span></a>
+    <a href="../users/users.html" data-admin-link="users"><i class="bi bi-people" aria-hidden="true"></i><span>Users</span></a>
+    <a href="../sellers/sellers.html" data-admin-link="sellers"><i class="bi bi-shop" aria-hidden="true"></i><span>Sellers</span></a>
+    <a href="../products/products.html#products" data-admin-link="products"><i class="bi bi-box-seam" aria-hidden="true"></i><span>Product approvals</span><em class="sidebar-count" id="admin-pending-products" hidden>0</em></a>
+    <a href="../products/products.html#feedback" data-admin-link="feedback"><i class="bi bi-chat-left-text" aria-hidden="true"></i><span>Feedback</span><em class="sidebar-count" id="admin-pending-feedback" hidden>0</em></a>
+    <a href="../orders/orders.html" data-admin-link="orders"><i class="bi bi-bag" aria-hidden="true"></i><span>Orders</span></a>
+  </nav>
 
-<a href="../../home/index.html" class="admin-logo">
+  <div class="sidebar-section-label sidebar-section-settings">PREFERENCES</div>
+  <nav class="sidebar-menu sidebar-preferences">
+    <a href="../settings/settings.html" data-admin-link="settings"><i class="bi bi-sliders" aria-hidden="true"></i><span>Settings</span></a>
+  </nav>
 
-    <img src="../../components/logo.png">
-
-    <span>
-        Stock <b>Mind</b>
-    </span>
-
-</a>
-
-
-
-<nav class="sidebar-menu">
-
-
-<a href="../dashboard/dashboard.html">
-    <i data-lucide="layout-dashboard"></i>
-    <span>Dashboard</span>
-</a>
-
-
-<a href="../users/users.html">
-    <i data-lucide="users"></i>
-    <span>Users</span>
-</a>
-
-
-<a href="../sellers/sellers.html">
-    <i data-lucide="store"></i>
-    <span>Sellers</span>
-</a>
-
-
-<a href="../products/products.html">
-    <i data-lucide="package"></i>
-    <span>Products</span>
-</a>
-
-
-<a href="../orders/orders.html">
-    <i data-lucide="shopping-cart"></i>
-    <span>Orders</span>
-</a>
-
-
-<a href="../settings/settings.html">
-    <i data-lucide="settings"></i>
-    <span>Settings</span>
-</a>
-
-
-</nav>
-
-
-
-<div class="sidebar-bottom">
-
-
-<a href="../profile/profile.html">
-
-<i data-lucide="user"></i>
-<span>Profile</span>
-
-</a>
-
-
-
-<a href="#" id="logoutBtn">
-
-<i data-lucide="log-out"></i>
-<span>Logout</span>
-
-</a>
-
-
-</div>
-
-
+  <div class="sidebar-bottom">
+    <div class="sidebar-admin-card"><span class="sidebar-admin-avatar">SM</span><span><strong>Stock Mind</strong><small>Administrator</small></span></div>
+    <a href="../profile/profile.html" data-admin-link="profile"><i class="bi bi-person-circle" aria-hidden="true"></i><span>Profile</span></a>
+    <a href="../../home/index.html" id="logoutBtn"><i class="bi bi-box-arrow-right" aria-hidden="true"></i><span>Log out</span></a>
+  </div>
 </aside>

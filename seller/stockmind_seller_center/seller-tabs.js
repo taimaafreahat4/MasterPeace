@@ -9,26 +9,14 @@
             href: "dashboard.html"
         },
         {
-            id: "ai-advisor",
-            label: "Before You Buy",
-            icon: "◈",
-            href: "ai-advisor.html"
-        },
-        {
-            id: "inventory",
-            label: "Inventory",
-            icon: "▦",
-            href: "inventory.html"
-        },
-        {
-            id: "recommendations",
-            label: "AI Recommendations",
+            id: "ai-tools",
+            label: "AI Tools",
             icon: "✧",
-            href: "recommendations.html"
+            href: "ai-tools.html"
         },
         {
             id: "marketplace",
-            label: "Marketplace",
+            label: "Surplus listings",
             icon: "◇",
             href: "marketplace.html"
         }
@@ -51,8 +39,10 @@
             // Navigation still works if storage is unavailable.
         }
 
-        const activePage =
-            document.body.dataset.sellerPage || "dashboard";
+        const currentPage = document.body.dataset.sellerPage || "dashboard";
+        const activePage = ["ai-advisor", "recommendations"].includes(currentPage)
+            ? "ai-tools"
+            : currentPage;
 
         mount.innerHTML = `
             <nav class="sm-seller-tabs" aria-label="Seller navigation">

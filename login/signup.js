@@ -212,7 +212,7 @@ form.addEventListener("submit", e => {
 
     const name     = get("name");
     const username = get("username");
-    const email    = get("email");
+    const email    = get("email").toLowerCase();
     const phone    = get("phone");
     const country  = get("country");
     const city     = get("city");
@@ -229,6 +229,19 @@ form.addEventListener("submit", e => {
 
     if (!phone)    return showError("Please enter your phone number.", "phone");
 
+    let accounts = [];
+    try {
+        const savedAccounts = JSON.parse(localStorage.getItem("stockMindAccounts") || "[]");
+        if (Array.isArray(savedAccounts)) accounts = savedAccounts;
+        const legacy = JSON.parse(localStorage.getItem("stockMindAccount") || "null");
+        if (legacy?.email && !accounts.some(item => String(item.email).toLowerCase() === String(legacy.email).toLowerCase())) accounts.push(legacy);
+    } catch { accounts = []; }
+    const reservedEmails = ["admin@stockmind.com","seller@stockmind.com","seller2@stockmind.com","buyer@stockmind.com"];
+    if (reservedEmails.includes(email) || accounts.some(item => String(item.email || "").toLowerCase() === email))
+        return showError("An account with this email already exists. Please log in instead.", "email");
+    if (accounts.some(item => String(item.username || "").toLowerCase() === username.toLowerCase()))
+        return showError("This username is already taken.", "username");
+
     if (pass.length < 6)
         return showError("Password must be at least 6 characters.", "password");
 
@@ -237,6 +250,7 @@ form.addEventListener("submit", e => {
 
 
     const user = {
+        id: `user-${Date.now()}-${Math.random().toString(36).slice(2,7)}`,
         name,
         username,
         email,
@@ -246,28 +260,44 @@ form.addEventListener("submit", e => {
         address,
         password: pass,
         role,
+        storeName: role === "Seller" ? `${name}'s Store` : "",
         image: imageData
     };
 
+    accounts.push(user);
+    localStorage.setItem("stockMindAccounts", JSON.stringify(accounts));
     localStorage.setItem("stockMindAccount", JSON.stringify(user));
 
     // مهم للـ navbar
     localStorage.setItem("stockMindUser", JSON.stringify({
         loggedIn: true,
+        id: user.id,
         role: role,
         name: user.name,
+        email: user.email,
+        username: user.username,
+        phone: user.phone,
+        country: user.country,
+        city: user.city,
+        address: user.address,
+        storeName: user.storeName,
         image: user.image
     }));
 
 
     signupBtn.classList.add("loading");
+    if (role === "Seller") document.getElementById("signupSuccessMessage").textContent = "Taking you to your store setup...";
 
     setTimeout(() => {
         document.getElementById("success").classList.add("show");
     }, 600);
 
     setTimeout(() => {
-        window.location.href = "../login/login.html?role=" + role.toLowerCase();
+        if (role === "Seller") {
+            window.location.href = "../seller/stockmind_seller_center/store-profile.html?mode=setup";
+        } else {
+            window.location.href = "../login/login.html?role=" + role.toLowerCase();
+        }
     }, 2100);
 
 });

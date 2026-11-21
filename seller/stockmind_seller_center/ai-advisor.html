@@ -6,15 +6,14 @@
     <meta name="theme-color" content="#061735">
     <title>Before You Buy | Stock Mind</title>
 
-    <!-- Sends the seller to subscription.html when there is no active subscription -->
+    <!-- Free monthly allowance with Premium upgrades -->
     <link rel="stylesheet" href="ai-advisor.css">
     <link rel="stylesheet" href="seller-tabs.css">
-    <link rel="stylesheet" href="../../components/navbar.css">
+    <link rel="stylesheet" href="../../components/navbar.css?v=navbar-links-glow-1">
     <link rel="stylesheet" href="../../components/footer.css">
     
-<script src="./subscription-guard.js"></script>
-
-
+    <link rel="stylesheet" href="../../responsive.css?v=site-responsive-2">
+    <link rel="stylesheet" href="subscription-access.css?v=freemium-1">
 </head>
 
 <body data-seller-page="ai-advisor">
@@ -244,29 +243,29 @@
 
                                 <label class="ai-field ai-field-full">
                                     <span>Store location <i>*</i></span>
-                                    <input id="location" value="Amman, Jordan"
-                                           maxlength="80" required>
+                                    <input id="location" value="Amman, Jordan" required minlength="3" maxlength="120">
                                 </label>
 
                                 <label class="ai-field">
                                     <span>Store type</span>
                                     <select id="storeType">
                                         <option value="commercial">Commercial shopping area</option>
-                                        <option value="residential">Residential neighborhood</option>
-                                        <option value="tourist">Tourist area</option>
-                                        <option value="university">University or school area</option>
+                                        <option value="residential">Residential area</option>
+                                        <option value="mall">Mall</option>
                                         <option value="online">Online store</option>
+                                        <option value="other">Other</option>
                                     </select>
                                 </label>
 
                                 <label class="ai-field">
                                     <span>Target customers</span>
                                     <select id="customers">
-                                        <option value="young">Children and teenagers</option>
                                         <option value="youngAdults">Young adults</option>
-                                        <option value="adults">Adults</option>
                                         <option value="families" selected>Families and mixed ages</option>
-                                        <option value="all">All age groups</option>
+                                        <option value="students">University students</option>
+                                        <option value="professionals">Professionals</option>
+                                        <option value="general">General customers</option>
+                                        <option value="other">Other</option>
                                     </select>
                                 </label>
 
@@ -505,7 +504,7 @@
     <div id="footer-container"></div>
 
     <!-- Existing Stock Mind navbar -->
-    <script src="../../components/navbar.js"></script>
+    <script src="../../components/navbar.js?v=subscription-notification-1"></script>
     <script src="../../components/load-navbar.js"></script>
     <script>
         if (typeof loadStockMindNavbar === "function") {
@@ -514,9 +513,12 @@
     </script>
 
     <!-- Seller functionality -->
+    <script src="store-profile-data.js?v=store-category-filter-1"></script>
     <script src="seller-data.js"></script>
     <script src="seller-tabs.js"></script>
-    <script src="ai-advisor.js"></script>
+    <script src="../../components/site-validation.js"></script>
+    <script src="subscription-access.js?v=freemium-1"></script>
+    <script src="ai-advisor.js?v=store-category-filter-1"></script>
     <script src="Advisor summary.js"></script>
 </body>
 </html>

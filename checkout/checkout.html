@@ -2,95 +2,92 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stock Mind | Checkout</title>
-  <link rel="stylesheet" href="checkout.css">
-  <link rel="stylesheet" href="../components/navbar.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#061735">
+  <title>Stock Mind | Secure checkout</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../components/navbar.css?v=navbar-links-glow-1">
   <link rel="stylesheet" href="../components/footer.css">
+  <link rel="stylesheet" href="checkout.css">
+  <link rel="stylesheet" href="checkout-polish.css">
+    <link rel="stylesheet" href="../responsive.css?v=site-responsive-2">
 </head>
 <body>
   <div id="navbar-container"></div>
-
   <main class="checkout-page">
-    <a href="../cart/cart.html" class="back-to-cart">
-    ← Back to Cart
-  </a>
-    <div class="breadcrumb">Home <span>›</span> Cart <span>›</span> <strong>Checkout</strong></div>
-    <div class="page-heading">
-      <div><p class="eyebrow">ALMOST THERE</p><h1>Checkout</h1><p class="subheading">Add your delivery details and choose how you’d like to pay.</p></div>
-      <div class="secure-label">🔒 Secure checkout demo</div>
-    </div>
+    <a href="../cart/cart.html" class="back-to-cart"><span aria-hidden="true">←</span> Back to cart</a>
+    <div class="breadcrumb"><a href="../home/index.html">Home</a><span>›</span><a href="../cart/cart.html">Cart</a><span>›</span><strong>Checkout</strong></div>
+    <header class="page-heading">
+      <div><p class="eyebrow">ORDER DETAILS</p><h1>Checkout</h1><p class="subheading">Delivery information and payment method</p></div>
+      <div class="secure-label"><span aria-hidden="true">✓</span><span><strong>Protected checkout</strong><small>Demo transaction · no live card charge</small></span></div>
+    </header>
+
+    <ol class="checkout-progress" aria-label="Checkout steps">
+      <li class="is-complete"><span>✓</span><div><strong>Cart</strong><small>Items selected</small></div></li>
+      <li class="is-active"><span>2</span><div><strong>Delivery &amp; payment</strong><small>Enter your details</small></div></li>
+      <li><span>3</span><div><strong>Confirmation</strong><small>Review your order</small></div></li>
+    </ol>
 
     <div class="checkout-layout">
-<form id="checkoutForm" class="checkout-form delivery-card">        <section class="checkout-panel">
-          <div class="panel-heading"><span class="step">1</span><div><h2>Delivery information</h2><p>Where should we deliver your order?</p></div></div>
+      <form id="checkoutForm" class="checkout-form delivery-card" novalidate>
+        <section class="checkout-panel">
+          <div class="panel-heading"><span class="step">01</span><div><h2>Delivery information</h2><p>We’ll use these details for this order.</p></div></div>
           <div class="form-grid">
-            <label class="full">Full name<input id="fullName" name="fullName" autocomplete="name" required placeholder="Enter your full name"></label>
-            <label class="full">Address<input id="address" name="address" autocomplete="street-address" required placeholder="Street, building, apartment"></label>
-            <label>City<input id="city" name="city" autocomplete="address-level2" required placeholder="City"></label>
-            <label>Phone number<input id="phone" name="phone" autocomplete="tel" type="tel" required placeholder="+962 7X XXX XXXX"></label>
-            <label class="full">Delivery notes <span class="optional">(optional)</span><textarea id="notes" name="notes" rows="2" placeholder="Any instructions for delivery"></textarea></label>
+            <label class="full">Full name<input id="fullName" name="fullName" autocomplete="name" required minlength="2" maxlength="90" placeholder="Enter your full name"></label>
+            <label>Email address<input id="email" name="email" type="email" autocomplete="email" required maxlength="160" placeholder="you@example.com"></label>
+            <label>Phone number<input id="phone" name="phone" autocomplete="tel" type="tel" required inputmode="tel" maxlength="22" placeholder="+962 7X XXX XXXX" aria-describedby="phoneHint"><small class="field-hint" id="phoneHint">Use 8–15 digits, including your country code.</small></label>
+            <label class="full">Delivery address<input id="address" name="address" autocomplete="street-address" required minlength="6" maxlength="180" placeholder="Street, building, floor or apartment"></label>
+            <label>City<input id="city" name="city" autocomplete="address-level2" required minlength="2" maxlength="70" placeholder="City"></label>
+            <label>Country<select id="country" name="country" autocomplete="country-name" required><option value="">Choose a country</option><option value="Jordan">Jordan</option><option value="Saudi Arabia">Saudi Arabia</option><option value="United Arab Emirates">United Arab Emirates</option><option value="Other">Other</option></select></label>
+            <label class="full">Delivery notes <span class="optional">Optional</span><textarea id="notes" name="notes" rows="2" maxlength="300" placeholder="Gate code or helpful delivery instructions"></textarea></label>
           </div>
         </section>
 
         <section class="checkout-panel">
-          <div class="panel-heading"><span class="step">2</span><div><h2>Payment method</h2><p>Choose your preferred payment option.</p></div></div>
+          <div class="panel-heading"><span class="step">02</span><div><h2>Payment method</h2><p>Choose how you’d like to complete this demo order.</p></div></div>
           <div class="payment-options">
-            <label class="payment-option"><input type="radio" name="paymentMethod" value="card" checked><span class="payment-icon">💳</span><span class="payment-copy"><strong>Credit or debit card</strong><small>Visa, Mastercard and other cards</small></span><span class="payment-mark">✓</span></label>
+            <label class="payment-option"><input type="radio" name="paymentMethod" value="card" checked><span class="payment-icon" aria-hidden="true">▤</span><span class="payment-copy"><strong>Credit or debit card</strong><small>Card form demo · no charge will be made</small></span><span class="payment-mark" aria-hidden="true">✓</span></label>
             <div id="cardFields" class="card-fields">
-              <label class="full">Name on card<input id="cardName" autocomplete="cc-name" placeholder="Name as shown on card"></label>
+              <label class="full">Name on card<input id="cardName" autocomplete="cc-name" minlength="2" maxlength="90" placeholder="Name as shown on card"></label>
               <label class="full">Card number<input id="cardNumber" inputmode="numeric" autocomplete="cc-number" maxlength="23" placeholder="1234 5678 9012 3456"></label>
               <div class="form-grid two">
-                <label>Expiry date<input id="cardExpiry" autocomplete="cc-exp" maxlength="5" placeholder="MM/YY"></label>
+                <label>Expiry date<input id="cardExpiry" autocomplete="cc-exp" inputmode="numeric" maxlength="5" placeholder="MM/YY"></label>
                 <label>Security code<input id="cardCvv" autocomplete="cc-csc" inputmode="numeric" maxlength="4" placeholder="CVV"></label>
               </div>
-              <p class="demo-note">Demo only: no real payment is processed. Do not use a real card. Card details are not saved.</p>
             </div>
-            <label class="payment-option"><input type="radio" name="paymentMethod" value="paypal"><span class="payment-icon paypal">P</span><span class="payment-copy"><strong>PayPal</strong><small>Continue with PayPal (demo)</small></span><span class="payment-mark">✓</span></label>
-            <label class="payment-option"><input type="radio" name="paymentMethod" value="cod"><span class="payment-icon">🚚</span><span class="payment-copy"><strong>Cash on delivery</strong><small>Pay when your order arrives</small></span><span class="payment-mark">✓</span></label>
+            <label class="payment-option"><input type="radio" name="paymentMethod" value="paypal"><span class="payment-icon paypal" aria-hidden="true">P</span><span class="payment-copy"><strong>PayPal</strong><small>Demo selection · not connected to PayPal</small></span><span class="payment-mark" aria-hidden="true">✓</span></label>
+            <label class="payment-option"><input type="radio" name="paymentMethod" value="cod"><span class="payment-icon" aria-hidden="true">▰</span><span class="payment-copy"><strong>Cash on delivery</strong><small>Payment handled outside this demo checkout</small></span><span class="payment-mark" aria-hidden="true">✓</span></label>
           </div>
-          <p id="formError" class="form-error" role="alert"></p>
+          <p class="demo-note"><strong>Demo checkout:</strong> never enter a real card. Card fields are validated for the flow but are not saved or sent to a payment provider.</p>
+          <label class="checkout-consent"><input id="orderConsent" type="checkbox" required><span>I understand this is a demo order and no payment will be taken through this website.</span></label>
+          <p id="formError" class="form-error" role="alert" aria-live="assertive"></p>
         </section>
-        <button class="place-order-button" type="submit">Place Order <span>→</span></button>
-        <p class="fine-print">Your order will be saved for this browser session as a front-end demo.</p>
+        <button class="place-order-button" type="submit">Place demo order <span aria-hidden="true">→</span></button>
+        <p class="fine-print">Your delivery details are stored in this browser’s local demo order history.</p>
       </form>
 
-      <aside class="order-summary summary-card">
-        <div class="summary-heading"><div><p class="eyebrow">YOUR PURCHASE</p><h2>Order summary</h2></div><span class="summary-icon">▤</span></div>
+      <aside class="order-summary summary-card" aria-label="Order summary">
+        <div class="summary-heading"><div><p class="eyebrow">YOUR PURCHASE</p><h2>Order summary</h2></div><span class="summary-icon" aria-hidden="true">▤</span></div>
         <div id="summaryItems" class="summary-items"></div>
-        <div id="emptyCartMessage" class="empty-cart" hidden>
-          <p>Your cart is empty.</p>
-          <a href="../../category/category.html" class="continue-shopping">
-    ← Continue Shopping
-</a>
-        </div>
+        <div id="emptyCartMessage" class="empty-cart" hidden><p>Your cart is empty.</p><a href="../category/category.html" class="continue-shopping">Browse products</a></div>
         <div class="summary-line"><span>Items</span><strong id="itemCount">0 units</strong></div>
         <div class="summary-line"><span>Subtotal</span><strong id="subtotal">JOD 0.00</strong></div>
-        <div class="summary-line"><span>Shipping</span><strong id="shipping">Calculated later</strong></div>
+        <div class="summary-line"><span>Marketplace service fee (5%)</span><strong id="shipping">JOD 0.00</strong></div>
+        <div class="summary-line"><span>Delivery</span><strong>Confirmed by seller</strong></div>
         <div class="summary-total"><span>Estimated total</span><strong id="total">JOD 0.00</strong></div>
-        <p class="summary-footnote">Shipping and final charges can be confirmed when a backend is connected.</p>
+        <p class="summary-footnote">Delivery charges, if any, are confirmed by the seller before fulfillment.</p>
+        <div class="summary-assurance"><span aria-hidden="true">✓</span> You’ll receive an in-site order update after checkout.</div>
       </aside>
     </div>
   </main>
-
   <div id="footer-container"></div>
-  <script>
-    fetch("../components/navbar.html").then(r => { if (!r.ok) throw Error("Navbar not found"); return r.text(); })
-      .then(html => {
-        document.getElementById("navbar-container").innerHTML = html;
-        const menu = document.getElementById("mobileMenu"), inner = document.getElementById("navInner");
-        if (menu && inner) menu.addEventListener("click", () => inner.classList.toggle("mobile-open"));
-        if (window.updateCartBadge) window.updateCartBadge();
-      }).catch(err => console.error(err));
-    fetch("../components/footer.html").then(r => { if (!r.ok) throw Error("Footer not found"); return r.text(); })
-      .then(html => document.getElementById("footer-container").innerHTML = html)
-      .catch(err => console.error(err));
-  </script>
-  <script src="../components/navbar.js"></script>
-<script src="../components/load-navbar.js"></script>
-<script>
-    loadStockMindNavbar();
-</script>
+  <script src="../components/navbar.js?v=subscription-notification-1"></script>
+  <script src="../components/load-navbar.js"></script>
+  <script>loadStockMindNavbar("navbar-container", "../components/");</script>
+  <script src="../components/site-validation.js"></script>
   <script src="checkout.js"></script>
+  <script>fetch("../components/footer.html").then(r=>r.ok?r.text():"").then(html=>{if(html)document.getElementById("footer-container").innerHTML=html;}).catch(()=>{});</script>
 </body>
 </html>

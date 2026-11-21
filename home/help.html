@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#071735">
+  <title>Help Center | Stock Mind</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="../components/navbar.css?v=navbar-links-glow-1"><link rel="stylesheet" href="../components/footer.css"><link rel="stylesheet" href="footer-pages.css">
+    <link rel="stylesheet" href="../responsive.css?v=site-responsive-2">
+</head>
+<body><div id="navbar-container"></div><main class="footer-info-page">
+  <a class="footer-info-back" href="index.html">← Back to Stock Mind</a>
+  <header class="footer-info-heading"><span class="footer-info-eyebrow">STOCK MIND SUPPORT</span><h1>How can we help?</h1><p>Quick guidance for the main workflows in the Stock Mind demo.</p></header>
+  <section class="help-list" aria-label="Frequently asked questions">
+    <details open><summary>How do I find products?</summary><p>Open <a href="../category/category.html">Categories</a> to browse available marketplace listings. You can add eligible items to your cart and continue through the demo checkout.</p></details>
+    <details><summary>How do I sell my stock?</summary><p>Sign in or create an account, then open the seller center to manage inventory and marketplace listings. The <a href="../login/login.html?role=seller">seller sign in</a> link opens the seller entry point.</p></details>
+    <details><summary>Are checkout and delivery real?</summary><p>No. This version simulates order processing, delivery updates, and feedback in your browser. It does not charge a payment method or dispatch a real shipment.</p></details>
+    <details><summary>Where can I see order updates?</summary><p>Use the order tracking link shown after placing a demo order. Delivery notifications are displayed within the site when supported by the local demo data.</p></details>
+    <details><summary>How do I send feedback or ask for help?</summary><p>Share product feedback through our <a href="feedback.html">website feedback form</a>, or email <a href="mailto:hello@stockmind.com?subject=Stock%20Mind%20support">hello@stockmind.com</a>.</p></details>
+  </section>
+  <section class="footer-info-card"><h2>Still need help?</h2><p>Send us a note and include the page or workflow you were using.</p><p><a href="mailto:hello@stockmind.com?subject=Stock%20Mind%20support">Email Stock Mind support →</a></p></section>
+</main><div id="footer-container"></div>
+<script src="../components/navbar.js?v=subscription-notification-1"></script><script src="../components/load-navbar.js"></script><script>loadStockMindNavbar("navbar-container", "../components/"); fetch("../components/footer.html").then(r => r.ok ? r.text() : "").then(html => { if (html) document.getElementById("footer-container").innerHTML = html; }).catch(() => {});</script>
+</body></html>

@@ -14,10 +14,13 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <link rel="stylesheet" href="../../responsive.css?v=site-responsive-2">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../components/admin-theme.css">
 </head>
 
 
-<body>
+<body class="admin-theme">
 
 
 <div id="sidebar"></div>
@@ -33,8 +36,9 @@
 
 <div>
 
+<span class="admin-page-eyebrow">SELLER MANAGEMENT</span>
 <h1>
-Seller Management 🏪
+Seller Management
 </h1>
 
 <p>
@@ -46,18 +50,7 @@ Manage sellers, stores and approvals
 
 
 
-<div class="admin-profile">
-
-🔔
-
-<img src="../../components/logo.png">
-
-<span>
-Admin
-</span>
-
-
-</div>
+<div class="admin-profile"><span class="admin-avatar" aria-hidden="true">SM</span><span>Administrator</span></div>
 
 
 </header>
@@ -121,7 +114,7 @@ Suspended
 
 
 <div class="icon">
-    <i data-lucide="store"></i>
+    <i class="bi bi-shop" aria-hidden="true"></i>
 
 </div>
 
@@ -155,7 +148,7 @@ Total Sellers
 
 
 <div class="icon">
-    <i data-lucide="badge-check"></i>
+    <i class="bi bi-patch-check" aria-hidden="true"></i>
 
 </div>
 
@@ -189,7 +182,7 @@ Verified Sellers
 
 
 <div class="icon">
-    <i data-lucide="clock"></i>
+    <i class="bi bi-clock" aria-hidden="true"></i>
 
 </div>
 
@@ -223,7 +216,7 @@ Needs Review
 
 
 <div class="icon">
-    <i data-lucide="ban"></i>
+    <i class="bi bi-slash-circle" aria-hidden="true"></i>
 </div>
 
 
@@ -386,17 +379,17 @@ Approved
 
 
 <button class="view">
-👁
+<i class="bi bi-eye" aria-hidden="true"></i>
 </button>
 
 
 <button class="suspend">
-🚫
+<i class="bi bi-slash-circle" aria-hidden="true"></i>
 </button>
 
 
 <button class="delete">
-🗑
+<i class="bi bi-trash3" aria-hidden="true"></i>
 </button>
 
 
@@ -463,17 +456,17 @@ Pending
 
 
 <button class="view">
-👁
+<i class="bi bi-eye" aria-hidden="true"></i>
 </button>
 
 
 <button class="approve">
-✅
+<i class="bi bi-check2-circle" aria-hidden="true"></i>
 </button>
 
 
 <button class="delete">
-🗑
+<i class="bi bi-trash3" aria-hidden="true"></i>
 </button>
 
 
@@ -514,19 +507,22 @@ fetch("../components/sidebar.html")
 .then(data => {
 
     document.getElementById("sidebar").innerHTML = data;
+    document.dispatchEvent(new Event("adminSidebarReady"));
 
 
-    lucide.createIcons();
+
 
 });
 
 </script>
 
 
-<script src="https://unpkg.com/lucide@latest"></script>
+
 <script src="../components/sidebar.js"></script>
 
 
 
+
+<script src="../../components/site-validation.js"></script>
 </body>
 </html>

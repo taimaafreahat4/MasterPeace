@@ -104,7 +104,21 @@ function clearError() {
     errorBox.classList.remove("show");
 }
 
-emailInput.addEventListener("input", clearError);
+emailInput.addEventListener("input", () => {
+    clearError();
+    const email = emailInput.value.trim().toLowerCase();
+    let registered = [];
+    try {
+        const accounts = JSON.parse(localStorage.getItem("stockMindAccounts") || "[]");
+        if (Array.isArray(accounts)) registered = accounts;
+        const legacy = JSON.parse(localStorage.getItem("stockMindAccount") || "null");
+        if (legacy?.email) registered.push(legacy);
+    } catch { registered = []; }
+    const match = [...DEFAULT_ACCOUNTS,...registered].find(item => String(item.email || "").toLowerCase() === email);
+    if (match && ["buyer","seller"].includes(String(match.role || "").toLowerCase())) {
+        setRole(String(match.role).toLowerCase() === "seller" ? "Seller" : "Buyer", false);
+    }
+});
 passInput.addEventListener("input", clearError);
 
 
@@ -137,38 +151,49 @@ loginBtn.addEventListener("click", e => {
 const DEFAULT_ACCOUNTS = [
 
     {
+        id: 3,
         name: "Stock Mind Admin",
         username: "admin",
         email: "admin@stockmind.com",
         password: "StockMindAdmin123",
-        role: "Admin",
+        role: "admin",
         image: ""
     },
 
     {
-        name: "Default Seller",
+        name: "Stock Mind Seller 1",
         username: "seller@stockmind.com",
         email: "seller@stockmind.com",
         password: "Seller123",
-        role: "Seller",
+        role: "seller",
+        id: "seller-main",
+        storeName: "Default Seller Store",
         image: ""
     },
 
     {
-        name: "Seller Two",
-        username: "seller2@stockmind.com",
+        id: "seller-two",
+        name: "Stock Mind Seller 2",
+        username: "seller2",
         email: "seller2@stockmind.com",
         password: "Seller2@123",
-        role: "Seller",
+        role: "seller",
+        id: "seller-two",
+        storeName: "Seller 2 Store",
+        phone: "+962790000002",
+        country: "Jordan",
+        city: "Amman",
+        address: "Demo seller address, Amman",
         image: ""
     },
 
     {
-        name: "Default Buyer",
+        id: 1,
+        name: "Stock Mind Buyer",
         username: "buyer@stockmind.com",
         email: "buyer@stockmind.com",
         password: "Buyer123",
-        role: "Buyer",
+        role: "buyer",
         image: ""
     }
 
@@ -179,7 +204,7 @@ const DEFAULT_ACCOUNTS = [
    LOGIN
 ===================================================== */
 
-loginForm.addEventListener("submit", async e => {
+loginForm.addEventListener("submit", e => {
 
     e.preventDefault();
 
@@ -197,34 +222,24 @@ loginForm.addEventListener("submit", async e => {
     /* 1) the account created from the sign up page */
 
     let saved = null;
+    let savedAccounts = [];
 
     try {
         saved = JSON.parse(localStorage.getItem("stockMindAccount"));
+        const accounts = JSON.parse(localStorage.getItem("stockMindAccounts") || "[]");
+        if (Array.isArray(accounts)) savedAccounts = accounts;
     } catch {
         saved = null;
+        savedAccounts = [];
     }
 
-    let account = null;
-
-    if (
-        saved &&
-        saved.email &&
-        saved.email.toLowerCase() === emailLower &&
-        saved.password === password
-    ) {
-
-        account = saved;
-
-    } else {
-
-        /* 2) default accounts (admin / seller / buyer) */
-
-        account = DEFAULT_ACCOUNTS.find(a =>
-            a.email.toLowerCase() === emailLower &&
-            a.password === password
-        ) || null;
-
-    }
+    const legacyMatches = saved && saved.email &&
+        saved.email.toLowerCase() === emailLower && saved.password === password ? saved : null;
+    let account = DEFAULT_ACCOUNTS.find(a =>
+        a.email.toLowerCase() === emailLower && a.password === password
+    ) || savedAccounts.find(a =>
+        String(a.email || "").toLowerCase() === emailLower && a.password === password
+    ) || legacyMatches || null;
 
     if (!account) {
         showError("Invalid email or password.");
@@ -236,6 +251,16 @@ loginForm.addEventListener("submit", async e => {
 
     const isAdmin  = userRole === "admin";
     const isSeller = userRole === "seller";
+    const needsStoreSetup = isSeller && !window.StockMindStoreProfile?.isComplete(account);
+    const subscriptionIntroKey = `stockMindSubscriptionIntroSeen:${String(account.email || account.id || account.username || "seller").trim().toLowerCase()}`;
+    const existingSubscription = (() => {
+        try {
+            const item = JSON.parse(localStorage.getItem("stockMindSubscription") || "null");
+            const matchesAccount = Boolean(item?.ownerEmail && String(item.ownerEmail).trim().toLowerCase() === emailLower);
+            return Boolean(item && matchesAccount && Number(item.expiresAt) > Date.now() && Number(item.startedAt || 0) <= Date.now());
+        } catch { return false; }
+    })();
+    const shouldShowSubscriptionIntro = isSeller && !needsStoreSetup && !existingSubscription && !localStorage.getItem(subscriptionIntroKey);
 
 
     /* Admin can login from the page directly (no role tab),
@@ -246,37 +271,16 @@ loginForm.addEventListener("submit", async e => {
         return;
     }
 
-
-    // Admin demo access does not depend on the Buyer/Seller selection.
-    // Buyer and Seller still authenticate with the shared trading server.
-    if (isAdmin) {
-        localStorage.removeItem("stockMindServerToken");
-    } else {
-        try {
-            const response = await fetch("/api/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password })
-            });
-
-            if (!response.ok) {
-                throw new Error(
-                    "Could not sign in to the shared trading server. Check your account and run node server.js on port 3000."
-                );
-            }
-
-            const auth = await response.json();
-            if (!auth.token) throw new Error("Server did not return a login token.");
-            localStorage.setItem("stockMindServerToken", auth.token);
-        } catch (error) {
-            showError(error.message);
-            return;
-        }
+    const previousUser = (() => { try { return JSON.parse(localStorage.getItem("stockMindUser") || "null"); } catch { return null; } })();
+    if (previousUser?.loggedIn && String(previousUser.email || "").toLowerCase() !== emailLower) {
+        sessionStorage.removeItem("stockMindCart");
+        sessionStorage.removeItem("stockMindGuestEmail");
     }
-    sessionStorage.removeItem("stockMindCart"); // prevent carts carrying across accounts
+
+
     localStorage.setItem(
         "stockMindUser",
-        JSON.stringify({ name: account.name, username: account.username, email: account.email, role: account.role, image: account.image, loggedIn: true })
+        JSON.stringify({ ...account, loggedIn: true })
     );
 
 
@@ -291,7 +295,7 @@ loginForm.addEventListener("submit", async e => {
             isAdmin
             ? "Taking you to admin dashboard..."
             : isSeller
-            ? "Taking you to your seller dashboard..."
+            ? (needsStoreSetup ? "Taking you to set up your store..." : shouldShowSubscriptionIntro ? "Review AI Tools plans and your free first analyses..." : "Taking you to your seller dashboard...")
             : "Taking you to the marketplace...";
 
     }, 600);
@@ -305,7 +309,11 @@ loginForm.addEventListener("submit", async e => {
 
         } else if (isSeller) {
 
-            window.location.href = "../seller/stockmind_seller_center/dashboard.html";
+            window.location.href = needsStoreSetup
+                ? "../seller/stockmind_seller_center/store-profile.html?mode=setup"
+                : shouldShowSubscriptionIntro
+                ? "../seller/stockmind_seller_center/subscription.html?welcome=1"
+                : "../seller/stockmind_seller_center/dashboard.html";
 
         } else {
 

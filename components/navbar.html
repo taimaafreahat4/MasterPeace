@@ -1,4 +1,5 @@
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <style>
 /* =====================================================
    STOCK MIND NAVBAR
@@ -468,11 +469,29 @@
         <!-- RIGHT ACTIONS -->
         <div class="nav-actions" id="navActions">
 
+            <!-- Notifications: directly left of the cart -->
+            <div class="navbar-notifications" id="navbarNotifications">
+                <button type="button" class="navbar-notification-trigger" id="notificationTrigger" aria-label="Notifications" aria-expanded="false" aria-controls="notificationPanel">
+                    <i class="bi bi-bell navbar-action-icon" aria-hidden="true"></i>
+                    <span class="notification-count" id="notificationCount" hidden>0</span>
+                </button>
+                <section class="notification-panel" id="notificationPanel" aria-label="Notifications" hidden>
+                    <header class="notification-panel__header">
+                        <div><strong>Notifications</strong><small id="notificationSummary">Updates about your orders</small></div>
+                        <div class="notification-panel__actions">
+                            <button type="button" id="enableDesktopNotifications">Desktop alerts</button>
+                            <button type="button" id="markNotificationsRead">Mark all read</button>
+                        </div>
+                    </header>
+                    <div class="notification-list" id="notificationList" aria-live="polite"></div>
+                </section>
+            </div>
+
             <!-- CART -->
             <a href="/cart/cart.html"
                class="navbar-cart-link"
                aria-label="Shopping cart">
-                <span class="navbar-cart-icon">🛒</span>
+                <i class="bi bi-cart3 navbar-cart-icon navbar-action-icon" aria-hidden="true"></i>
                 <span class="cart-count" id="cartCount">0</span>
             </a>
 
@@ -480,7 +499,7 @@
             <div class="favorite-icon">
             <a href="/favorite/favorite.html"
                    aria-label="Favorites">
-                    ❤️
+                    <i class="bi bi-heart-fill navbar-action-icon" aria-hidden="true"></i>
                 </a>
             </div>
 
@@ -537,8 +556,13 @@
     <span>My Dashboard</span>
 </a>
 
+                    <a href="#" id="sellerStoreProfileLink" hidden>
+                        <span class="menu-icon">▣</span>
+                        Store Profile
+                    </a>
 
-                    <a href="../profile/profile.html#edit-profile">
+
+                    <a href="../profile/profile.html#edit-profile" id="editProfileLink">
                         <span class="menu-icon">✎</span>
                         Edit Profile
                     </a>

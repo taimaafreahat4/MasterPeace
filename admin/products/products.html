@@ -1,729 +1,88 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>
-Stock Mind | Products Management
-</title>
-
-
-<link rel="stylesheet" href="products.css">
-
-<link rel="stylesheet" href="../components/sidebar.css">
-
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071735">
+  <title>Moderation Center | Stock Mind Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../components/sidebar.css">
+  <link rel="stylesheet" href="products.css">
+  <link rel="stylesheet" href="../../responsive.css?v=site-responsive-2">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../components/admin-theme.css">
 </head>
-
-
-<body>
-
-
-
-<!-- SIDEBAR -->
-
-<div id="sidebar"></div>
-
-
-
-
-
-<main class="content">
-
-
-
-<header class="page-header">
-
-
-<div>
-
-<h1>
-Products Management 📦
-</h1>
-
-
-<p>
-Manage marketplace products and inventory
-</p>
-
-
-</div>
-
-
-
-
-<div class="admin-profile">
-
-
-🔔
-
-
-<img src="../../components/logo.png">
-
-
-<span>
-Admin
-</span>
-
-
-</div>
-
-
-
-</header>
-
-
-
-
-
-
-
-
-<!-- SEARCH -->
-
-
-<section class="controls">
-
-
-<input 
-type="text"
-id="searchInput"
-placeholder="Search products..."
->
-
-
-
-
-<select id="categoryFilter">
-
-
-<option value="all">
-All Categories
-</option>
-
-
-<option value="electronics">
-Electronics
-</option>
-
-
-<option value="clothes">
-Clothes
-</option>
-
-
-<option value="cosmetics">
-Cosmetics
-</option>
-
-
-<option value="books">
-Books
-</option>
-
-
-</select>
-
-
-
-
-
-<select id="stockFilter">
-
-
-<option value="all">
-All Stock
-</option>
-
-
-<option value="available">
-Available
-</option>
-
-
-<option value="low">
-Low Stock
-</option>
-
-
-<option value="out">
-Out of Stock
-</option>
-
-
-</select>
-
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<!-- STATISTICS -->
-
-
-<section class="stats">
-
-
-
-<div class="stat-card">
-
-
-<div class="icon">
-    <i data-lucide="package"></i>
-</div>
-
-
-<div>
-
-<h2>
-8920
-</h2>
-
-
-<p>
-Total Products
-</p>
-
-
-<span>
-+12%
-</span>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-<div class="stat-card">
-
-
-<div class="icon">
-    <i data-lucide="package-check"></i>
-
-</div>
-
-
-<div>
-
-<h2>
-8200
-</h2>
-
-
-<p>
-Active Products
-</p>
-
-
-<span>
-+8%
-</span>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-<div class="stat-card">
-
-
-<div class="icon">
-    <i data-lucide="triangle-alert"></i>
-</div>
-
-
-<div>
-
-<h2>
-350
-</h2>
-
-
-<p>
-Low Stock
-</p>
-
-
-<span>
-Need Attention
-</span>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-
-<div class="stat-card">
-
-
-<div class="icon">
-    <i data-lucide="package-x"></i>
-
-</div>
-
-
-<div>
-
-<h2>
-70
-</h2>
-
-
-<p>
-Out Of Stock
-</p>
-
-
-<span class="red">
-Critical
-</span>
-
-
-</div>
-
-
-</div>
-
-
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<!-- PRODUCTS TABLE -->
-
-
-<section class="table-container">
-
-
-
-<div class="table-header">
-
-
-<h2>
-All Products
-</h2>
-
-
-<button>
-+ Add Product
-</button>
-
-
-
-</div>
-
-
-
-
-
-
-
-<table>
-
-
-<thead>
-
-<tr>
-
-
-<th>
-Product
-</th>
-
-
-<th>
-Seller
-</th>
-
-
-<th>
-Category
-</th>
-
-
-<th>
-Price
-</th>
-
-
-<th>
-Stock
-</th>
-
-
-<th>
-AI Status
-</th>
-
-
-<th>
-Status
-</th>
-
-
-<th>
-Actions
-</th>
-
-
-</tr>
-
-
-</thead>
-
-
-
-
-
-
-<tbody id="productsTable">
-
-
-
-
-
-<tr>
-
-
-<td>
-
-
-<div class="product-info">
-
-
-<img src="../../components/logo.png">
-
-
-<div>
-
-<strong>
-iPhone 15 Pro
-</strong>
-
-<small>
-Electronics
-</small>
-
-
-</div>
-
-
-</div>
-
-
-</td>
-
-
-
-
-
-<td>
-Tech Store
-</td>
-
-
-
-
-
-<td>
-Electronics
-</td>
-
-
-
-
-
-<td>
-700 JOD
-</td>
-
-
-
-
-
-<td>
-25
-</td>
-
-
-
-
-
-<td>
-
-<span class="ai high">
-📈 High Demand
-</span>
-
-
-</td>
-
-
-
-
-
-<td>
-
-<span class="status available">
-Available
-</span>
-
-
-</td>
-
-
-
-
-
-
-<td>
-
-
-<button class="view">
-👁
-</button>
-
-
-<button class="edit">
-✏️
-</button>
-
-
-<button class="delete">
-🗑
-</button>
-
-
-
-</td>
-
-
-
-
-
-</tr>
-
-
-
-
-
-
-
-
-
-<tr>
-
-
-<td>
-
-
-<div class="product-info">
-
-
-<img src="../../components/logo.png">
-
-
-<div>
-
-<strong>
-Foundation Cream
-</strong>
-
-<small>
-Cosmetics
-</small>
-
-
-</div>
-
-
-</div>
-
-
-</td>
-
-
-
-
-
-<td>
-Beauty Store
-</td>
-
-
-
-
-
-<td>
-Cosmetics
-</td>
-
-
-
-
-
-<td>
-15 JOD
-</td>
-
-
-
-
-
-<td>
-5
-</td>
-
-
-
-
-
-<td>
-
-
-<span class="ai warning">
-⚠️ Low Demand
-</span>
-
-
-</td>
-
-
-
-
-
-<td>
-
-
-<span class="status low">
-Low Stock
-</span>
-
-
-</td>
-
-
-
-
-
-<td>
-
-
-<button class="view">
-👁
-</button>
-
-
-<button class="edit">
-✏️
-</button>
-
-
-<button class="delete">
-🗑
-</button>
-
-
-</td>
-
-
-
-
-</tr>
-
-
-
-
-
-
-</tbody>
-
-
-
-</table>
-
-
-
-</section>
-
-
-
-
-
-</main>
-
-
-
-
-
-
-<script src="products.js"></script>
-<script>
-
-fetch("../components/sidebar.html")
-
-.then(response => response.text())
-
-.then(data => {
-
-    document.getElementById("sidebar").innerHTML = data;
-
-
-    lucide.createIcons();
-
-});
-
-</script>
-
-
-<script src="https://unpkg.com/lucide@latest"></script>
-<script src="../components/sidebar.js"></script>
-
-
-
+<body class="moderation-page admin-theme">
+  <div id="sidebar"></div>
+  <main class="content moderation-content">
+    <header class="page-header">
+      <div>
+        <span class="admin-page-eyebrow">TRUST &amp; QUALITY CONTROL</span>
+        <h1>Moderation center</h1>
+        <p>Review seller products and customer feedback before they become public.</p>
+      </div>
+      <div class="admin-profile"><span class="admin-avatar">SM</span><span>Administrator</span></div>
+    </header>
+
+    <section class="moderation-stats" aria-label="Moderation totals">
+      <article class="moderation-stat"><span class="stat-icon pending-icon"><i class="bi bi-hourglass-split" aria-hidden="true"></i></span><div><span>Products waiting</span><strong id="pendingProductsCount">0</strong></div></article>
+      <article class="moderation-stat"><span class="stat-icon approved-icon"><i class="bi bi-check2-circle" aria-hidden="true"></i></span><div><span>Approved products</span><strong id="approvedProductsCount">0</strong></div></article>
+      <article class="moderation-stat"><span class="stat-icon feedback-icon"><i class="bi bi-chat-square-heart" aria-hidden="true"></i></span><div><span>Feedback waiting</span><strong id="pendingFeedbackCount">0</strong></div></article>
+      <article class="moderation-stat"><span class="stat-icon public-icon"><i class="bi bi-chat-left-quote" aria-hidden="true"></i></span><div><span>Public feedback</span><strong id="publicFeedbackCount">0</strong></div></article>
+    </section>
+
+    <section class="moderation-workspace">
+      <div class="moderation-toolbar">
+        <div>
+          <span class="toolbar-eyebrow">REVIEW QUEUE</span>
+          <h2>Submitted for approval</h2>
+          <p>Pending items stay private until you approve them.</p>
+        </div>
+        <div class="moderation-tabs" role="tablist" aria-label="Moderation type">
+          <button type="button" class="moderation-tab is-active" role="tab" aria-selected="true" data-panel="products-panel">Products <span id="productsTabCount">0</span></button>
+          <button type="button" class="moderation-tab" role="tab" aria-selected="false" data-panel="feedback-panel" id="feedbackTab">Feedback <span id="feedbackTabCount">0</span></button>
+        </div>
+      </div>
+
+      <section class="moderation-panel is-active" id="products-panel" role="tabpanel">
+        <div class="queue-controls">
+          <label class="queue-search"><span class="sr-only">Search products</span><span aria-hidden="true"><i class="bi bi-search"></i></span><input id="productSearch" type="search" placeholder="Search product, seller, category…"></label>
+          <label class="queue-filter"><span class="sr-only">Filter product approval status</span><select id="productStatusFilter"><option value="pending_review">Waiting for review</option><option value="all">All products</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></label>
+        </div>
+        <div class="table-wrap">
+          <table class="moderation-table">
+            <thead><tr><th>Product</th><th>Seller / Store</th><th>Category</th><th>Offer</th><th>Submitted</th><th>Review status</th><th>Decision</th></tr></thead>
+            <tbody id="productsTable"></tbody>
+          </table>
+          <div class="queue-empty" id="productsEmpty" hidden><span>✓</span><strong>Nothing to review here</strong><p>New seller submissions will appear in this queue.</p></div>
+        </div>
+      </section>
+
+      <section class="moderation-panel" id="feedback-panel" role="tabpanel" hidden>
+        <div class="queue-controls">
+          <label class="queue-search"><span class="sr-only">Search feedback</span><span aria-hidden="true">⌕</span><input id="feedbackSearch" type="search" placeholder="Search feedback, author, topic…"></label>
+          <label class="queue-filter"><span class="sr-only">Filter feedback status</span><select id="feedbackStatusFilter"><option value="pending_review">Waiting for review</option><option value="all">All feedback</option><option value="approved">Approved</option><option value="rejected">Rejected</option></select></label>
+        </div>
+        <div class="feedback-queue" id="feedbackList"></div>
+        <div class="queue-empty" id="feedbackEmpty" hidden><span><i class="bi bi-chat-square-heart" aria-hidden="true"></i></span><strong>No feedback to review</strong><p>Order and website feedback will appear here when submitted.</p></div>
+      </section>
+    </section>
+    <p class="moderation-storage-note"><span aria-hidden="true"><i class="bi bi-info-circle"></i></span> This version stores approvals in this browser. Use the same browser profile for the admin, seller, and buyer flows.</p>
+  </main>
+
+  
+  <script>
+    fetch("../components/sidebar.html").then(response => response.text()).then(html => {
+      document.getElementById("sidebar").innerHTML = html;
+      
+      document.dispatchEvent(new Event("adminSidebarReady"));
+    }).catch(() => {});
+  </script>
+  <script src="../components/sidebar.js"></script>
+  <script src="products.js"></script>
 </body>
-
 </html>

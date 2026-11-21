@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#071735">
+  <title>Website Feedback | Stock Mind</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="../components/navbar.css?v=navbar-links-glow-1"><link rel="stylesheet" href="../components/footer.css"><link rel="stylesheet" href="footer-pages.css">
+    <link rel="stylesheet" href="../responsive.css?v=site-responsive-2">
+</head>
+<body><div id="navbar-container"></div><main class="footer-info-page">
+  <a class="footer-info-back" href="index.html">← Back to Stock Mind</a>
+  <header class="footer-info-heading"><span class="footer-info-eyebrow">HELP US IMPROVE</span><h1>Tell us what you think.</h1><p>Report an issue, suggest an improvement, or tell us what worked well.</p></header>
+  <div class="site-feedback-layout">
+    <form class="site-feedback-form" id="site-feedback-form" novalidate>
+      <label for="feedback-category">Feedback type <select id="feedback-category" name="category" required><option value="">Choose a topic</option><option value="selling-experience">My selling experience</option><option value="buying-experience">My buying experience</option><option value="suggestion">Suggestion</option><option value="issue">Something is not working</option><option value="experience">My experience</option><option value="other">Other</option></select></label>
+      <label for="feedback-name">Name <span aria-hidden="true">(optional)</span><input id="feedback-name" name="name" maxlength="80" autocomplete="name" placeholder="Your name"></label>
+      <label for="feedback-email">Email <span aria-hidden="true">(optional)</span><input id="feedback-email" name="email" type="email" maxlength="254" autocomplete="email" placeholder="you@example.com"></label>
+      <label for="feedback-message">Your feedback <textarea id="feedback-message" name="message" minlength="10" maxlength="1000" required placeholder="Share the details (at least 10 characters)..."></textarea></label>
+      <button class="site-feedback-submit" type="submit">Send feedback <span aria-hidden="true">→</span></button>
+      <p class="site-feedback-message" id="feedback-result" role="status" aria-live="polite"></p>
+    </form>
+    <aside class="site-feedback-note"><strong>What happens next?</strong>Your feedback is sent to the Stock Mind admin review queue. If approved for public display, it will appear in the customer feedback section on the home page.</aside>
+  </div>
+</main><div id="footer-container"></div>
+<script src="../components/navbar.js?v=subscription-notification-1"></script><script src="../components/load-navbar.js"></script><script>loadStockMindNavbar("navbar-container", "../components/"); fetch("../components/footer.html").then(r => r.ok ? r.text() : "").then(html => { if (html) document.getElementById("footer-container").innerHTML = html; }).catch(() => {});</script>
+<script>
+(() => {
+  const form = document.getElementById("site-feedback-form");
+  const result = document.getElementById("feedback-result");
+  form.addEventListener("submit", event => {
+    event.preventDefault();
+    const data = new FormData(form);
+    const message = String(data.get("message") || "").trim();
+    const category = String(data.get("category") || "");
+    const email = String(data.get("email") || "").trim();
+    if (!category || message.length < 10 || message.length > 1000 || (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) {
+      form.reportValidity();
+      result.textContent = "Please choose a topic, enter at least 10 characters, and check the email address.";
+      result.style.color = "#b42318";
+      return;
+    }
+    let account = {};
+    try { account = JSON.parse(localStorage.getItem("stockMindUser") || "{}"); } catch { account = {}; }
+    const entry = { id: `FB-${Date.now()}`, source: "site", category, name: String(data.get("name") || account.name || "").trim(), email: email || String(account.email || "").trim(), role: account.loggedIn ? account.role || "Member" : "Stock Mind member", message, createdAt: new Date().toISOString(), approvalStatus: "pending_review", showOnHome: false };
+    try {
+      const saved = JSON.parse(localStorage.getItem("stockMindFeedbacks") || "[]");
+      localStorage.setItem("stockMindFeedbacks", JSON.stringify([entry, ...(Array.isArray(saved) ? saved : [])]));
+      window.dispatchEvent(new Event("stockMindFeedbackUpdated"));
+      form.reset();
+      result.textContent = "Thanks — your feedback was sent for admin review. It will appear on the home page only if approved for public display.";
+      result.style.color = "#21805e";
+    } catch (_) {
+      result.textContent = "This browser could not save your feedback. Please email hello@stockmind.com.";
+      result.style.color = "#b42318";
+    }
+  });
+})();
+</script>
+</body></html>

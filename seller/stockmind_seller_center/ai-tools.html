@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#061735">
+  <title>AI Tools | Stock Mind</title>
+  <link rel="stylesheet" href="seller-shared.css">
+  <link rel="stylesheet" href="seller-tabs.css">
+  <link rel="stylesheet" href="ai-tools.css">
+  <link rel="stylesheet" href="subscription-access.css?v=freemium-2">
+  <link rel="stylesheet" href="../../components/navbar.css?v=navbar-links-glow-1">
+  <link rel="stylesheet" href="../../components/footer.css">
+  <link rel="stylesheet" href="../../responsive.css?v=site-responsive-2">
+</head>
+<body data-seller-page="ai-tools">
+  <div id="navbar-container"></div>
+  <div id="seller-tabs-mount"></div>
+  <main class="sm-page ai-tools-page">
+    <header class="ai-tools-hero">
+      <span class="ai-tools-eyebrow"><span></span> STOCK MIND INTELLIGENCE</span>
+      <h1>Choose the right tool<br><em>for your next decision.</em></h1>
+      <p>Analyze a product before you buy it, or get a practical next step for surplus you already have.</p>
+      <div class="ai-tools-plan" id="ai-tools-plan" role="status" aria-live="polite">Your free first analysis is available in each tool.</div>
+    </header>
+
+    <section class="ai-tools-grid" aria-label="Stock Mind AI tools">
+      <article class="ai-tool-card ai-tool-card--buy">
+        <div class="ai-tool-card__top"><span class="ai-tool-icon" aria-hidden="true">◈</span><span class="ai-tool-label">BUY WITH CONFIDENCE</span></div>
+        <h2>Before You Buy</h2>
+        <p>Enter a product, its cost, expected selling price, quantity, and store context to review the purchase before committing your budget.</p>
+        <div class="ai-tool-meta"><span>Free access</span><strong id="buy-allowance">1 first analysis</strong></div>
+        <a class="ai-tool-button" href="ai-advisor.html">Open Before You Buy <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="ai-tool-card ai-tool-card--recommend">
+        <div class="ai-tool-card__top"><span class="ai-tool-icon" aria-hidden="true">✧</span><span class="ai-tool-label">SELL SURPLUS SMARTER</span></div>
+        <h2>AI Recommendations</h2>
+        <p>Add a surplus product with its photo and total quantity. Review pricing, demand signals, and suggested actions for that specific lot.</p>
+        <div class="ai-tool-meta"><span>Free access</span><strong id="rec-allowance">1 first analysis</strong></div>
+        <a class="ai-tool-button" href="recommendations.html">Open AI Recommendations <span aria-hidden="true">→</span></a>
+      </article>
+    </section>
+
+    <section class="ai-tools-premium">
+      <div><span class="ai-tools-eyebrow">WHEN YOUR STORE IS READY</span><h2>Keep analyzing with Premium</h2><p>After each tool’s free first analysis, Premium unlocks continued use of all three AI services for your selected plan period.</p></div>
+      <a href="subscription.html">Compare Premium plans <span aria-hidden="true">→</span></a>
+    </section>
+    <p class="ai-tools-footnote">Demand Forecast is available inside AI Recommendations. Marketplace access and the seller dashboard remain free; marketplace commission is separate.</p>
+  </main>
+  <div id="footer-container"></div>
+  <script src="../../components/navbar.js?v=subscription-notification-1"></script>
+  <script src="../../components/load-navbar.js"></script>
+  <script>if(typeof loadStockMindNavbar === "function")loadStockMindNavbar("navbar-container","../../components/");</script>
+  <script src="store-profile-data.js"></script>
+  <script>const activeSeller=window.StockMindStoreProfile?.currentSeller();if(!activeSeller)window.location.replace("../../login/login.html?role=seller");else if(!window.StockMindStoreProfile.isComplete(activeSeller))window.location.replace("store-profile.html?mode=setup");</script>
+  <script src="seller-tabs.js"></script>
+  <script src="subscription-access.js?v=freemium-2"></script>
+  <script>
+    (() => {
+      const access = window.StockMindAccess;
+      if (!access) return;
+      const account = (() => { try { return JSON.parse(localStorage.getItem("stockMindUser") || "null") || {}; } catch { return {}; } })();
+      const introKey = `stockMindSubscriptionIntroSeen:${String(account.email || account.id || account.username || "seller").trim().toLowerCase()}`;
+      if (!access.isPremium() && !localStorage.getItem(introKey)) {
+        window.location.replace("subscription.html?welcome=1");
+        return;
+      }
+      const plan = document.getElementById("ai-tools-plan");
+      const buy = document.getElementById("buy-allowance");
+      const rec = document.getElementById("rec-allowance");
+      if (access.isPremium()) {
+        plan.textContent = "Premium is active — all three AI tools are available during your plan.";
+        buy.textContent = "Premium active";
+        rec.textContent = "Premium active";
+      } else {
+        if (access.used("beforeYouBuy") > 0) buy.textContent = "Free analysis used · Premium to continue";
+        if (access.used("recommendations") > 0) rec.textContent = "Free analysis used · Premium to continue";
+        if (access.used("beforeYouBuy") > 0 && access.used("recommendations") > 0) {
+          plan.textContent = "Your free first analysis in both tools has been used. Choose Premium to continue.";
+        }
+      }
+    })();
+  </script>
+  <script src="../../components/site-validation.js"></script>
+</body>
+</html>

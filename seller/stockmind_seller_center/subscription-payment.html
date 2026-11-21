@@ -1,43 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Stock Mind | Subscription Checkout</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#061735">
+  <title>Stock Mind | Checkout</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../components/navbar.css">
+  <link rel="stylesheet" href="../../components/navbar.css?v=navbar-links-glow-1">
   <link rel="stylesheet" href="../../components/footer.css">
   <link rel="stylesheet" href="subscription-payment.css">
+    <link rel="stylesheet" href="../../responsive.css?v=site-responsive-2">
 </head>
 <body>
   <div id="navbar-container"></div>
-  <main class="pay-page">
-    <div class="pay-heading"><span class="eyebrow">STOCK MIND PREMIUM</span><h1>Complete your subscription</h1><p>Review your plan and continue to secure payment.</p></div>
-    <div class="pay-grid">
-      <section class="pay-card" aria-label="Subscription checkout">
-        <div class="section-heading"><span class="step">1</span><h2>Choose access period</h2></div>
-        <div class="period-grid" id="period-options"></div>
-        <div class="section-heading payment-heading"><span class="step">2</span><h2>Payment method</h2></div>
-        <div class="method"><span class="method-icon">▣</span><div><strong>Credit or debit card</strong><small>Secure payment through an approved gateway</small></div><span class="methods">VISA · MC</span></div>
-        <div class="notice"><strong>Card security</strong><p>Real card details must be entered only on the payment provider's secure checkout page. This website does not collect or store card numbers or CVC.</p></div>
-        <button id="continue-pay" class="primary" type="button">Continue to secure payment →</button>
-        <button id="demo-pay" class="secondary" type="button">Complete demo checkout (test only)</button>
-        <p class="status" id="pay-status" role="status" aria-live="polite"></p>
-        <p class="fine-print">The demo option activates a local test subscription without charging money. Real payment requires an integrated backend and payment provider.</p>
-      </section>
-      <aside class="pay-card summary"><h2>Order summary</h2>
-        <div class="service"><span class="service-icon">✦</span><div><strong>Stock Mind Premium</strong><small>AI buying analysis & recommendations</small></div></div>
-        <div class="summary-line"><span>Access period</span><strong id="selected-period">—</strong></div>
-        <div class="summary-line"><span>Service price</span><strong id="service-price">—</strong></div>
-        <div class="summary-total"><strong>Total due</strong><strong id="total-due">—</strong></div>
-        <a href="subscription.html" class="back">← Back to plans</a>
+  <main class="checkout-page">
+    <a class="checkout-back" href="subscription.html"><span aria-hidden="true">←</span> Back to plans</a>
+    <header class="checkout-heading">
+      <span class="checkout-eyebrow"><span class="checkout-eyebrow__dot"></span> STOCK MIND PREMIUM</span>
+      <h1>Checkout</h1>
+      <p>Review your plan and add your billing details.</p>
+    </header>
+
+    <ol class="checkout-steps" aria-label="Checkout progress">
+      <li class="is-active" data-progress-step="1"><span>1</span><b>Plan</b></li>
+      <li data-progress-step="2"><span>2</span><b>Billing details</b></li>
+      <li data-progress-step="3"><span>3</span><b>Payment</b></li>
+    </ol>
+
+    <div class="checkout-layout">
+      <form class="checkout-card" id="checkout-form" novalidate>
+        <section class="checkout-stage is-active" data-checkout-step="1">
+          <div class="stage-heading"><span class="stage-number">01</span><div><h2>Review your plan</h2><p>Your access period begins after checkout.</p></div></div>
+          <label class="field-label" for="plan-select">Subscription period</label>
+          <div class="select-wrap"><select id="plan-select" name="plan" required></select><span aria-hidden="true">⌄</span></div>
+          <div class="selected-plan" id="selected-plan-card"></div>
+          <div class="inline-note"><span aria-hidden="true">ⓘ</span><span>One-time purchase. Your plan will not renew automatically.</span></div>
+          <div class="checkout-actions"><span></span><button class="checkout-button" type="button" data-next>Continue to billing <span>→</span></button></div>
+        </section>
+
+        <section class="checkout-stage" data-checkout-step="2" hidden>
+          <div class="stage-heading"><span class="stage-number">02</span><div><h2>Billing details</h2><p>Used for your order confirmation.</p></div></div>
+          <div class="fields-grid">
+            <label class="field"><span>Full name</span><input id="billing-name" name="name" autocomplete="name" placeholder="Your name" required maxlength="90"><small class="field-error"></small></label>
+            <label class="field"><span>Email address</span><input id="billing-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required maxlength="160"><small class="field-error"></small></label>
+            <label class="field"><span>Store name <em>Optional</em></span><input id="billing-store" name="store" autocomplete="organization" placeholder="Your store" maxlength="100"></label>
+            <label class="field"><span>Country</span><select id="billing-country" name="country" autocomplete="country-name" required><option value="Jordan">Jordan</option><option value="Saudi Arabia">Saudi Arabia</option><option value="United Arab Emirates">United Arab Emirates</option><option value="Other">Other</option></select></label>
+          </div>
+          <div class="inline-note"><span aria-hidden="true">◈</span><span>Your billing details stay in this browser for the demo order. They are not sent to a payment service.</span></div>
+          <div class="checkout-actions"><button class="checkout-button checkout-button--quiet" type="button" data-back>← Back</button><button class="checkout-button" type="button" data-next>Continue to payment <span>→</span></button></div>
+        </section>
+
+        <section class="checkout-stage" data-checkout-step="3" hidden>
+          <div class="stage-heading"><span class="stage-number">03</span><div><h2>Payment</h2><p>Choose how you want to complete checkout.</p></div></div>
+          <div class="payment-choice payment-choice--live">
+            <span class="payment-choice__icon" aria-hidden="true">▤</span>
+            <span class="payment-choice__copy"><strong>Card payment</strong><small>Visa · Mastercard · processed on a hosted provider page</small></span>
+            <span class="payment-state">Not connected</span>
+          </div>
+          <div class="gateway-note"><strong>Live card payments are not set up yet</strong><p>This project has no payment server or connected gateway. Card numbers are never requested or stored on this page.</p></div>
+          <label class="payment-choice payment-choice--demo" for="demo-mode">
+            <input id="demo-mode" type="radio" name="payment-mode" value="demo" checked>
+            <span class="payment-choice__icon" aria-hidden="true">✓</span>
+            <span class="payment-choice__copy"><strong>Complete demo checkout</strong><small>Creates a clearly marked test subscription. No money is charged.</small></span>
+            <span class="demo-pill">TEST MODE</span>
+          </label>
+          <label class="confirm-demo"><input id="confirm-demo" type="checkbox"><span>I understand this is a demo order and no payment will be taken.</span></label>
+          <p class="checkout-error" id="checkout-error" role="alert" aria-live="assertive"></p>
+          <div class="checkout-actions"><button class="checkout-button checkout-button--quiet" type="button" data-back>← Back</button><button class="checkout-button checkout-button--complete" id="complete-demo" type="button">Confirm demo order <span>→</span></button></div>
+        </section>
+      </form>
+
+      <aside class="order-card" aria-label="Order summary">
+        <div class="order-card__top"><span>ORDER SUMMARY</span><span class="order-lock" aria-hidden="true">◇</span></div>
+        <div class="order-product"><span class="order-product__icon" aria-hidden="true">✦</span><div><strong>Stock Mind Premium</strong><small>Before You Buy · AI Recommendations · Demand Forecast</small></div></div>
+        <div class="order-rule"></div>
+        <div class="order-line"><span>Access period</span><strong id="summary-period">—</strong></div>
+        <div class="order-line"><span>Plan price</span><strong id="summary-price">—</strong></div>
+        <div class="order-line order-line--saving" id="summary-savings-row" hidden><span>Multi-month saving</span><strong id="summary-savings">—</strong></div>
+        <div class="order-rule"></div>
+        <div class="order-total"><span>Total due</span><strong id="summary-total">—</strong></div>
+        <p class="order-tax">No automatic renewal. No hidden fees.</p>
+        <div class="order-secure"><span aria-hidden="true">✓</span><span>Card details are not collected on this site.</span></div>
+        <a class="change-plan" href="subscription.html">Change plan</a>
       </aside>
     </div>
+    <p class="checkout-footnote">By continuing in test mode, you create a local demo subscription for this browser only.</p>
   </main>
   <div id="footer-container"></div>
-  <script src="../../components/navbar.js"></script>
+  <script src="../../components/navbar.js?v=subscription-notification-1"></script>
   <script src="../../components/load-navbar.js"></script>
   <script>if(typeof loadStockMindNavbar === 'function') loadStockMindNavbar('navbar-container','../../components/');</script>
+  <script src="../../components/site-validation.js"></script>
   <script src="subscription-payment.js"></script>
 </body>
 </html>

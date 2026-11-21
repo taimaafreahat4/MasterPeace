@@ -1,0 +1,96 @@
+.stock-intel{--bg:#07112B;--navy:#0B173A;--acc:#7C3AED;--lav:#C4B5FD;--ink:#F8FAFC;--mute:#A8B4D6;--amb:#F59E0B;--teal:#2DD4BF;--line:rgba(196,181,253,.24);--glass:rgba(11,23,58,.7);--disp:"Space Grotesk",system-ui,sans-serif;--body:Inter,system-ui,sans-serif;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.stock-intel #stock-intel-app{position:sticky;top:var(--intel-nav,64px);height:max(440px,calc(100svh - var(--intel-nav,64px)));overflow:hidden}
+.stock-intel #stock-intel-stage, .stock-intel #stock-intel-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+.stock-intel .copy{position:absolute;left:max(18px,env(safe-area-inset-left,0px));top:calc(78px + env(safe-area-inset-top,0px));max-width:34rem;z-index:5;pointer-events:none;transition:opacity .35s}
+.stock-intel .copy.off{opacity:0}
+.stock-intel .copy.in>*{animation:intel-up .5s both}
+.stock-intel .copy.in>*:nth-child(2){animation-delay:.05s}.stock-intel .copy.in>*:nth-child(3){animation-delay:.1s}
+@keyframes intel-up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.stock-intel .eye{margin:0 0 10px;font:600 11px var(--body);letter-spacing:.2em;text-transform:uppercase;color:var(--lav)}
+.stock-intel h1{margin:0;font:700 clamp(1.7rem,4.4vw,3.6rem)/1.02 var(--disp);letter-spacing:-.025em;text-wrap:balance}
+.stock-intel h1 em{font-style:normal;color:var(--lav)}
+.stock-intel .sub{margin:14px 0 0;max-width:30rem;color:var(--mute);font-size:clamp(13px,1.3vw,16px)}
+.stock-intel .cta{display:flex;gap:10px;margin-top:20px;pointer-events:auto;flex-wrap:wrap}
+.stock-intel .cta button{font:600 13px var(--body);padding:12px 20px;border-radius:999px;border:1px solid var(--line);background:var(--glass);color:var(--ink);cursor:pointer;backdrop-filter:blur(10px)}
+.stock-intel .cta button:first-child{background:var(--acc);border-color:var(--acc)}
+.stock-intel .cta button:focus-visible{outline:2px solid var(--lav);outline-offset:2px}
+.stock-intel #stock-intel-lines{display:none;position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:6}
+.stock-intel #stock-intel-lines line{stroke:var(--lav);stroke-width:1.2;opacity:.8}
+.stock-intel #stock-intel-lines circle{fill:var(--lav)}
+.stock-intel .card{position:absolute;left:0;top:0;width:15.5rem;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:7;pointer-events:none;opacity:0;will-change:transform,opacity;box-shadow:0 12px 34px rgba(3,8,30,.5)}
+.stock-intel .card h4{margin:0 0 3px;font:600 14px var(--disp)}
+.stock-intel .card p{margin:0;color:var(--mute);font-size:12.5px;line-height:1.4}
+.stock-intel .card.warn{border-color:rgba(245,158,11,.55)}.stock-intel .card.warn h4{color:#fbbf24}
+.stock-intel .card.good{border-color:rgba(45,212,191,.5)}.stock-intel .card.good h4{color:var(--teal)}
+.stock-intel .tag{display:inline-block;margin-bottom:6px;padding:1px 8px;border-radius:999px;font:600 9.5px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--lav);background:rgba(124,58,237,.25)}
+.stock-intel .card.wide{width:17.5rem}
+.stock-intel .card svg{width:100%;display:block;margin:6px 0}
+.stock-intel .gr, .stock-intel .gr2{fill:none;stroke-width:2.4;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--dr,0))}
+.stock-intel .gr{stroke:var(--teal)}.stock-intel .gr2{stroke:var(--lav);stroke-width:1.4;opacity:.8}
+.stock-intel .row{display:flex;justify-content:space-between;font-size:11.5px;color:var(--mute);margin-top:3px}.stock-intel .row b{color:var(--ink);font-weight:600}
+.stock-intel .thumb{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,#c79a6b,#8a6a45);float:left;margin-right:10px}
+.stock-intel .hint{position:absolute;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:8;padding:6px 14px;border:1px solid var(--line);border-radius:999px;background:var(--glass);color:var(--mute);font-size:12px;pointer-events:none;transition:opacity .4s}
+.stock-intel #stock-intel-nogl[hidden]{display:none!important}
+.stock-intel #stock-intel-nogl{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px;color:var(--mute);z-index:9;background:var(--bg)}
+
+.stock-intel.has-3d { min-height: 700svh; }
+.stock-intel #stock-intel-app { color: var(--ink); font: 14px/1.5 var(--body); background: var(--bg); }
+.stock-intel:not(.has-3d) #stock-intel-app {
+    background: linear-gradient(90deg,#07112bf5,#07112b63),url('./warehouse-cinematic.jpg') center / cover;
+}
+.stock-intel [hidden] { display: none !important; }
+.stock-intel .intel-tools {
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 8;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 14px clamp(16px,4.4vw,70px);
+    background: linear-gradient(#07112bcc, transparent);
+}
+.stock-intel .intel-logo, .stock-intel .intel-skip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ink);
+    font-weight: 700;
+}
+.stock-intel .intel-logo img { border-radius: 8px; }
+.stock-intel .intel-skip { border: 1px solid var(--line); border-radius: 100px; padding: 7px 11px; background: var(--glass); font-size: .78rem; }
+.stock-intel .intel-skip:hover { border-color: var(--lav); }
+.stock-intel .copy {
+    left: clamp(16px,4.4vw,70px);
+    top: clamp(68px, 13vh, 120px);
+    max-width: min(42rem, 47vw);
+    padding: 12px 18px 18px 0;
+    border-radius: 14px;
+    background: radial-gradient(ellipse at 10% 40%, #07112bbd, #07112b50 65%, transparent 100%);
+}
+.stock-intel .cta a {
+    font: 600 13px var(--body);
+    padding: 12px 20px;
+    border: 1px solid var(--line);
+    border-radius: 99px;
+    color: var(--ink);
+    background: var(--glass);
+}
+.stock-intel .cta a:first-child { border-color: var(--acc); background: var(--acc); }
+.stock-intel .cta :is(a,button):focus-visible, .stock-intel .intel-tools a:focus-visible {
+    outline: 2px solid var(--lav); outline-offset: 2px;
+}
+.stock-intel .thumb { background: #d0b787 url('../../Images/electronic/p1.jpg') center / cover; }
+@media(max-width:720px) {
+    .stock-intel.has-3d { min-height: 540svh; }
+    .stock-intel .copy { max-width: calc(100% - 32px); top: 57px; padding-top: 5px; }
+    .stock-intel .card { width: 11.5rem; padding: 8px 9px; }
+    .stock-intel .card.wide { width: 12.5rem; }
+}
+@media(prefers-reduced-motion:reduce) {
+    .stock-intel .copy, .stock-intel .hint { transition: none; }
+    .stock-intel .copy.in>* { animation: none; }
+}
+
+.stock-intel { margin-top: var(--intel-nav, 64px); }

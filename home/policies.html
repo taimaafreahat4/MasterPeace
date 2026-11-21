@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#071735"><title>Privacy & Terms | Stock Mind</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../components/navbar.css?v=navbar-links-glow-1"><link rel="stylesheet" href="../components/footer.css"><link rel="stylesheet" href="footer-pages.css">
+    <link rel="stylesheet" href="../responsive.css?v=site-responsive-2">
+</head>
+<body><div id="navbar-container"></div><main class="footer-info-page">
+  <a class="footer-info-back" href="index.html">← Back to Stock Mind</a>
+  <header class="footer-info-heading"><span class="footer-info-eyebrow">CLEAR, SIMPLE GUIDELINES</span><h1>Privacy &amp; Terms</h1><p>These notes describe how this Stock Mind demo currently works. They are product information, not a substitute for legal advice.</p></header>
+  <section class="footer-info-card" id="privacy"><h2>Privacy Policy</h2><p>This browser based prototype keeps some account, cart, order, notification, and feedback data in your browser storage so that demo workflows can continue between pages. Data saved this way is local to this browser profile and is not automatically sent to a Stock Mind server.</p><p>Do not enter real payment credentials or sensitive personal information in this demo. The checkout and delivery flow are demonstrations and do not process a real payment or shipment. Clearing browser site data may remove locally saved demo information.</p><p>For questions, contact <a href="mailto:hello@stockmind.com?subject=Privacy%20question">hello@stockmind.com</a>.</p></section>
+  <section class="footer-info-card" id="terms"><h2>Terms of Service</h2><p>Stock Mind is provided here as a demonstration of inventory management and a merchant marketplace. Product listings, recommendations, orders, delivery statuses, and analytics may be sample or locally simulated data.</p><p>Do not rely on demo output for financial, purchasing, logistics, or business decisions. No real sale, payment, delivery, or service commitment is created through this prototype. Use of the demo must not include unlawful, harmful, or misleading content.</p><p>These terms explain the current prototype only. A production service would need complete, jurisdiction specific terms and privacy disclosures before launch.</p></section>
+</main><div id="footer-container"></div>
+<script src="../components/navbar.js?v=subscription-notification-1"></script><script src="../components/load-navbar.js"></script><script>loadStockMindNavbar("navbar-container", "../components/"); fetch("../components/footer.html").then(r => r.ok ? r.text() : "").then(html => { if (html) document.getElementById("footer-container").innerHTML = html; }).catch(() => {});</script>
+</body></html>

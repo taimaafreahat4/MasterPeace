@@ -53,10 +53,12 @@ document.addEventListener("DOMContentLoaded", () => {
         electronics: "Electronics",
         home: "Home & Living",
         books: "Books",
+        toys_baby: "Toys & Baby",
         grocery: "Grocery",
         sports: "Sports",
         bags: "Bags & Accessories",
-        auto: "Automotive"
+        auto: "Automotive",
+        other: "Other"
     };
 
     // Accept both category slugs and the labels
@@ -79,6 +81,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             "electronic": "electronics",
             "electronics": "electronics",
+            "phone & electronics": "electronics",
+            "phones & electronics": "electronics",
+            "phone electronics": "electronics",
+            "phones electronics": "electronics",
 
             "home": "home",
             "home living": "home",
@@ -86,6 +92,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
             "book": "books",
             "books": "books",
+
+            "toy": "toys_baby",
+            "toys": "toys_baby",
+            "baby": "toys_baby",
+            "toys baby": "toys_baby",
+            "toys & baby": "toys_baby",
+            "baby products": "toys_baby",
 
             "grocery": "grocery",
             "groceries": "grocery",
@@ -104,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
             "car": "auto"
         };
 
-        return aliases[category] || "";
+        return aliases[category] || (category ? "other" : "");
     }
 
     // =========================
@@ -192,10 +205,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 ],
         books: [],
+        toys_baby: [],
         grocery: [],
         sports: [],
         bags: [],
-        auto: []
+        auto: [],
+        other: []
     };
 
     // =========================
@@ -203,26 +218,31 @@ document.addEventListener("DOMContentLoaded", () => {
     // =========================
 
     function readSellerProducts() {
-        // Supports the main key and a few earlier key names.
+        // Merge seller-store products and published marketplace listings.
+        // Some versions of the seller pages wrote to different localStorage keys.
         const storageKeys = [
-            "stockMindSellerProducts",
             "sellerProducts",
-            "stockMindProducts"
+            "stockMindSellerProducts",
+            "stockMindProducts",
+            "stockMindMarketplaceListings"
         ];
 
+        const merged = new Map();
+        let fallbackId = 0;
         for (const key of storageKeys) {
             try {
                 const saved = JSON.parse(localStorage.getItem(key) || "[]");
-
-                if (Array.isArray(saved) && saved.length > 0) {
-                    return saved;
-                }
+                if (!Array.isArray(saved)) continue;
+                saved.forEach(item => {
+                    if (!item || typeof item !== "object") return;
+                    const id = String(item.id || `${key}-${fallbackId++}-${item.name || "product"}`);
+                    merged.set(id, {...(merged.get(id) || {}), ...item});
+                });
             } catch (error) {
                 console.warn("Could not read seller products:", key, error);
             }
         }
-
-        return [];
+        return [...merged.values()];
     }
 
     function addSellerProductsToCategories() {
@@ -230,7 +250,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         sellerProducts.forEach((item, index) => {
             if (!item || typeof item !== "object") return;
-
+            // Seller listings stay private until an admin approves them.
+            if (item.sellerListed && item.approvalStatus && item.approvalStatus !== "approved") return;
             const category = normalizeCategory(
                 item.category || item.categoryName
             );
@@ -264,13 +285,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 image => typeof image === "string" && image.trim() !== ""
             );
 
+            const sellingMethod = item.sellingMethod === "whole_lot" ? "whole_lot" : "regular";
+            const quantity = Math.max(0, Number(item.quantity) || 0);
+            const unitPrice = Number(item.price || item.sellingPrice || 0);
+            const lotPrice = sellingMethod === "whole_lot"
+                ? Number(item.lotPrice) || unitPrice * quantity
+                : null;
             categoryProducts[category].push({
                 id: productId,
                 name: String(item.name || item.title || "Seller Product"),
-                price: Number(item.price || item.sellingPrice || 0),
+                price: unitPrice,
+                lotPrice,
+                sellingMethod,
                 oldPrice: 0,
-                minimumOrder: 1,
-                quantity: Math.max(0, Number(item.quantity) || 0),
+                minimumOrder: sellingMethod === "whole_lot" ? 1 : Math.max(1, Math.floor(Number(item.minOrder) || 1)),
+                quantity,
                 sold: 0,
                 badge: "",
                 brand: String(item.brand || item.seller || "Seller"),
@@ -278,13 +307,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 images: images,
                 condition: item.condition || "New",
                 description: item.description || "",
-                sellerProduct: true
+                sellerProduct: true,
+                marketplaceListingId: item.marketplaceListingId || (item.sellerListed ? productId : null),
+                sellerId: item.sellerId || "",
+                sellerEmail: item.sellerEmail || "",
+                status: item.status || "available"
             });
         });
     }
 
     // Important: define categoryProducts before adding seller products.
     addSellerProductsToCategories();
+
+    // An admin review in another tab immediately refreshes buyer-visible products.
+    window.addEventListener("storage", event => {
+        if (event.key === "stockMindMarketplaceListings") window.location.reload();
+    });
 
     // =========================
     // STATE
@@ -307,11 +345,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function getPrice(product) {
+        if (product?.sellingMethod === "whole_lot") {
+            return Number(product.price) * Number(product.quantity || 0);
+        }
         return Number(product.price) || 0;
     }
 
     function getMinimum(product) {
-        if (product.sellerProduct) return 1;
+        if (product?.sellingMethod === "whole_lot") return 1;
+        if (product.sellerProduct) return Math.max(1, Math.floor(Number(product.minimumOrder) || 1));
 
         return Math.max(
             1,
@@ -415,8 +457,13 @@ function updateCartCount() {
             return;
         }
 
+        if (["sold", "reserved"].includes(String(product.status || "").toLowerCase())) {
+            showNotice(String(product.status).toLowerCase() === "reserved" ? "This lot is reserved." : "This product has sold out.");
+            return;
+        }
+
         const minimum = getMinimum(product);
-        const amount = Math.max(
+        const amount = product.sellingMethod === "whole_lot" ? 1 : Math.max(
             minimum,
             Math.floor(Number(quantity) || minimum)
         );
@@ -437,6 +484,10 @@ function updateCartCount() {
         );
 
         if (existing) {
+            if (product.sellingMethod === "whole_lot") {
+                showNotice("This complete lot is already in your cart.");
+                return;
+            }
             const newQuantity = Number(existing.quantity || 0) + amount;
 
             if (
@@ -455,8 +506,15 @@ function updateCartCount() {
                 id: product.id,
                 name: product.name,
                 price: getPrice(product),
+                unitPrice: Number(product.price) || 0,
                 minimum: minimum,
                 quantity: amount,
+                maxQuantity: product.sellingMethod === "whole_lot" ? 1 : Number(product.quantity) || undefined,
+                sellingMethod: product.sellingMethod || "regular",
+                lotUnits: product.sellingMethod === "whole_lot" ? Number(product.quantity) : null,
+                marketplaceListingId: product.marketplaceListingId || null,
+                sellerId: product.sellerId || "",
+                sellerEmail: product.sellerEmail || "",
                 category: currentCategory,
                 categoryName: categoryNames[currentCategory] || currentCategory,
                 image: getProductImage(product, 0),
@@ -737,7 +795,9 @@ imageBox.appendChild(favoriteButton);
         const cartButton = document.createElement("button");
         cartButton.className = "product-cart-button add-to-cart-text";
         cartButton.type = "button";
-        cartButton.textContent = "Add to Cart";
+        const unavailable = product.status === "sold" || product.status === "reserved" || (product.sellerProduct && Number(product.quantity) <= 0);
+        cartButton.disabled = unavailable;
+        cartButton.textContent = unavailable ? (product.status === "reserved" ? "Reserved" : "Sold out") : product.sellingMethod === "whole_lot" ? "Buy entire lot" : "Add to Cart";
         cartButton.setAttribute(
             "aria-label",
             `Add ${product.name} to cart`
@@ -761,8 +821,15 @@ imageBox.appendChild(favoriteButton);
 
         const price = document.createElement("strong");
         price.className = "product-price";
-        price.textContent = money(product.price);
+        price.textContent = money(getPrice(product));
         priceRow.appendChild(price);
+
+        if (product.sellingMethod === "whole_lot") {
+            const lotLabel = document.createElement("span");
+            lotLabel.className = "product-old-price";
+            lotLabel.textContent = "Complete lot";
+            priceRow.appendChild(lotLabel);
+        }
 
         if (Number(product.oldPrice) > getPrice(product)) {
             const oldPrice = document.createElement("span");
@@ -780,8 +847,10 @@ imageBox.appendChild(favoriteButton);
             : `${Number(product.sold || 0).toLocaleString()} sold`;
 
         const minimum = document.createElement("span");
-        minimum.textContent = product.sellerProduct
-            ? "Seller listing"
+        minimum.textContent = product.sellingMethod === "whole_lot"
+            ? `${product.quantity} pieces · whole lot`
+            : product.sellerProduct
+            ? `Min. ${getMinimum(product)} unit${getMinimum(product) === 1 ? "" : "s"}`
             : `Min. ${getMinimum(product)}`;
 
         meta.append(sold, minimum);
@@ -853,19 +922,33 @@ imageBox.appendChild(favoriteButton);
         }
 
         if (detailsMinimum) {
-            detailsMinimum.textContent = product.sellerProduct
+            detailsMinimum.textContent = product.sellingMethod === "whole_lot"
+                ? `${product.quantity} pieces in this complete lot`
+                : product.sellerProduct
                 ? `${product.quantity} units available`
                 : `${getMinimum(product)} units`;
         }
 
         if (minimumOrderText) {
-            minimumOrderText.textContent = product.sellerProduct
-                ? "1 unit"
+            minimumOrderText.textContent = product.sellingMethod === "whole_lot"
+                ? "Entire lot only"
+                : product.sellerProduct
+                ? `Minimum ${getMinimum(product)} unit${getMinimum(product) === 1 ? "" : "s"}`
                 : `${getMinimum(product)} units`;
         }
 
         if (quantityMinimum) {
             quantityMinimum.textContent = String(getMinimum(product));
+        }
+
+        const unitLabel = document.querySelector(".unit-price span");
+        const unitSuffix = document.querySelector(".unit-price small");
+        if (unitLabel) unitLabel.textContent = product.sellingMethod === "whole_lot" ? "Lot Total" : "Unit Price";
+        if (unitSuffix) unitSuffix.textContent = product.sellingMethod === "whole_lot" ? `(${money(product.price)} × ${Number(product.quantity).toLocaleString()} pieces)` : "/ unit";
+        if (addToCartButton) {
+            const unavailable = product.status === "sold" || product.status === "reserved" || (product.sellerProduct && Number(product.quantity) <= 0);
+            addToCartButton.disabled = unavailable;
+            addToCartButton.textContent = unavailable ? (product.status === "reserved" ? "Reserved" : "Sold out") : product.sellingMethod === "whole_lot" ? "Buy Entire Lot" : "Add to Cart";
         }
 
         const firstImage = getProductImage(product, 0);
@@ -907,8 +990,7 @@ imageBox.appendChild(favoriteButton);
         });
 
         if (plusButton) {
-            plusButton.disabled = product.sellerProduct &&
-                currentQuantity >= Number(product.quantity);
+            plusButton.disabled = product.sellingMethod === "whole_lot" || (product.sellerProduct && currentQuantity >= Number(product.quantity));
         }
 
         updateTotal();
@@ -961,18 +1043,17 @@ imageBox.appendChild(favoriteButton);
         }
 
         if (totalCalculation) {
-            totalCalculation.textContent =
-                `${currentQuantity} units × ${money(price)}`;
+            totalCalculation.textContent = currentProduct.sellingMethod === "whole_lot"
+                ? `Complete lot · ${currentProduct.quantity} pieces`
+                : `${currentQuantity} units × ${money(price)}`;
         }
 
         if (minusButton) {
-            minusButton.disabled =
-                currentQuantity <= getMinimum(currentProduct);
+            minusButton.disabled = currentProduct.sellingMethod === "whole_lot" || currentQuantity <= getMinimum(currentProduct);
         }
 
         if (plusButton) {
-            plusButton.disabled = currentProduct.sellerProduct &&
-                currentQuantity >= Number(currentProduct.quantity);
+            plusButton.disabled = currentProduct.sellingMethod === "whole_lot" || (currentProduct.sellerProduct && currentQuantity >= Number(currentProduct.quantity));
         }
     }
 

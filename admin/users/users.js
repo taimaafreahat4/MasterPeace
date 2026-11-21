@@ -151,7 +151,7 @@ button.addEventListener("click",()=>{
         status.className="status active";
 
 
-        button.innerText="🚫";
+        button.innerHTML="<i class=\"bi bi-slash-circle\" aria-hidden=\"true\"></i>";
 
 
     }
@@ -164,7 +164,7 @@ button.addEventListener("click",()=>{
         status.className="status blocked";
 
 
-        button.innerText="✅";
+        button.innerHTML="<i class=\"bi bi-check2-circle\" aria-hidden=\"true\"></i>";
 
 
     }

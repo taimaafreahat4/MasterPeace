@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#061735">
+  <title>Stock Mind | Order confirmation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../components/navbar.css?v=navbar-links-glow-1">
+  <link rel="stylesheet" href="../../components/footer.css">
+  <link rel="stylesheet" href="subscription-confirmation.css">
+    <link rel="stylesheet" href="../../responsive.css?v=site-responsive-2">
+</head>
+<body>
+  <div id="navbar-container"></div>
+  <main class="confirmation-page">
+    <a class="confirmation-back" href="subscription.html">← Subscription plans</a>
+    <section class="confirmation-card" aria-labelledby="confirmation-title">
+      <div class="confirmation-mark" aria-hidden="true"><span>✓</span></div>
+      <span class="confirmation-eyebrow" id="confirmation-eyebrow">ORDER CONFIRMED</span>
+      <h1 id="confirmation-title">Your plan is ready.</h1>
+      <p class="confirmation-lead" id="confirmation-lead">Your Stock Mind Premium access is active.</p>
+      <div class="demo-banner" id="demo-banner"><span aria-hidden="true">ⓘ</span><span><strong>Demo checkout · no payment was taken</strong><small>This is a local test order for this browser, not a live card transaction.</small></span></div>
+      <div class="receipt">
+        <div class="receipt__head"><strong>Order details</strong><span id="receipt-status">ACTIVE</span></div>
+        <div class="receipt__line"><span>Order number</span><strong id="receipt-order">—</strong></div>
+        <div class="receipt__line"><span>Plan</span><strong id="receipt-plan">—</strong></div>
+        <div class="receipt__line"><span>Access starts</span><strong id="receipt-start">—</strong></div>
+        <div class="receipt__line"><span>Access through</span><strong id="receipt-expiry">—</strong></div>
+        <div class="receipt__line"><span>Billing email</span><strong id="receipt-email">—</strong></div>
+        <div class="receipt__total"><span>Total</span><strong id="receipt-total">—</strong></div>
+      </div>
+      <div class="confirmation-actions"><a href="ai-tools.html" class="confirmation-button">Open AI Tools <span aria-hidden="true">→</span></a><a href="dashboard.html" class="confirmation-secondary">Return to Seller Center</a></div>
+      <p class="confirmation-help">Need help? Contact <a href="mailto:hello@stockmind.com">hello@stockmind.com</a>.</p>
+    </section>
+  </main>
+  <div id="footer-container"></div>
+  <script src="../../components/navbar.js?v=subscription-notification-1"></script>
+  <script src="../../components/load-navbar.js"></script>
+  <script>if(typeof loadStockMindNavbar === 'function') loadStockMindNavbar('navbar-container','../../components/');</script>
+  <script src="subscription-confirmation.js?v=subscription-notification-1"></script>
+</body>
+</html>

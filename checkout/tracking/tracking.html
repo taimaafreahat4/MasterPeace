@@ -9,10 +9,12 @@
 <title>Stock Mind | Track Order</title>
 
 <link rel="stylesheet" href="tracking.css">
+<link rel="stylesheet" href="tracking-polish.css">
 
-<link rel="stylesheet" href="../../components/navbar.css">
+<link rel="stylesheet" href="../../components/navbar.css?v=navbar-links-glow-1">
 <link rel="stylesheet" href="../../components/footer.css">
 
+    <link rel="stylesheet" href="../../responsive.css?v=site-responsive-2">
 </head>
 
 
@@ -24,8 +26,8 @@
 <main class="tracking-page">
 
 
-<a href="../checkout.html" class="back-to-cart">
-    ← Back to Checkout
+<a href="../../category/category.html" class="back-to-cart" id="trackingBack">
+    ← Back to orders
 </a>
 
 
@@ -59,9 +61,7 @@ Order Status
 </h2>
 
 
-<div id="statusBadge">
-Shipped
-</div>
+<div id="statusBadge" role="status" aria-live="polite">Processing</div>
 
 
 </div>
@@ -69,12 +69,14 @@ Shipped
 
 
 
+
+<p class="tracking-status-message" id="statusMessage" role="status" aria-live="polite"></p>
 
 <div class="timeline">
 
 
 
-<div class="timeline-step completed">
+<div class="timeline-step" data-order-step="0">
 
 <div class="circle">
 ✓
@@ -89,12 +91,12 @@ Ordered
 
 
 
-<div class="line completed-line"></div>
+<div class="line" data-order-line="0"></div>
 
 
 
 
-<div class="timeline-step completed">
+<div class="timeline-step" data-order-step="1">
 
 <div class="circle">
 ✓
@@ -109,13 +111,13 @@ Processing
 
 
 
-<div class="line" id="deliveryLine"></div>
+<div class="line" data-order-line="1"></div>
 
 
 
 
 
-<div class="timeline-step active" id="shippedStep">
+<div class="timeline-step" id="shippedStep" data-order-step="2">
 
 <div class="circle" id="shippedCircle">
 🚚
@@ -131,15 +133,15 @@ Shipped
 
 
 
-<div class="line"></div>
+<div class="line" data-order-line="2"></div>
 
 
 
 
-<div class="timeline-step" id="deliveredStep">
+<div class="timeline-step" id="deliveredStep" data-order-step="3">
 
 <div class="circle" id="deliveredCircle">
-□
+···
 </div>
 
 <p>
@@ -215,7 +217,7 @@ Order Date
 
 <div class="detail">
 
-<span>
+<span id="deliveryDateLabel">
 Estimated Delivery
 </span>
 
@@ -241,7 +243,7 @@ Estimated Delivery
 
 
 
-<div class="action-card">
+<div class="action-card" id="deliveryAction">
 
 
 <h2>
@@ -256,12 +258,12 @@ Confirm when your package arrives.
 
 <button id="confirmDeliveryButton">
 
-✓ Yes, I received it
+✓ Confirm delivery received
 
 </button>
 
 
-<p id="deliveryMessage"></p>
+<p id="deliveryMessage" role="status" aria-live="polite"></p>
 
 
 </div>
@@ -272,12 +274,11 @@ Confirm when your package arrives.
 
 
 
-<div class="action-card">
+<div class="action-card" id="feedbackAction">
 
 
-<h2>
-How was your experience?
-</h2>
+<span class="action-card-kicker">ORDER COMPLETE</span>
+<h2>How was your experience?</h2>
 
 
 <p>
@@ -285,22 +286,8 @@ Your feedback helps us improve Stock Mind.
 </p>
 
 
-<div class="stars">
-
-<span>☆</span>
-<span>☆</span>
-<span>☆</span>
-<span>☆</span>
-<span>☆</span>
-
-</div>
-
-
-<button id="feedbackButton">
-
-Rate your order
-
-</button>
+<a id="feedbackLink" class="tracking-primary-button" href="../../checkout/feedback/feedback.html">Leave feedback</a>
+<p id="feedbackSubmitted" class="feedback-submitted" hidden>✓ Your feedback has been recorded. Thank you for sharing your experience.</p>
 
 
 
@@ -371,7 +358,7 @@ document.getElementById("footer-container").innerHTML=html;
 
 </script>
 
-<script src="../../components/navbar.js"></script>
+<script src="../../components/navbar.js?v=subscription-notification-1"></script>
 <script src="../../components/load-navbar.js"></script>
 
 <script>

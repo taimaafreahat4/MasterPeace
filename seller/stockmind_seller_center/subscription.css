@@ -34,7 +34,7 @@ body { margin: 0; }
 /* HERO */
 .sub-page .hero {
   background: radial-gradient(1000px 420px at 50% -10%, #eadfff 0%, var(--bg) 70%);
-  padding: 64px 24px 24px;
+  padding: 84px 24px 24px;
 }
 .sub-page .hero__inner {
   max-width: 860px; margin: 0 auto; text-align: center;
@@ -56,6 +56,12 @@ body { margin: 0; }
 }
 
 /* PLANS */
+.sub-page .subscription-welcome{max-width:1160px;margin:0 auto 24px;padding:22px 26px;display:flex;align-items:center;justify-content:space-between;gap:24px;border:1px solid #ded2ff;border-radius:18px;background:linear-gradient(110deg,#f3edff,#fff);box-shadow:0 12px 32px rgba(48,28,99,.06)}
+.sub-page .subscription-welcome[hidden]{display:none}
+.sub-page .subscription-welcome .eyebrow{color:#6d2ee6;font-size:11px;font-weight:800;letter-spacing:.14em}
+.sub-page .subscription-welcome h2{margin:7px 0 4px;color:#0f1b3d;font-size:22px}
+.sub-page .subscription-welcome p{margin:0;color:#55607f;font-size:14px;line-height:1.6}
+.sub-page .subscription-welcome__free{flex:none;padding:13px 17px;border:1px solid #d9cafb;border-radius:12px;background:#fff;color:#5b21b6;font-size:14px;font-weight:750;text-decoration:none}
 .sub-page .plans { padding: 32px 24px 24px; }
 .sub-page .plans__grid {
   max-width: 1160px; margin: 0 auto;
@@ -111,8 +117,22 @@ body { margin: 0; }
   height: 52px; border-radius: 14px; font-size: 16px; font-weight: 700; cursor: pointer;
   background: #fff; color: var(--purple-dark); border: 1.5px solid var(--purple);
   transition: transform .15s ease, box-shadow .15s ease;
+  display: flex; justify-content: center; align-items: center; gap: 12px;
 }
 .sub-page .plan__btn:hover { transform: translateY(-1px); }
+.sub-page .plan__btn span { transition: transform .18s ease; }
+.sub-page .plan__btn:hover span { transform: translateX(3px); }
+.sub-page .plan__fine { margin: auto 0 0; padding-top: 2px; color: #7c8499; font-size: 10px; }
+.sub-page .plan.is-selected .plan__fine { color: #c9d0ea; }
+.sub-page .plan__current { position: absolute; right: 16px; top: -12px; padding: 6px 10px; border-radius: 999px; background: #ecfdf5; color: #087a51; font-size: 9px; font-weight: 800; letter-spacing: .08em; }
+.sub-page .plan.is-current { outline: 2px solid #7c3aed; outline-offset: 2px; }
+.sub-page .subscription-status { max-width: 940px; margin: 0 auto 22px; padding: 14px 18px; display: flex; align-items: center; gap: 12px; border: 1px solid #c9b8f3; border-radius: 14px; background: #f8f5ff; color: #35235f; }
+.sub-page .subscription-status[hidden] { display: none; }
+.sub-page .subscription-status__icon { display: grid; place-items: center; flex: none; width: 30px; height: 30px; border-radius: 50%; background: #7138db; color: #fff; font-weight: 800; }
+.sub-page .subscription-status strong,.sub-page .subscription-status small { display: block; }
+.sub-page .subscription-status strong { font-size: 12px; }
+.sub-page .subscription-status small { margin-top: 3px; color: #645b78; font-size: 10px; line-height: 1.5; }
+.sub-page .subscription-status a { margin-left: auto; color: #5b2bbd; font-size: 10px; font-weight: 750; text-decoration: none; white-space: nowrap; }
 
 .sub-page .plan__divider { height: 1px; background: var(--line); }
 
@@ -162,5 +182,18 @@ body { margin: 0; }
 
 /* MOBILE */
 @media (max-width: 640px) {
+  .sub-page .subscription-welcome { align-items: stretch; flex-direction: column; padding: 19px; }
+  .sub-page .subscription-welcome__free { text-align: center; }
   .sub-page .plan { max-width: none; }
+  .sub-page .subscription-status { align-items: flex-start; flex-wrap: wrap; }
+  .sub-page .subscription-status a { width: calc(100% - 42px); margin-left: 42px; }
 }
+
+/* Compact, non-repeating Free and Premium plan overview. */
+.sub-page .plans .freemium-overview{display:flex;align-items:center;justify-content:space-between;gap:24px;margin:0 auto 22px;padding:19px 24px;border-radius:18px}
+.sub-page .plans .freemium-overview h2{margin:5px 0 3px;font-size:21px}
+.sub-page .plans .freemium-overview p{margin:0;color:#69758c;font-size:14px;line-height:1.5}
+.sub-page .free-plan-label{color:#6d35df;font-size:11px;font-weight:800;letter-spacing:.12em}
+.sub-page .free-plan-button{display:inline-flex;flex:none;align-items:center;gap:12px;padding:12px 16px;border:1px solid #d9cafb;border-radius:12px;background:#fff;color:#5b21b6;font-size:14px;font-weight:750;text-decoration:none;transition:background .18s,border-color .18s}
+.sub-page .free-plan-button:hover{border-color:#aa8bf0;background:#f8f4ff}
+@media(max-width:640px){.sub-page .plans .freemium-overview{align-items:stretch;flex-direction:column;gap:15px;padding:18px}.sub-page .free-plan-button{justify-content:center}}

@@ -39,6 +39,18 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    // Prefill from the signed-in seller's saved profile; analysis edits stay local to this report.
+    const storeApi = window.StockMindStoreProfile;
+    const seller = storeApi?.currentSeller();
+    const storeProfile = seller ? storeApi.get(seller) : null;
+    if (storeProfile) {
+        const preciseLocation = [storeProfile.locationDetails, storeProfile.city, storeProfile.country].filter(Boolean).join(", ");
+        if (preciseLocation) $("location").value = preciseLocation;
+        if (["commercial", "residential", "mall", "online", "other"].includes(storeProfile.storeType)) $("storeType").value = storeProfile.storeType;
+        if (["youngAdults", "families", "students", "professionals", "general", "other"].includes(storeProfile.targetCustomers)) $("customers").value = storeProfile.targetCustomers;
+        if (storeProfile.averageVisitorsPerDay !== "" && storeProfile.averageVisitorsPerDay != null) $("visitors").value = storeProfile.averageVisitorsPerDay;
+    }
+
     const panels = [...document.querySelectorAll("[data-panel]")];
     const steps = [...document.querySelectorAll("#stepper .step")];
     const lines = [...document.querySelectorAll("#stepper .step-line")];
@@ -146,27 +158,23 @@ document.addEventListener("DOMContentLoaded", () => {
                 "accessories", "electronics"
             ],
             residential: ["home", "grocery", "clothing", "books"],
-            tourist: ["accessories", "clothing", "cosmetics"],
-            university: [
-                "books", "electronics", "clothing",
-                "shoes", "accessories"
-            ],
-            online: Object.keys(categoryNames)
+            mall: ["clothing", "shoes", "cosmetics", "accessories", "electronics", "home"],
+            online: Object.keys(categoryNames),
+            other: Object.keys(categoryNames)
         };
 
         const customerMatches = {
-            young: ["clothing", "shoes", "sports", "books", "accessories"],
             youngAdults: [
                 "clothing", "shoes", "cosmetics",
                 "electronics", "accessories", "sports"
             ],
-            adults: [
-                "clothing", "cosmetics", "electronics", "home", "automotive"
-            ],
             families: [
                 "clothing", "shoes", "home", "grocery", "books", "sports"
             ],
-            all: Object.keys(categoryNames)
+            students: ["books", "electronics", "clothing", "shoes", "accessories"],
+            professionals: ["clothing", "cosmetics", "electronics", "home", "automotive"],
+            general: Object.keys(categoryNames),
+            other: Object.keys(categoryNames)
         };
 
         let score = seasonal[data.category]?.[data.arrival] ?? 67;
@@ -462,6 +470,7 @@ document.addEventListener("DOMContentLoaded", () => {
         $("resultsSection").hidden = false;
 
         goStep(3);
+        window.StockMindAccess?.record("beforeYouBuy");
     }
 
     /* =========================================
@@ -470,6 +479,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     form.addEventListener("submit", event => {
         event.preventDefault();
+
+        const access = window.StockMindAccess;
+        if (access && !access.canUse("beforeYouBuy")) {
+            access.notifyLimit("beforeYouBuy", form.previousElementSibling);
+            return;
+        }
 
         if (!form.reportValidity()) return;
 
@@ -592,6 +607,11 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Please analyze a product first.");
             return;
         }
+        if (!window.StockMindAccess?.isPremium()) {
+            alert("Saving full reports is a Premium feature. Your free analysis remains available on screen.");
+            window.location.href = "subscription.html";
+            return;
+        }
 
         try {
             const existing = JSON.parse(
@@ -626,6 +646,11 @@ document.addEventListener("DOMContentLoaded", () => {
     $("downloadBtn")?.addEventListener("click", () => {
         if (!lastReport) {
             alert("Please analyze a product first.");
+            return;
+        }
+        if (!window.StockMindAccess?.isPremium()) {
+            alert("Downloading reports is a Premium feature. Your free analysis remains available on screen.");
+            window.location.href = "subscription.html";
             return;
         }
 

@@ -2,12 +2,16 @@
 <html>
 <head>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Favorites | Stock Mind</title>
 
 <link rel="stylesheet" href="favorite.css">
-<link rel="stylesheet" href="../../components/navbar.css">
-<link rel="stylesheet" href="../../components/footer.css">
+<link rel="stylesheet" href="../components/navbar.css?v=navbar-links-glow-1">
+<link rel="stylesheet" href="../components/footer.css">
 
+    <link rel="stylesheet" href="../responsive.css?v=site-responsive-2">
 </head>
 
 
@@ -51,7 +55,7 @@ Products you saved for later.
 
 <script>
 
-fetch("../../components/navbar.html")
+fetch("../components/navbar.html")
 
 .then(res=>res.text())
 
@@ -86,7 +90,7 @@ nav.classList.toggle("mobile-open");
 
 
 
-fetch("../../components/footer.html")
+fetch("../components/footer.html")
 
 .then(res=>res.text())
 
@@ -100,6 +104,8 @@ document.getElementById("footer-container").innerHTML=html;
 
 </script>
 
+<script src="../components/navbar.js?v=subscription-notification-1"></script>
+<script src="../components/site-validation.js"></script>
 <script src="favorite.js"></script>
 
 </body>

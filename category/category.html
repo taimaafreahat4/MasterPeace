@@ -12,10 +12,11 @@
 
     <link rel="stylesheet" href="category.css">
 
-    <link rel="stylesheet" href="../components/navbar.css">
+    <link rel="stylesheet" href="../components/navbar.css?v=navbar-links-glow-1">
 
     <link rel="stylesheet" href="../components/footer.css">
 
+    <link rel="stylesheet" href="../responsive.css?v=site-responsive-2">
 </head>
 
 <body>
@@ -82,11 +83,11 @@
                 <span>Books</span>
             </button>
 
-            <button class="category-card" data-category="grocery">
+            <button class="category-card" data-category="toys_baby">
                 <div class="category-image">
-                    <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=85" alt="Grocery">
+                    <img src="https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?auto=format&fit=crop&w=400&q=85" alt="Toys and baby products">
                 </div>
-                <span>Grocery</span>
+                <span>Toys &amp; Baby</span>
             </button>
 
             <button class="category-card" data-category="sports">
@@ -103,11 +104,11 @@
                 <span>Bags &amp; Accessories</span>
             </button>
 
-            <button class="category-card" data-category="auto">
+            <button class="category-card" data-category="other">
                 <div class="category-image">
-                    <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=400&q=85" alt="Automotive">
+                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=400&q=85" alt="Other products">
                 </div>
-                <span>Automotive</span>
+                <span>Other</span>
             </button>
 
         </div>
@@ -265,11 +266,6 @@
             id="productsGrid"
 
         ></div>
-        <section class="seller-listings-section">
-    <h2>Products Listed by Sellers</h2>
-
-    <div class="products-grid" id="sellerProductsGrid"></div>
-</section>
 
     </section>
 
@@ -637,7 +633,7 @@
 
 <div id="navbar-container"></div>
 
-<script src="../components/navbar.js"></script>
+<script src="../components/navbar.js?v=subscription-notification-1"></script>
 
 <script>
     fetch("../components/navbar.html")
@@ -692,8 +688,9 @@
 
 <!-- ================= CATEGORY JS ================= -->
 
-<script src="category.js"></script>
-<script src="seller-products.js"></script>
+<script src="category.js?v=toys-baby-category-1"></script>
 
+
+<script src="../components/site-validation.js"></script>
 </body>
 </html>

@@ -1,245 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Stock Mind | Order Confirmation</title>
-
-<link rel="stylesheet" href="confirmation.css">
-
-<link rel="stylesheet" href="../../components/navbar.css">
-
-<link rel="stylesheet" href="../../components/footer.css">
-
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#061735"><title>Stock Mind | Order confirmed</title>
+  <link rel="stylesheet" href="confirmation.css"><link rel="stylesheet" href="../../components/navbar.css?v=navbar-links-glow-1"><link rel="stylesheet" href="../../components/footer.css">
+    <link rel="stylesheet" href="../../responsive.css?v=site-responsive-2">
+    <link rel="stylesheet" href="confirmation-polish.css?v=confirmation-layout-1">
 </head>
-
-
 <body>
-
-
-<div id="navbar"></div>
-
-
-
-<main class="confirmation-page">
-
-
-<a href="../checkout.html" class="back-to-cart">
-    ← Back to Checkout
-</a>
-
-<div class="confetti"></div>
-
-
-
-<section class="confirmation-card">
-
-
-
-<div class="success-icon">
-
-<svg viewBox="0 0 64 64">
-
-<path d="M16 33 L27 44 L49 20"></path>
-
-</svg>
-
-</div>
-
-
-
-
-<h1>
-Order Placed 
-<span>Successfully!</span>
-</h1>
-
-
-
-<p class="thank-you">
-
-Thank you for your purchase. Your order has been confirmed.
-
-</p>
-
-
-
-
-<div class="order-info">
-
-
-<div>
-
-<small>
-Order Number
-</small>
-
-
-<strong id="orderNumber">
-#SM123456
-</strong>
-
-
-</div>
-
-
-
-<div>
-
-<small>
-Total paid
-</small>
-
-
-<strong id="orderTotal">
-JOD 0.00
-</strong>
-
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-
-<div class="items-box">
-
-
-<h3>
-Order Items
-</h3>
-
-
-
-<div id="orderItems">
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-
-
-<div class="buttons">
-
-
-<button 
-id="viewOrderDetails"
-class="primary-button">
-
-View Order Details →
-
-</button>
-
-
-
-
-<a href="../../category/category.html">
-
-Continue Shopping
-
-</a>
-
-
-
-</div>
-
-
-
-
-
-<p id="orderDetails" class="order-details" hidden></p>
-
-
-
-</section>
-
-
-
-</main>
-
-
-
-
-
-
-<div id="footer-container"></div>
-
-
-
-
-
-<script>
-
-
-fetch("../../components/navbar.html")
-
-.then(response=>response.text())
-
-.then(html=>{
-
-document.getElementById("navbar").innerHTML=html;
-
-
-const mobileMenu=document.getElementById("mobileMenu");
-
-const navInner=document.getElementById("navInner");
-
-
-if(mobileMenu && navInner){
-
-mobileMenu.onclick=()=>{
-
-navInner.classList.toggle("mobile-open");
-
-}
-
-}
-
-
-});
-
-
-
-
-
-fetch("../../components/footer.html")
-
-.then(response=>response.text())
-
-.then(html=>{
-
-document.getElementById("footer-container").innerHTML=html;
-
-});
-
-
-
-</script>
-
-
-<div id="footer"></div>
-<script src="../components/navbar.js"></script>
-<script src="../components/load-navbar.js"></script>
-<script>
-    loadStockMindNavbar();
-</script>
-<script src="confirmation.js"></script>
-
-
+  <div id="navbar-container"></div>
+  <main class="confirmation-page">
+    <section class="confirmation-card">
+      <div class="success-icon" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M16 33 L27 44 L49 20"></path></svg></div>
+      <p class="success-eyebrow">DEMO ORDER CONFIRMED</p>
+      <h1>Order placed <span>successfully.</span></h1>
+      <p class="thank-you">Your order is being prepared. We’ll add an in-site notification when its delivery status changes.</p>
+      <p class="demo-note">No payment was taken. This order is saved in this browser for the Stock Mind demo.</p>
+      <div class="order-info">
+        <div><small>Order number</small><strong id="orderNumber">—</strong></div>
+        <div><small>Demo total</small><strong id="orderTotal">JOD 0.00</strong></div>
+        <div><small>Current status</small><strong id="orderStatus">Processing</strong></div>
+      </div>
+      <div class="items-box"><h3>Order items</h3><div id="orderItems"></div></div>
+      <div class="buttons"><button id="viewOrderDetails" class="primary-button" type="button">Track this order <span aria-hidden="true">→</span></button><a href="../../category/category.html">Continue shopping</a></div>
+      <p id="orderDetails" class="order-details" hidden></p>
+    </section>
+  </main>
+  <div id="footer-container"></div>
+  <script src="../../components/navbar.js?v=subscription-notification-1"></script><script src="../../components/load-navbar.js"></script>
+  <script>loadStockMindNavbar("navbar-container","../../components/");</script>
+  <script src="../../components/site-validation.js"></script><script src="confirmation.js"></script>
+  <script>fetch("../../components/footer.html").then(r=>r.ok?r.text():"").then(html=>{if(html)document.getElementById("footer-container").innerHTML=html;}).catch(()=>{});</script>
 </body>
-
 </html>

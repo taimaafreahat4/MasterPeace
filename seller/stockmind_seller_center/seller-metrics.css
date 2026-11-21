@@ -1,0 +1,130 @@
+/* One shared visual language for seller overview cards. */
+.db-metric-card,
+.sm-metric-card,
+.rec-metric {
+    --metric-color: #7047ed;
+    --metric-tint: #f0eaff;
+    position: relative;
+    isolation: isolate;
+    min-width: 0;
+    min-height: 146px;
+    padding: 18px 19px;
+    overflow: hidden;
+    border: 1px solid #e7e8f1;
+    border-radius: 18px;
+    background: linear-gradient(145deg, #fff 55%, #fbfaff 100%);
+    box-shadow: 0 8px 24px rgba(21, 31, 69, .045), 0 1px 2px rgba(21, 31, 69, .025);
+    transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+
+.db-metric-card::after,
+.sm-metric-card::after,
+.rec-metric::after {
+    position: absolute;
+    z-index: -1;
+    right: -30px;
+    bottom: -48px;
+    width: 112px;
+    height: 112px;
+    border: 17px solid var(--metric-tint);
+    border-radius: 50%;
+    content: "";
+    opacity: .56;
+    pointer-events: none;
+}
+
+.db-metric-card:hover,
+.sm-metric-card:hover,
+.rec-metric:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--metric-color) 23%, #e7e8f1);
+    box-shadow: 0 16px 34px rgba(30, 35, 78, .09), 0 3px 8px rgba(55, 42, 116, .04);
+}
+
+.db-metric-blue, .sm-metric--blue { --metric-color:#4776e6; --metric-tint:#edf2ff; }
+.db-metric-purple, .sm-metric--purple, .metric-purple { --metric-color:#7047ed; --metric-tint:#f0eaff; }
+.db-metric-amber, .sm-metric--amber, .metric-amber { --metric-color:#c18422; --metric-tint:#fff4df; }
+.db-metric-green, .sm-metric--green, .metric-green { --metric-color:#168b69; --metric-tint:#e5f7ef; }
+.db-metric-cyan { --metric-color:#259bad; --metric-tint:#e8f8fa; }
+.db-metric-pink, .metric-rose { --metric-color:#cf5670; --metric-tint:#fff0f3; }
+
+.db-metric-label,
+.sm-metric-label,
+.rec-metric-top {
+    position: relative;
+    z-index: 1;
+    color: #77839b;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.db-metric-icon,
+.sm-metric-icon,
+.rec-metric-icon {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    place-items: center;
+    border-radius: 11px;
+    background: var(--metric-tint);
+    color: var(--metric-color);
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.db-metric-icon { width:32px; height:32px; flex-basis:32px; }
+.rec-metric-icon { width:32px; height:32px; flex-basis:32px; }
+.db-metric-top, .sm-metric-top { position:relative; z-index:1; display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+
+.db-metric-value,
+.sm-metric-value,
+.rec-metric > strong {
+    position: relative;
+    z-index: 1;
+    display: block;
+    margin: 13px 0 6px;
+    color: #142443;
+    font-size: clamp(25px, 2.1vw, 31px);
+    font-weight: 820;
+    line-height: 1.15;
+    letter-spacing: -.85px;
+    overflow-wrap: anywhere;
+    font-variant-numeric: tabular-nums;
+}
+
+.db-metric-value.db-metric-money,
+.sm-metric-value.sm-metric-money,
+.rec-metric > strong#metric-capital {
+    font-size: clamp(19px, 1.75vw, 25px);
+    letter-spacing: -.65px;
+}
+
+.db-metric-foot,
+.sm-metric-foot,
+.rec-metric > p {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    color: #8b95aa;
+    font-size: 10px;
+    line-height: 1.55;
+}
+
+.db-metric-foot { margin-top: 9px; }
+.sm-metric-foot { margin-top: 8px; }
+.db-metric-caption { color: inherit; font-size: inherit; line-height: inherit; }
+.rec-metric-top { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+
+@media (max-width: 640px) {
+    .db-metric-card, .sm-metric-card, .rec-metric { min-height:132px; padding:14px; border-radius:15px; }
+    .db-metric-value, .sm-metric-value, .rec-metric > strong { margin-top:10px; font-size:25px; }
+    .db-metric-value.db-metric-money, .sm-metric-value.sm-metric-money, .rec-metric > strong#metric-capital { font-size:19px; }
+    .db-metric-icon, .sm-metric-icon, .rec-metric-icon { width:30px; height:30px; flex-basis:30px; border-radius:10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .db-metric-card, .sm-metric-card, .rec-metric { transition:none; }
+    .db-metric-card:hover, .sm-metric-card:hover, .rec-metric:hover { transform:none; }
+}

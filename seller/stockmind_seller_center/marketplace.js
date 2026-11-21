@@ -43,6 +43,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const D = window.StockMindSellerData;
 
     const $ = id => document.getElementById(id);
+    const currentSeller = D?.currentSeller?.() || null;
+    const currentSellerEmail = String(currentSeller?.email || "").trim().toLowerCase();
+    const currentSellerId = String(currentSeller?.id || currentSeller?.username || currentSellerEmail).trim().toLowerCase();
+    const storeProfileApi = window.StockMindStoreProfile;
+    const currentStoreProfile = currentSeller && storeProfileApi?.get(currentSeller);
+    if (!currentSeller) {
+        window.location.replace("../../login/login.html?role=seller");
+        return;
+    }
+    if (!currentStoreProfile || !storeProfileApi.isComplete(currentSeller)) {
+        window.location.replace("store-profile.html?mode=setup");
+        return;
+    }
+    const currentStoreName = String(currentStoreProfile.storeName || currentSeller?.storeName || (currentSeller?.name ? currentSeller.name + "'s Store" : "My Store"));
+    const businessCategory = String(currentStoreProfile.businessCategory || "other").toLowerCase();
+    const categoryLabels = {electronics:"Phones & Electronics",home:"Home & Living",clothes:"Clothes & Fashion",books:"Books & Stationery",toys_baby:"Toys & Baby",cosmetics:"Cosmetics & Beauty",accessories:"Bags & Accessories",sports:"Sports",grocery:"Grocery",other:"Other"};
+    const ownsListing = product => Boolean(currentSellerEmail && product?.sellerListed && String(product.sellerEmail || "").toLowerCase() === currentSellerEmail);
 
     const form = $("marketplace-form");
     const formCard = $("listing-form-card");
@@ -50,6 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const search = $("market-search");
     const categoryFilter = $("market-category-filter");
     const emptyMessage = $("market-empty");
+    const storeContext = $("store-market-context");
 
     if (!form || !formCard || !grid || !search ||
         !categoryFilter || !emptyMessage) {
@@ -67,10 +85,36 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    function canonicalCategory(value) {
+        const key = String(value || "").trim().toLowerCase().replace(/&/g, " ").replace(/[^a-z0-9]+/g, " ").trim();
+        const aliases = {"electronics":"electronics","phones electronics":"electronics","phone electronics":"electronics","home living":"home","home":"home","clothes":"clothes","clothing":"clothes","clothes fashion":"clothes","books":"books","books stationery":"books","toys baby":"toys_baby","toy baby":"toys_baby","baby products":"toys_baby","cosmetics":"cosmetics","cosmetics beauty":"cosmetics","bags accessories":"accessories","accessories":"accessories","sports":"sports","grocery":"grocery","other":"other"};
+        return aliases[key] || "other";
+    }
+
+    const allowedCategory = businessCategory in categoryLabels ? businessCategory : "other";
+    const storeCategoryLabel = categoryLabels[allowedCategory];
+    if (storeContext) {
+        storeContext.replaceChildren();
+        const text = document.createElement("span");
+        text.textContent = `Marketplace is showing ${storeCategoryLabel} listings for ${currentStoreProfile.storeName}. Your own listings remain visible for management.`;
+        const edit = document.createElement("a");
+        edit.href = "store-profile.html";
+        edit.textContent = "Edit store category";
+        storeContext.append(text, edit);
+    }
+
+    const matchingFilterOption = [...categoryFilter.options].find(option => canonicalCategory(option.textContent) === allowedCategory);
+    [...categoryFilter.options].forEach(option => {
+        if (!option.value) return;
+        option.disabled = canonicalCategory(option.textContent) !== allowedCategory;
+    });
+    if (matchingFilterOption) categoryFilter.value = matchingFilterOption.value;
+
     const defaultImage =
         "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=700&q=80";
 
     let prefilledImage = "";
+    let uploadedImageData = "";
 
 
     /* =========================================
@@ -114,6 +158,81 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 3500);
     }
 
+    function showImagePreview(source) {
+        const preview = $("m-image-preview");
+        if (!preview) return;
+        preview.replaceChildren();
+        if (!source) {
+            const placeholder = document.createElement("span");
+            placeholder.textContent = "Product photo preview";
+            preview.appendChild(placeholder);
+            return;
+        }
+        const image = document.createElement("img");
+        image.src = source;
+        image.alt = "Selected product photo preview";
+        image.onerror = () => showImagePreview("");
+        preview.appendChild(image);
+    }
+
+    $("m-image-file")?.addEventListener("change", async event => {
+        const file = event.target.files?.[0];
+        if (!file) {
+            uploadedImageData = "";
+            showImagePreview($("m-image")?.value.trim() || prefilledImage);
+            return;
+        }
+        if (!file.type.startsWith("image/")) {
+            event.target.value = "";
+            toast("Please choose a valid image file.");
+            return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+            event.target.value = "";
+            toast("Choose an image smaller than 5 MB.");
+            return;
+        }
+
+        try {
+            uploadedImageData = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onerror = () => reject(new Error("Could not read image."));
+                reader.onload = () => {
+                    const sourceImage = new Image();
+                    sourceImage.onerror = () => reject(new Error("Invalid image file."));
+                    sourceImage.onload = () => {
+                        const maxDimension = 1400;
+                        const scale = Math.min(1, maxDimension / Math.max(sourceImage.width, sourceImage.height));
+                        const canvas = document.createElement("canvas");
+                        canvas.width = Math.max(1, Math.round(sourceImage.width * scale));
+                        canvas.height = Math.max(1, Math.round(sourceImage.height * scale));
+                        canvas.getContext("2d").drawImage(sourceImage, 0, 0, canvas.width, canvas.height);
+                        resolve(canvas.toDataURL("image/jpeg", 0.82));
+                    };
+                    sourceImage.src = String(reader.result);
+                };
+                reader.readAsDataURL(file);
+            });
+            $("m-image").value = "";
+            showImagePreview(uploadedImageData);
+        } catch (error) {
+            uploadedImageData = "";
+            event.target.value = "";
+            showImagePreview("");
+            toast("This image could not be loaded. Try another file.");
+        }
+    });
+
+    $("m-image")?.addEventListener("input", event => {
+        if (event.target.value.trim()) {
+            uploadedImageData = "";
+            $("m-image-file").value = "";
+            showImagePreview(event.target.value.trim());
+        } else if (!uploadedImageData) {
+            showImagePreview(prefilledImage);
+        }
+    });
+
     function setSelectValue(select, value) {
         if (!select || value == null) {
             return;
@@ -146,26 +265,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const isLot = product => product?.sellingMethod === "whole_lot";
     const stockOf = product => Math.max(0, Math.floor(Number(product?.quantity) || 0));
     const minOf = product => Math.max(1, Math.floor(Number(product?.minOrder) || 1));
-    const lotTotal = product => {
-        // For every NEW listing, product.price is the per-piece price.
-        // The complete lot is sold as one cart line for this total.
-        const unitPrice = Number(product?.price) || 0;
-        return Math.round(unitPrice * stockOf(product) * 100) / 100;
-    };
+    const lotTotal = product => Number(product?.price) * stockOf(product);
     let methodFilter = "all";
 
     function updateFormMethod() {
         const lot = $("m-method")?.value === "whole_lot";
-        $("m-price-label").textContent = lot ? "Price per piece (JOD) *" : "Price per unit (JOD) *";
+        $("m-price-label").textContent = "Price per unit (JOD) *";
         $("m-quantity-label").textContent = lot ? "Pieces included in this complete lot *" : "Available quantity *";
         $("min-order-field").hidden = lot;
         $("m-min").disabled = lot;
+        $("m-min").max = $("m-quantity").value || "";
         $("method-help").textContent = lot
-            ? "All pieces are sold together. Total lot price = price per piece × pieces included."
+            ? "Enter the price for one piece. The full lot total is unit price × pieces."
             : "The buyer chooses a quantity, respecting the minimum order.";
     }
     $("m-method")?.addEventListener("change", updateFormMethod);
-    form.addEventListener("reset", () => setTimeout(updateFormMethod, 0));
+    $("m-quantity")?.addEventListener("input", updateFormMethod);
+    form.addEventListener("reset", () => setTimeout(() => {
+        updateFormMethod();
+        uploadedImageData = "";
+        showImagePreview("");
+    }, 0));
     updateFormMethod();
 
     /* =========================================
@@ -184,14 +304,17 @@ document.addEventListener("DOMContentLoaded", () => {
         window.dispatchEvent(new Event("cartUpdated"));
     }
     function addToCart(product) {
+        if (ownsListing(product)) {
+            toast("You cannot buy your own listing. Sign in as another seller to purchase it.");
+            return;
+        }
         const wholeLot = isLot(product);
         const stock = stockOf(product);
         const minimum = minOf(product);
-        if (product.status === "reserved" || stock < (wholeLot ? 1 : minimum)) {
+        if (product.status !== "available" || stock < (wholeLot ? 1 : minimum)) {
             toast("This listing is unavailable.");
             return;
         }
-        if (product.ownerId === String(D.currentUser()?.email||"").toLowerCase()) {toast("You cannot buy your own listing.");return;}
         const id = String(product.id);
         const cart = readSharedCart();
         const existing = cart.find(item => String(item.id) === id);
@@ -210,13 +333,17 @@ document.addEventListener("DOMContentLoaded", () => {
             cart.push({
                 id, name: product.name,
                 price: wholeLot ? lotTotal(product) : Number(product.price),
+                unitPrice: Number(product.price),
                 quantity, minimum: wholeLot ? 1 : minimum,
                 maxQuantity: wholeLot ? 1 : stock,
                 sellingMethod: wholeLot ? "whole_lot" : "regular",
                 lotUnits: wholeLot ? stock : null,
                 marketplaceListingId: id,
                 categoryName: product.category || "Marketplace",
+                condition: product.condition || "New",
                 seller: product.seller || "Stock Mind Seller",
+                sellerId: product.sellerId || "",
+                sellerEmail: product.sellerEmail || "",
                 image: product.image || defaultImage
             });
         }
@@ -266,9 +393,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
             $("m-image").value =
                 image.startsWith("http") ? image : "";
+            showImagePreview(image);
 
             $("m-description").value =
                 prefill.description || "";
+        } else {
+            $("m-seller").value = currentStoreName;
+            setSelectValue($("m-category"), allowedCategory);
+            $("m-location").value = [currentStoreProfile.locationDetails,currentStoreProfile.city,currentStoreProfile.country].filter(Boolean).join(", ");
         }
 
         formCard.scrollIntoView({
@@ -292,9 +424,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const category = categoryFilter.value;
 
             rows = allListings.filter(product => {
+                const own = ownsListing(product);
+                const isApproved = product.approvalStatus === "approved";
+                const matchesApproval = own || isApproved;
+                const matchesStoreCategory = own || canonicalCategory(product.category) === allowedCategory;
+                if (!matchesApproval || !matchesStoreCategory) return false;
                 if (methodFilter !== "all" && (isLot(product) ? "whole_lot" : "regular") !== methodFilter) return false;
-                const matchesCategory =
-                    !category || product.category === category;
+                const matchesCategory = !category || own || canonicalCategory(product.category) === canonicalCategory(category);
 
                 const searchableText = [
                     product.name,
@@ -356,6 +492,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const id = escapeHTML(product.id);
             const lot = isLot(product);
             const reserved = product.status === "reserved";
+            const sold = product.status === "sold" || quantity < 1;
+            const own = ownsListing(product);
+            const approvalStatus = product.approvalStatus || "approved";
+            const waitingApproval = own && approvalStatus === "pending_review";
+            const rejected = own && approvalStatus === "rejected";
+            const approvalLabel = waitingApproval ? "Pending admin review" : rejected ? "Not approved · remove and submit again" : "Approved for marketplace";
 
             return `
                 <article class="sm-card sm-market-card">
@@ -387,6 +529,8 @@ document.addEventListener("DOMContentLoaded", () => {
                             ${seller} · ${condition}
                         </p>
 
+                        ${own ? `<p class="sm-listing-review-status ${waitingApproval ? 'is-pending' : rejected ? 'is-rejected' : 'is-approved'}">${approvalLabel}</p>` : ""}
+
                         <div class="sm-market-price">
                             ${money(lot ? lotTotal(product) : price)}
                             <span class="sm-muted"
@@ -396,7 +540,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
 
                         <p class="sm-muted">
-                            ${lot ? `${quantity} pieces × ${money(price)} each · Sold together only` : `${quantity} units · Minimum order ${minOrder}`}
+                            ${lot ? `${quantity} pieces · Sold together only` : `${quantity} units · Minimum order ${minOrder}`}
                         </p>
 
                         <p class="sm-muted">${description}</p>
@@ -406,8 +550,8 @@ document.addEventListener("DOMContentLoaded", () => {
                             <button
                                 class="sm-btn sm-btn-primary request-btn"
                                 type="button"
-                                data-id="${id}" ${reserved || quantity < 1 || product.ownerId === String(D.currentUser()?.email||"").toLowerCase() ? 'disabled' : ''}>
-                                ${reserved ? 'Reserved' : product.ownerId === String(D.currentUser()?.email||"").toLowerCase() ? 'Your listing' : lot ? 'Add entire lot' : 'Add to cart'}
+                                data-id="${id}" ${reserved || sold || own ? 'disabled' : ''}>
+                                ${own ? waitingApproval ? 'Awaiting approval' : rejected ? 'Not approved' : 'Your listing' : reserved ? 'Reserved' : sold ? 'Sold' : lot ? 'Add entire lot' : 'Add to cart'}
                             </button>
 
                             <button
@@ -416,7 +560,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 data-id="${id}"
                                 title="Remove your listing"
                                 aria-label="Remove ${name}"
-                                ${product.ownerId === String(D.currentUser()?.email||"").toLowerCase() ? '' : 'hidden'}>
+                                ${own ? '' : 'hidden'}>
                                 ×
                             </button>
 
@@ -451,15 +595,41 @@ document.addEventListener("DOMContentLoaded", () => {
         /* Remove demo listing */
 
         grid.querySelectorAll(".remove-btn").forEach(button => {
-            button.addEventListener("click", async () => {
-                const listing = getListings().find(x => String(x.id) === button.dataset.id);
-                if (!listing || listing.ownerId !== String(D.currentUser()?.email||"").toLowerCase()) return toast("Only your own listing can be removed.");
-                if (!confirm(`Remove ${listing.name}?`)) return;
-                try {await D.removeListing(listing.id);render();toast("Listing removed.");}
-                catch(error){toast(error.message);}
+            button.addEventListener("click", () => {
+                try {
+                    const selected = getListings().find(item => String(item.id) === button.dataset.id);
+                    if (!ownsListing(selected)) {
+                        toast("Only your own demo listings can be removed.");
+                        return;
+                    }
+                    if (!confirm(`Remove ${selected.name} from the Marketplace?`)) return;
+                    const remaining = getListings().filter(
+                        item => String(item.id) !== button.dataset.id
+                    );
+
+                    if (typeof D.write !== "function" || !D.LISTINGS_KEY) {
+                        throw new Error(
+                            "Marketplace storage functions are unavailable."
+                        );
+                    }
+
+                    D.write(D.LISTINGS_KEY, remaining);
+                    const old = JSON.parse(localStorage.getItem("sellerProducts") || "[]");
+                    if (Array.isArray(old)) localStorage.setItem("sellerProducts", JSON.stringify(old.filter(item => String(item.id) !== button.dataset.id)));
+                    const remainingCart = readSharedCart().filter(item => String(item.id) !== button.dataset.id);
+                    saveSharedCart(remainingCart);
+                    render();
+
+                    toast("Listing removed from this browser demo.");
+
+                } catch (error) {
+                    console.error("Could not remove listing:", error);
+                    toast("Could not remove this listing.");
+                }
             });
         });
     }
+
 
     /* =========================================
        OPEN / CLOSE FORM
@@ -491,12 +661,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     categoryFilter.addEventListener("change", render);
 
+    window.addEventListener("storage", event => {
+        if (event.key === D.LISTINGS_KEY) render();
+    });
+
 
     /* =========================================
        PUBLISH PRODUCT
     ========================================= */
 
-    form.addEventListener("submit", async event => {
+    form.addEventListener("submit", event => {
         event.preventDefault();
 
         if (!form.reportValidity()) {
@@ -536,10 +710,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             category: $("m-category").value,
 
-            price: price,
+            price,
             lotPrice: wholeLot ? Number((price * quantity).toFixed(2)) : null,
             sellingMethod,
             status: "available",
+            approvalStatus: "pending_review",
 
             quantity,
 
@@ -548,10 +723,12 @@ document.addEventListener("DOMContentLoaded", () => {
             location: $("m-location").value.trim(),
 
             seller: $("m-seller").value.trim() || "My Store",
+            sellerId: currentSellerId,
+            sellerEmail: currentSellerEmail,
 
             condition: $("m-condition").value,
 
-            image: typedImage || prefilledImage || defaultImage,
+            image: uploadedImageData || typedImage || prefilledImage || defaultImage,
 
             description: $("m-description").value.trim(),
 
@@ -564,12 +741,16 @@ document.addEventListener("DOMContentLoaded", () => {
             toast("Please enter a product name.");
             return;
         }
+        if (!currentSellerEmail) {
+            toast("Log in with a seller account before publishing a listing.");
+            return;
+        }
 
         try {
             /* Save using the existing seller data component */
 
             if (typeof D.saveListing === "function") {
-                await D.saveListing(product);
+                D.saveListing(product);
 
             } else if (
                 typeof D.write === "function" &&
@@ -588,15 +769,48 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
             }
 
+            /*
+             * Maintain the existing sellerProducts key used by
+             * the project's other product/category code.
+             */
+
+            try {
+                const oldProducts = JSON.parse(
+                    localStorage.getItem("sellerProducts") || "[]"
+                );
+
+                if (Array.isArray(oldProducts)) {
+                    const exists = oldProducts.some(
+                        item => String(item.id) === product.id
+                    );
+
+                    if (!exists) {
+                        oldProducts.unshift(product);
+
+                        localStorage.setItem(
+                            "sellerProducts",
+                            JSON.stringify(oldProducts)
+                        );
+                    }
+                }
+            } catch (storageError) {
+                console.warn(
+                    "Could not update sellerProducts:",
+                    storageError
+                );
+            }
+
             localStorage.removeItem("stockMindPrelistProduct");
 
             form.reset();
 
             $("m-location").value = "Amman, Jordan";
-            $("m-seller").value = "My Store";
+            $("m-seller").value = currentStoreName;
             $("m-min").value = "1";
 
             prefilledImage = "";
+            uploadedImageData = "";
+            showImagePreview("");
 
             formCard.hidden = true;
 
@@ -605,9 +819,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             render();
 
-            toast(
-                "Product published for both sellers."
-            );
+            toast("Product submitted for admin review. It will appear to buyers after approval.");
+            window.dispatchEvent(new Event("stockMindListingsUpdated"));
 
             window.scrollTo({
                 top: 0,
@@ -637,8 +850,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const params = new URLSearchParams(window.location.search);
 
-        if (params.get("newListing") === "1" && pending) {
-            openForm(pending);
+        if (params.get("newListing") === "1") {
+            openForm(pending || null);
+            if (pending) localStorage.removeItem("stockMindPrelistProduct");
         }
     } catch (error) {
         console.error("Could not load prefilled listing:", error);
@@ -649,10 +863,6 @@ document.addEventListener("DOMContentLoaded", () => {
        INITIALIZE
     ========================================= */
 
-    D.refreshListings().then(render).catch(error=>{
-        console.error(error);
-        toast("Please sign in using a demo seller account and start the Node server: " + error.message);
-    });
-    window.addEventListener("focus",()=>D.refreshListings().then(render).catch(()=>{}));
+    render();
 
 });
