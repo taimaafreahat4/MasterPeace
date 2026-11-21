@@ -289,13 +289,21 @@ function update(dt,t){
  /* copy + progress */
  setScene(sceneFor(target));updateJourneyHud(target);$('stock-intel-hint').style.opacity=target>.02?0:1;
  /* cards */
- var shown=0,narrow=W<720;
+ var shown=0,narrow=W<760,stackBottom=0;
+ var hud=root.querySelector(".intel-hud");
+ var cardBottom=hud.offsetTop-12;
+ var cardTop=narrow&&!copy.inert?copy.offsetTop+copy.offsetHeight+12:75;
  CARDS.forEach(function(c){var v=ss(c.a,c.a+.012,sp)*(1-ss(c.b-.012,c.b,sp));
-  if(v<.02||(shown>=2)){c.el.style.opacity=0;c.ln.setAttribute('opacity',0);c.dt.setAttribute('opacity',0);return}
+  if(v<.02||shown>=(narrow?1:2)){c.el.style.opacity=0;c.ln.setAttribute('opacity',0);c.dt.setAttribute('opacity',0);return}
   if(c.at==='hero')pv.copy(hero.position).y+=.6;else pv.set(c.at[0],c.at[1],c.at[2]);pv.project(cam);
   if(pv.z>1||Math.abs(pv.x)>1.15||Math.abs(pv.y)>1.15){c.el.style.opacity=0;c.ln.setAttribute('opacity',0);c.dt.setAttribute('opacity',0);return}
-  shown++;var ax=(pv.x*.5+.5)*W,ay=(-pv.y*.5+.5)*H,gap=narrow?24:56,cx=c.side>0?ax+gap:ax-gap-c.w;
-  cx=cl(cx,10,W-c.w-10);var cy=cl(ay-c.h/2+(c.side>0?-20:30),narrow?H*.34:90,Math.max(narrow?H*.34:90,H-c.h-(narrow?128:148)));
+  var ax=(pv.x*.5+.5)*W,ay=(-pv.y*.5+.5)*H;
+  var cx=W-c.w-(narrow?16:Math.max(22,W*.044));
+  var low=Math.max(cardTop,stackBottom?stackBottom+12:0);
+  var high=cardBottom-c.h;
+  if(high<low){c.el.style.opacity=0;c.ln.setAttribute('opacity',0);c.dt.setAttribute('opacity',0);return}
+  var cy=cl(ay-c.h/2,low,high);
+  stackBottom=cy+c.h;shown++;
   var ex=cx>ax?cx:cx+c.w,ey=cy+c.h/2;
   c.el.style.opacity=v;c.el.style.transform='translate('+cx.toFixed(1)+'px,'+(cy+(1-v)*14).toFixed(1)+'px)';
   c.el.style.setProperty('--dr',ss(c.a+.012,c.b-.02,sp).toFixed(3));
