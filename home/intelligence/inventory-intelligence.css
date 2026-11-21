@@ -66,7 +66,6 @@
     max-width: min(42rem, 47vw);
     padding: 12px 18px 18px 0;
     border-radius: 14px;
-    background: radial-gradient(ellipse at 10% 40%, #07112bbd, #07112b50 65%, transparent 100%);
 }
 .stock-intel .cta a {
     font: 600 13px var(--body);
@@ -98,7 +97,6 @@
 .stock-intel .copy {
     top: clamp(65px, 10vh, 105px);
     max-width: min(40rem, 50vw);
-    background: radial-gradient(ellipse at 4% 28%, #07112bea, #07112b81 55%, transparent 95%);
 }
 .stock-intel h1 { font-size: clamp(2rem, 4.1vw, 4.3rem); letter-spacing: -.047em; }
 .stock-intel .sub { max-width: 37ch; line-height: 1.55; color: #d6dff8; }
