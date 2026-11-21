@@ -1,25 +1,13 @@
-# Stock Mind Seller Center — integrated prototype
+# Stock Mind Seller Center
 
-Copy the files in this folder into your existing `seller/` folder. Keep your current `components/navbar.html`, `components/navbar.css`, `components/footer.html`, and `components/footer.css`.
+The Seller Center is part of [Stock Mind](../../README.md). Run the project from its root with `node server.js`, then sign in as a seller. A new seller completes the store profile before choosing a subscription plan.
 
-## Pages
-- `dashboard.html` / `dashboard.css` / `dashboard.js`
-- `ai-advisor.html` / `ai-advisor.css` / `ai-advisor.js` (Before You Buy)
-- `inventory.html` / `inventory.css` / `inventory.js`
-- `recommendations.html` / `recommendations.css` / `recommendations.js`
-- `marketplace.html` / `marketplace.css` / `marketplace.js`
-- `add-product.html` / `seller.css` / `seller.js` (the listing wizard)
-- `seller-tabs.css` and `seller-tabs.js` create one shared collapsible navigation strip; it is not a sidebar.
-- `seller-data.js` contains sample data and browser storage helpers.
+## Seller workflow
 
-## Navigation curtain
-The five-button bar sits beneath the existing main navbar. Once you click a tab, the bar collapses to a slim strip with an arrow. Click the strip to reopen it. The chosen collapsed/expanded state is saved in localStorage.
+1. Review your listing activity from the [seller dashboard](dashboard.html).
+2. Use [Before You Buy](ai-advisor.html) to evaluate a planned purchase or [AI Recommendations](recommendations.html) to review an existing surplus lot. Demand Forecast is available inside AI Recommendations.
+3. Open [Surplus listings](marketplace.html) to publish or review stock offered by quantity or as a whole lot.
 
-## Run
-Use VS Code Live Server and open `seller/dashboard.html`. `fetch()` cannot reliably load the shared navbar/footer if you open files with `file://`.
+[Subscription plans](subscription.html) open after each seller sign-in. The Free plan includes one initial analysis per tool, and an active Premium plan stays on the account when you sign in again. Premium checkout is simulated.
 
-## Marketplace and Category sync
-Publishing from `add-product.html` saves the item to `sellerProducts` (to preserve the existing Category page integration) and to `stockMindMarketplaceListings` (used by the new Marketplace page). These are browser-local demo records. To make listings visible to multiple real users/devices, replace localStorage with a backend/database and API.
-
-## Note about AI
-The buying advisor results are a transparent illustrative heuristic, not a trained predictive AI model and not a guarantee of sales.
+Listings, free allowances, and subscriptions use browser-local demo storage in this version. The tools provide rule-based estimates based on the data entered.
