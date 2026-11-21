@@ -213,30 +213,7 @@
     .stock-intel .intel-chapters button { min-height: 44px; }
 }
 
-/* The narrative, callouts and chapter controls each have their own space in the scene. */
-.stock-intel .copy {
-    top: clamp(60px, 11vh, 112px);
-    width: min(470px, 43vw);
-    max-width: none;
-    padding: clamp(15px, 2vw, 26px);
-    border: 1px solid #b8a6ff4d;
-    border-top-color: #d1bcff83;
-    border-radius: 17px;
-    background: linear-gradient(145deg, #101e44f5, #0a1433ec 74%);
-    box-shadow: 0 14px 42px #03071d70;
-}
-.stock-intel .copy .eye { margin: 0 0 8px; font-size: .65rem; letter-spacing: .13em; }
-.stock-intel .copy h1 {
-    color: #f6f8ff;
-    font-size: clamp(1.65rem, 3.55vw, 3.55rem);
-    line-height: 1.04;
-    letter-spacing: -.044em;
-    overflow-wrap: anywhere;
-}
-.stock-intel .copy .sub { margin-top: 10px; font-size: clamp(.82rem, 1.3vw, 1.03rem); }
-.stock-intel .copy .cta:empty { display: none; }
-.stock-intel .copy .cta { margin-top: 13px; }
-.stock-intel .copy .cta :is(a,button) { padding: 9px 13px; }
+/* Compact callouts and chapter controls. */
 .stock-intel .card {
     width: min(275px, 34vw);
     padding: 12px 14px;
@@ -249,14 +226,10 @@
 .stock-intel .card .row b { text-align: end; }
 .stock-intel .intel-hud { inset-block-end: clamp(10px, 1.9vh, 22px); }
 @media (max-width: 760px), (max-height: 600px) {
-    .stock-intel .copy { top: 53px; padding: 12px 13px; border-radius: 12px; }
-    .stock-intel .copy h1 { font-size: clamp(1.48rem, 4.7vw, 2.5rem); }
-    .stock-intel .copy .sub { margin-top: 7px; }
     .stock-intel .intel-brief { padding: 8px 11px; margin-bottom: 5px; }
     .stock-intel .intel-chapters button { min-height: 42px; }
 }
 @media (max-width: 760px) {
-    .stock-intel .copy { width: min(420px, calc(100% - 32px)); }
     .stock-intel .card, .stock-intel .card.wide { width: min(290px, calc(100% - 32px)); padding: 8px 11px; }
     .stock-intel .card svg { max-height: 54px; }
     .stock-intel .intel-hud-description { display: none; }
