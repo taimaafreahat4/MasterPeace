@@ -59,17 +59,18 @@
 }
 
 
-.footer-logo img {
+.footer-logo-mark {
     width: 44px;
     height: 44px;
 
-    object-fit: contain;
+    flex: none;
+    background: url("./logo.png") center / contain no-repeat;
 
     display: block;
 }
 
 
-.footer-logo span {
+.footer-logo > span:not(.footer-logo-mark) {
     font-size: 24px;
     font-weight: 800;
 
@@ -389,12 +390,12 @@
     }
 
 
-    .footer-logo span {
+    .footer-logo > span:not(.footer-logo-mark) {
         font-size: 21px;
     }
 
 
-    .footer-logo img {
+    .footer-logo-mark {
         width: 40px;
         height: 40px;
     }
