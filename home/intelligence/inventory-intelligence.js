@@ -57,24 +57,13 @@ function setScene(i){if(i===cur)return;cur=i;if(i<0){copy.classList.add('off');c
 var hudButtons=Array.from(root.querySelectorAll('.intel-chapters button'));
 var hudProgress=root.querySelector('.intel-progress i');
 var hudIndex=-1;
-var stops=[
- [0,'Overview','The fulfillment center','Follow a package from the loading dock through inventory, forecasting and the marketplace.'],
- [.08,'Receiving','Goods arrive on the belt','A moving conveyor takes the package into the receiving area.'],
- [.27,'Inventory','Understand the cost of excess','See where unsold stock ties up space and capital.'],
- [.61,'Forecasting','Estimate demand before you buy','Explore the demand signals that inform a purchasing decision.'],
- [.72,'Stock insights','Decide what to keep or sell','Turn recommendations into practical steps for your inventory.'],
- [.885,'Marketplace','Give surplus a second destination','Browse available products or sell stock by quantity or as a whole lot.']
-];
+var chapterStarts=[0,.08,.27,.61,.72,.885];
 function updateJourneyHud(p){
   if(hudProgress)hudProgress.style.transform='scaleX('+p+')';
   var index=0;
-  for(var j=1;j<stops.length;j++){if(p>=stops[j][0])index=j;}
+  for(var j=1;j<chapterStarts.length;j++){if(p>=chapterStarts[j])index=j;}
   if(index===hudIndex)return;
   hudIndex=index;
-  var entry=stops[index];
-  $('intel-chapter-label').textContent=entry[1];
-  $('intel-chapter-title').textContent=entry[2];
-  $('intel-chapter-summary').textContent=entry[3];
   hudButtons.forEach(function(b,i){if(i===index)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');});
 }
 function sceneFor(p){for(var i=0;i<SC.length;i++)if(p>=SC[i][0]&&p<SC[i][1])return i;return -1}
