@@ -443,9 +443,247 @@
     display: none !important;
 }
 
+/* Shared navigation layout and controls. */
+.stockmind-nav {
+    --nav-edge: #27344e;
+    --nav-hover: #1b2948;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    pointer-events: none;
+}
+.stockmind-nav .nav-inner {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: clamp(14px, 2.5vw, 36px);
+    width: min(1080px, calc(100% - 36px));
+    max-width: none;
+    height: calc(100% - 10px);
+    min-height: 0;
+    padding-inline: 18px;
+    border: 1px solid #6d80ae65;
+    border-radius: 999px;
+    background: linear-gradient(110deg, #182948f5, #09162cf7 76%);
+    box-shadow: 0 8px 25px #050b1d42;
+    pointer-events: auto;
+}
+.stockmind-nav .navbar-panel { display: contents; }
+.stockmind-nav .navbar-logo { gap: 8px; padding-right: 14px; border-right: 1px solid #677da555; }
+.stockmind-nav .navbar-logo-image { width: 36px; height: 36px; }
+.stockmind-nav .navbar-logo-text { font-size: 20px; letter-spacing: -.6px; }
+.stockmind-nav .navbar-logo-text strong { color: #b490ff; }
+.stockmind-nav .nav-links {
+    justify-self: center;
+    gap: 3px;
+    margin: 0;
+    padding: 4px;
+    border: 0;
+    background: transparent;
+    transform: none !important;
+}
+.stockmind-nav .nav-links a {
+    display: grid;
+    align-items: center;
+    min-height: 34px;
+    padding: 0 clamp(8px, 1.12vw, 15px);
+    border-radius: 999px;
+    color: #d6def0;
+    font-size: 13px;
+    font-weight: 650;
+    text-shadow: none;
+}
+.stockmind-nav .nav-links a:hover,
+.stockmind-nav .nav-links a[aria-current] { color: #fff; background: #263353; text-shadow: none; }
+.stockmind-nav .nav-links a[aria-current] { color: #e9d9ff; background: #674e9e66; }
+.stockmind-nav .nav-actions { gap: 5px; margin: 0; }
+.stockmind-nav #navActions :is(.navbar-cart-link,.navbar-notification-trigger,.favorite-icon a) {
+    display: grid;
+    width: 36px;
+    height: 36px;
+    margin: 0;
+    padding: 0;
+    place-items: center;
+    border-radius: 9px;
+    color: #e3e9f8;
+}
+.stockmind-nav #navActions :is(.navbar-cart-link,.navbar-notification-trigger,.favorite-icon a):hover { background: var(--nav-hover); }
+.stockmind-nav #navActions .navbar-action-icon { font-size: 18px; }
+.stockmind-nav #navActions .favorite-icon .navbar-action-icon { color: #bda3fa; }
+.stockmind-nav #navActions .navbar-notifications { flex-basis: 36px; width: 36px; height: 36px; }
+.stockmind-nav #guestButtons { gap: 6px; margin-left: 8px; }
+.stockmind-nav :is(.navbar-login,.navbar-signup) { display: inline-flex; align-items: center; padding: 0 12px; border-radius: 999px; font-size: 13px; white-space: nowrap; text-decoration: none; }
+.stockmind-nav .navbar-signup { background: #7242d7; }
+.stockmind-nav .profile-trigger {
+    margin-left: 6px;
+    padding: 4px 8px 4px 4px;
+    min-height: 38px;
+    border: 1px solid var(--nav-edge);
+    border-radius: 10px;
+    background: #12213c;
+    color: #edf1fb;
+}
+.stockmind-nav .profile-image { width: 28px; height: 28px; }
+.stockmind-nav #username { max-width: 9ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.stockmind-nav :is(a,button):focus-visible { outline: 2px solid #c4aaff; outline-offset: 2px; }
+
+@media (min-width: 861px) {
+    .stockmind-nav .nav-inner { width: min(1160px, calc(100% - 36px)); height: calc(100% - 4px); padding-inline: 22px; }
+    .stockmind-nav .navbar-logo-image { width: 38px; height: 38px; }
+}
+
+@media (max-width: 860px) {
+    .stockmind-nav .nav-inner { grid-template-columns: 1fr auto; width: calc(100% - 28px); padding-inline: 11px; }
+    .stockmind-nav .navbar-logo { padding-right: 0; border-right: 0; }
+    .stockmind-nav .mobile-menu {
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--nav-edge);
+        border-radius: 50%;
+        background: #12213c;
+    }
+    .stockmind-nav .navbar-panel { display: none; }
+    .stockmind-nav .nav-inner.mobile-open .navbar-panel {
+        position: absolute;
+        z-index: 9999;
+        inset: calc(100% + 8px) 14px auto auto;
+        display: grid;
+        width: min(370px, calc(100vw - 28px));
+        padding: 10px;
+        gap: 8px;
+        border: 1px solid var(--nav-edge);
+        border-radius: 15px;
+        background: #09172e;
+        box-shadow: 0 16px 36px #02091670;
+    }
+    .stockmind-nav .nav-inner.mobile-open .nav-links {
+        position: static;
+        display: grid;
+        width: 100%;
+        padding: 4px;
+        justify-self: stretch;
+        gap: 3px;
+    }
+    .stockmind-nav .nav-links a { min-height: 40px; width: 100%; }
+    .stockmind-nav .nav-inner.mobile-open .nav-actions {
+        position: relative;
+        inset: auto;
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        margin: 0;
+        padding: 4px 0 0;
+        background: transparent;
+    }
+    .stockmind-nav #navActions .navbar-notifications { position: static; }
+    .stockmind-nav .notification-panel { right: 0; width: 100%; }
+    .stockmind-nav :is(#guestButtons,.user-profile) { margin-left: auto; }
+}
+
+/* Notifications inbox */
+.stockmind-nav .notification-panel {
+    top: calc(100% + 16px);
+    right: -68px;
+    width: min(390px, calc(100vw - 28px));
+    overflow: hidden;
+    border: 1px solid #d9dff0;
+    border-radius: 17px;
+    background: #f8f9fe;
+    color: #172343;
+    box-shadow: 0 18px 50px #17234333;
+    color-scheme: light;
+}
+.stockmind-nav .notification-panel__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 17px 12px;
+    border: 0;
+}
+.stockmind-nav .notification-panel__header strong { font-size: 18px; }
+.stockmind-nav #notificationSummary { color: #52617e; font-size: 12px; }
+.stockmind-nav .notification-panel button {
+    cursor: pointer;
+    font: inherit;
+}
+.stockmind-nav .notification-close {
+    display: grid;
+    place-items: center;
+    width: 33px;
+    height: 33px;
+    border: 1px solid #dce3f2;
+    border-radius: 9px;
+    background: #edf0fa;
+    color: #293a59;
+}
+.stockmind-nav .notification-close:hover { background: #e5e9f7; }
+.stockmind-nav .notification-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 0 16px 12px;
+    border-bottom: 1px solid #e0e5f2;
+}
+.stockmind-nav .notification-filters { display: flex; gap: 3px; padding: 3px; border-radius: 9px; background: #edf0fa; }
+.stockmind-nav .notification-filters button,
+.stockmind-nav .notification-text-button {
+    padding: 7px 10px;
+    border: 0;
+    border-radius: 7px;
+    background: transparent;
+    color: #5530a8;
+    font-size: 12px;
+    font-weight: 750;
+}
+.stockmind-nav .notification-filters button { color: #515f7b; }
+.stockmind-nav .notification-filters button[aria-pressed="true"] { background: #e4d9ff; color: #45248a; }
+.stockmind-nav .notification-text-button:hover:not(:disabled) { background: #e5e9f7; }
+.stockmind-nav .notification-text-button:disabled { color: #68758e; cursor: default; }
+.stockmind-nav .notification-list { max-height: min(375px, 47vh); overflow-y: auto; overscroll-behavior: contain; }
+.stockmind-nav .notification-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 35px minmax(0,1fr);
+    gap: 10px;
+    padding: 13px 30px 13px 16px;
+    border-bottom: 1px solid #e7eaf4;
+    background: transparent;
+}
+.stockmind-nav .notification-item:last-child { border-bottom: 0; }
+.stockmind-nav .notification-item.is-unread { background: #efedfc; }
+.stockmind-nav a.notification-item:hover { background: #e8e2fb; }
+.stockmind-nav .notification-item.is-unread::after {
+    position: absolute;
+    top: 20px;
+    right: 16px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #7546d5;
+    content: "";
+}
+.stockmind-nav .notification-item__icon { width: 34px; height: 34px; border-radius: 9px; background: #ebe2ff; color: #5631a4; font-size: 15px; }
+.stockmind-nav .notification-item[data-kind="shipping"] .notification-item__icon { background: #e2edff; color: #20528d; }
+.stockmind-nav .notification-item[data-kind="delivered"] .notification-item__icon { background: #dff4ea; color: #196444; }
+.stockmind-nav .notification-item__copy strong { display: block; color: #172343; font-size: 13px; }
+.stockmind-nav .notification-item__copy small,
+.stockmind-nav .notification-item__copy time { display: block; margin-top: 3px; color: #435472; font-size: 12px; line-height: 1.45; }
+.stockmind-nav .notification-item__copy time { margin-top: 5px; color: #566680; }
+.stockmind-nav .notification-empty { padding: 26px 15px; color: #52617e; text-align: center; }
+.stockmind-nav .notification-footer { padding: 7px 9px; border-top: 1px solid #e0e5f2; }
+.stockmind-nav .notification-footer i { margin-right: 4px; }
+.stockmind-nav #navActions .navbar-notification-trigger[aria-expanded="true"] { background: #332750; color: #dfcbff; }
+.stockmind-nav #navActions .notification-count { border-color: #101d34; background: #7242d7; }
+@media (max-width: 860px) {
+    .stockmind-nav .notification-panel { top: calc(100% + 9px); right: 0; width: 100%; }
+}
+@media (max-height: 490px) {
+    .stockmind-nav .notification-list { max-height: 30vh; }
+}
+
 </style>
 
-<header class="navbar">
+<header class="navbar stockmind-nav">
     <div class="nav-inner" id="navInner">
 
         <!-- LOGO -->
@@ -460,11 +698,13 @@
         </a>
 
         <!-- NAVIGATION LINKS -->
-        <nav class="nav-links" id="navLinks">
-            <a href="/home/index.html">Home</a>
-            <a href="/category/category.html">Categories</a>
-<a href="/home/index.html#about">About</a>
-<a href="/home/index.html#contact">Contact us</a></nav>
+        <div class="navbar-panel" id="navbarPanel">
+        <nav class="nav-links" id="navLinks" aria-label="Main navigation">
+            <a href="/home/index.html" data-nav-route="home/index.html">Home</a>
+            <a href="/category/category.html" data-nav-route="category/category.html">Categories</a>
+            <a href="/home/index.html#about" data-nav-route="home/index.html#about">About</a>
+            <a href="/home/contact.html" data-nav-route="home/contact.html">Contact us</a>
+        </nav>
         <!-- RIGHT ACTIONS -->
         <div class="nav-actions" id="navActions">
 
@@ -476,13 +716,20 @@
                 </button>
                 <section class="notification-panel" id="notificationPanel" aria-label="Notifications" hidden>
                     <header class="notification-panel__header">
-                        <div><strong>Notifications</strong><small id="notificationSummary">Updates about your orders</small></div>
-                        <div class="notification-panel__actions">
-                            <button type="button" id="enableDesktopNotifications">Desktop alerts</button>
-                            <button type="button" id="markNotificationsRead">Mark all read</button>
-                        </div>
+                        <div><strong>Notifications</strong><small id="notificationSummary" aria-live="polite"></small></div>
+                        <button type="button" id="closeNotificationPanel" class="notification-close" aria-label="Close notifications"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
                     </header>
-                    <div class="notification-list" id="notificationList" aria-live="polite"></div>
+                    <div class="notification-toolbar">
+                        <div class="notification-filters" role="group" aria-label="Filter notifications">
+                            <button type="button" data-notification-filter="all" aria-pressed="true">All</button>
+                            <button type="button" data-notification-filter="unread" aria-pressed="false">Unread</button>
+                        </div>
+                        <button type="button" id="markNotificationsRead" class="notification-text-button">Mark all as read</button>
+                    </div>
+                    <div class="notification-list" id="notificationList"></div>
+                    <div class="notification-footer">
+                        <button type="button" id="enableDesktopNotifications" class="notification-text-button"><i class="bi bi-bell" aria-hidden="true"></i> <span>Enable desktop alerts</span></button>
+                    </div>
                 </section>
             </div>
 
@@ -496,7 +743,7 @@
 
             <!-- FAVORITES -->
             <div class="favorite-icon">
-            <a href="/favorite/favorite.html"
+            <a href="/favorite/favorite.html" data-nav-route="favorite/favorite.html"
                    aria-label="Favorites">
                     <i class="bi bi-heart-fill navbar-action-icon" aria-hidden="true"></i>
                 </a>
@@ -504,19 +751,9 @@
 
             <!-- GUEST BUTTONS: BEFORE LOGIN -->
             <div id="guestButtons">
-                <button
-                    type="button"
-                    class="navbar-login"
-                    onclick="window.location.href='../login/login.html'">
-                    Login
-                </button>
+                <a class="navbar-login" href="/login/login.html" data-nav-route="login/login.html">Login</a>
 
-                <button
-                    type="button"
-                    class="navbar-signup"
-                    onclick="window.location.href='../login/signup.html'">
-                    Sign Up
-                </button>
+                <a class="navbar-signup" href="/login/signup.html" data-nav-route="login/signup.html">Sign Up</a>
             </div>
 
             <!-- PROFILE: AFTER LOGIN -->
@@ -580,14 +817,17 @@
             </div>
         </div>
 
+        </div>
+
         <!-- MOBILE MENU BUTTON -->
         <button
             type="button"
             class="mobile-menu"
             id="mobileMenu"
             aria-label="Toggle navigation menu"
+            aria-controls="navbarPanel"
             aria-expanded="false">
-            ☰
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
         </button>
 
     </div>

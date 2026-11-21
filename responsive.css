@@ -156,3 +156,30 @@ table {
         transition-duration: 0.01ms !important;
     }
 }
+
+/* Shared sizing for the two purchase actions on product cards. */
+.product-card-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 100px), 1fr));
+    gap: 7px;
+}
+.product-card-actions > button:is(.view-details-button,.product-cart-button,.cart-btn,.details-btn) {
+    position: static;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    min-width: 0;
+    height: 42px;
+    min-height: 42px;
+    margin: 0;
+    padding: 0 6px;
+    border-radius: 8px;
+    box-shadow: none;
+    font-size: 12px;
+    font-weight: 750;
+    line-height: 1.15;
+    text-align: center;
+}
+.product-card-actions > button:is(.view-details-button,.product-cart-button,.cart-btn,.details-btn)::after { flex: none; }

@@ -12,75 +12,88 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <link rel="stylesheet" href="../components/navbar.css?v=navbar-links-glow-1">
   <link rel="stylesheet" href="../components/footer.css">
-  <link rel="stylesheet" href="about.css">
+  <link rel="stylesheet" href="about.css?v=about-layout-2">
     <link rel="stylesheet" href="../responsive.css?v=site-responsive-2">
 </head>
 <body>
   <div id="navbar-container"></div>
 
-  <main>
-    <section class="about-hero">
+  <main class="about-page" id="main-content">
+    <section class="about-hero" aria-labelledby="about-title">
       <div class="about-shell about-hero__layout">
-        <div class="about-hero__copy">
-          <span class="about-eyebrow"><i class="fa-solid fa-cube" aria-hidden="true"></i> ABOUT STOCK MIND</span>
-          <h1>Better inventory decisions.<br><span>Healthier businesses.</span></h1>
-          <p>Stock Mind brings inventory management, practical analytics, and a surplus marketplace into one connected experience—so merchants can make informed moves before stock becomes a problem.</p>
-          <div class="about-hero__actions">
-            <a class="about-button about-button--primary" href="../login/login.html?role=seller">Start with Stock Mind <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
-            <a class="about-button about-button--glass" href="#how-it-works">See how it works</a>
+        <div>
+          <p class="about-eyebrow">About Stock Mind</p>
+          <h1 id="about-title">Know your stock. <em>Put surplus to work.</em></h1>
+          <p class="about-lead">Stock Mind helps merchants see what is in stock, plan what to buy next, and find buyers for surplus inventory.</p>
+          <div class="about-actions">
+            <a class="about-button about-button--primary" href="#how-it-works">See how it works <i class="fa-solid fa-arrow-down" aria-hidden="true"></i></a>
+            <a class="about-button" href="../category/category.html">Explore marketplace <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
           </div>
-          <div class="about-hero__note"><span></span> Built around real inventory workflows</div>
         </div>
-        <div class="about-hero__visual" aria-label="Stock Mind turns inventory data into actionable insights">
-          <div class="about-orbit about-orbit--one"></div><div class="about-orbit about-orbit--two"></div>
-          <div class="about-core"><img src="../components/logo.png" alt=""><strong>Stock Mind</strong><small>INVENTORY INTELLIGENCE</small></div>
-          <div class="about-float about-float--top"><span class="about-float__icon"><i class="fa-solid fa-chart-line" aria-hidden="true"></i></span><span><small>Stock health</small><strong>Clearer visibility</strong></span><i class="fa-solid fa-arrow-trend-up about-float__trend" aria-hidden="true"></i></div>
-          <div class="about-float about-float--bottom"><span class="about-float__icon about-float__icon--green"><i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i></span><span><small>Surplus stock</small><strong>New opportunities</strong></span><i class="fa-solid fa-arrow-right about-float__trend" aria-hidden="true"></i></div>
-          <span class="about-visual__spark about-visual__spark--a">✦</span><span class="about-visual__spark about-visual__spark--b">✧</span>
-        </div>
-      </div>
-      <div class="about-hero__glow" aria-hidden="true"></div>
-    </section>
-
-    <section class="about-section about-mission" id="our-idea">
-      <div class="about-shell about-mission__grid">
-        <div><span class="about-section-label">THE IDEA</span><h2>Inventory should help a business move forward—not hold it back.</h2></div>
-        <div class="about-mission__body"><p>Merchants often have to make purchasing and pricing decisions with information scattered across products, sales, and stock records. That can make it hard to spot slow-moving items early or understand how much capital is sitting on a shelf.</p><p>Stock Mind is designed to bring those signals together. It helps sellers review what they have, understand possible risks, and consider a next step with the evidence in view.</p></div>
+        <figure class="about-hero__image">
+          <img src="intelligence/warehouse-cinematic.jpg" alt="A warehouse aisle with shelves of boxed inventory" fetchpriority="high" width="1672" height="941">
+        </figure>
       </div>
     </section>
 
-    <section class="about-section about-how" id="how-it-works">
+    <div class="about-jump">
+      <nav class="about-shell" aria-label="On this page">
+        <a href="#our-idea">Why Stock Mind</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#business-model">For sellers and buyers</a>
+      </nav>
+    </div>
+
+    <section class="about-section" id="our-idea" aria-labelledby="idea-title">
+      <div class="about-shell about-intro">
+        <h2 id="idea-title">See what’s moving and what’s sitting.</h2>
+        <div>
+          <p>When stock levels, costs, and sales live in different places, it can be hard to know which products to reorder or which ones are tying up cash.</p>
+          <p>Stock Mind brings those details together. You can review inventory, use sales data to evaluate demand, and list products you have available to sell.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section about-workflow" id="how-it-works" aria-labelledby="workflow-title">
+      <div class="about-shell about-workflow__layout">
+        <header class="about-section-heading">
+          <h2 id="workflow-title">How Stock Mind works</h2>
+          <p>Start with your inventory and decide what to do with each product.</p>
+          <p class="about-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Demand estimates depend on the inventory and sales information you provide.</p>
+        </header>
+        <ol class="about-steps" role="list">
+          <li><span class="about-step-icon"><i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i></span><h3>Review your stock</h3><p>Bring product quantities, costs, and sales into one seller workspace.</p></li>
+          <li><span class="about-step-icon"><i class="fa-solid fa-magnifying-glass-chart" aria-hidden="true"></i></span><h3>Spot slow-moving items</h3><p>Check which products need attention and review demand estimates when you have recent sales data.</p></li>
+          <li><span class="about-step-icon"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i></span><h3>Choose your next step</h3><p>Use the available information to evaluate a purchase, review a price, or keep monitoring an item.</p></li>
+          <li><span class="about-step-icon"><i class="fa-solid fa-arrows-left-right" aria-hidden="true"></i></span><h3>List surplus stock</h3><p>Offer extra inventory by quantity or as a whole lot so buyers can choose what fits their needs.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="about-section" id="business-model" aria-labelledby="audience-title">
       <div class="about-shell">
-        <div class="about-section-heading"><span class="about-section-label">HOW STOCK MIND WORKS</span><h2>From stock records to a more confident next step.</h2><p>A connected workflow keeps the important decisions close to the inventory they affect.</p></div>
-        <div class="about-steps">
-          <article class="about-step"><span class="about-step__number">01</span><div class="about-step__icon"><i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i></div><h3>Bring stock into view</h3><p>Keep product quantities, costs, sales, and holding time together in a seller inventory workspace.</p></article>
-          <article class="about-step"><span class="about-step__number">02</span><div class="about-step__icon"><i class="fa-solid fa-magnifying-glass-chart" aria-hidden="true"></i></div><h3>Spot what needs attention</h3><p>Review stock risk signals and recommendations based on the inventory information available.</p></article>
-          <article class="about-step"><span class="about-step__number">03</span><div class="about-step__icon"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i></div><h3>Choose an informed action</h3><p>Consider monitoring, a pricing scenario, or a marketplace listing—then validate the decision against your business context.</p></article>
-          <article class="about-step"><span class="about-step__number">04</span><div class="about-step__icon"><i class="fa-solid fa-arrows-left-right" aria-hidden="true"></i></div><h3>Connect supply with demand</h3><p>Give surplus products a path to buyers looking for the quantity or lot that fits their needs.</p></article>
+        <header class="about-section-heading"><h2 id="audience-title">Use Stock Mind as a seller or buyer</h2></header>
+        <div class="about-paths">
+          <article class="about-path about-path--seller">
+            <i class="fa-solid fa-store" aria-hidden="true"></i>
+            <h3>For sellers</h3>
+            <p>Track your stock, evaluate purchases with seller analytics, and publish surplus listings.</p>
+            <a class="about-button about-button--primary" href="../login/login.html?role=seller">Open seller tools <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+          </article>
+          <article class="about-path">
+            <i class="fa-solid fa-basket-shopping" aria-hidden="true"></i>
+            <h3>For buyers</h3>
+            <p>Browse surplus from other businesses and buy the available quantity or the full lot.</p>
+            <a class="about-button" href="../category/category.html">Browse products <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+          </article>
         </div>
-        <p class="about-honesty"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Insights depend on the quality and completeness of the inventory and sales records provided. Forecast examples should be treated as guidance, not guaranteed outcomes.</p>
+        <p class="about-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Premium seller analytics are available through subscription plans.</p>
       </div>
-    </section>
-
-    <section class="about-section about-model" id="business-model">
-      <div class="about-shell about-model__layout">
-        <div class="about-model__intro"><span class="about-section-label">BUSINESS MODEL</span><h2>A platform that creates value on both sides of inventory.</h2><p>Stock Mind is designed to support merchants throughout the product lifecycle—from planning a purchase to moving surplus stock.</p><a href="../category/category.html" class="about-text-link">Explore the marketplace <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>
-        <div class="about-model__cards">
-          <article class="about-model-card"><span class="about-model-card__icon"><i class="fa-solid fa-store" aria-hidden="true"></i></span><div><span class="about-model-card__tag">FOR SELLERS</span><h3>Seller tools</h3><p>Inventory tracking and premium analytics plans help merchants organize stock and evaluate purchasing decisions.</p></div><span class="about-model-card__arrow">01</span></article>
-          <article class="about-model-card"><span class="about-model-card__icon about-model-card__icon--mint"><i class="fa-solid fa-shop" aria-hidden="true"></i></span><div><span class="about-model-card__tag">FOR BUYERS</span><h3>Product marketplace</h3><p>Buyers can discover listed products and choose between available quantities and whole lots.</p></div><span class="about-model-card__arrow">02</span></article>
-          <article class="about-model-card"><span class="about-model-card__icon about-model-card__icon--blue"><i class="fa-solid fa-link" aria-hidden="true"></i></span><div><span class="about-model-card__tag">NETWORK VALUE</span><h3>Better stock circulation</h3><p>Marketplace discovery can connect one merchant’s excess with another merchant’s sourcing need.</p></div><span class="about-model-card__arrow">03</span></article>
-        </div>
-      </div>
-      <div class="about-shell"><div class="about-model-note"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i><p><strong>Transparent by design.</strong> Seller subscriptions are intended to fund premium tools. Any marketplace fees or live payment terms should be clearly disclosed before a real transaction; payment processing must be enabled before live charges can occur.</p></div></div>
-    </section>
-
-    <section class="about-cta">
-      <div class="about-shell about-cta__inner"><div><span class="about-section-label">MAKE YOUR NEXT MOVE COUNT</span><h2>Ready to see your inventory differently?</h2><p>Start with your products, review the signals, and find the next opportunity.</p></div><div class="about-cta__actions"><a href="../login/login.html?role=seller" class="about-button about-button--primary">Get started <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a><a href="../category/category.html" class="about-button about-button--light">Browse marketplace</a></div></div>
     </section>
   </main>
 
   <div id="footer-container"></div>
-  <script src="../components/navbar.js?v=subscription-notification-1"></script>
+  <script src="../components/navbar.js?v=nav-layout-1"></script>
   <script src="../components/load-navbar.js"></script>
   <script>loadStockMindNavbar("navbar-container", "../components/");</script>
   <script>

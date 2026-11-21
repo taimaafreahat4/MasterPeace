@@ -13,6 +13,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const sortSelect = $("#sortSelect");
     const trendsButton = $("#trendsButton");
     const resultsCount = $("#resultsCount");
+    const search = $("#marketSearch");
+    const saleMethod = $("#marketSellingMethod");
+    const maxPrice = $("#marketMaxPrice");
+    const minStock = $("#marketMinStock");
+    const resultsTitle = $("#marketResultsTitle");
 
     const productDetailsPage = $("#productDetailsPage");
     const backToProducts = $("#backToProducts");
@@ -328,7 +333,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // STATE
     // =========================
 
-    let currentCategory = "clothing";
+    let currentCategory = "all";
+    let browseCategory = "all";
     let currentProduct = null;
     let currentQuantity = 1;
     let trendsOnly = false;
@@ -446,7 +452,7 @@ function updateCartCount() {
     // CART
     // =========================
 
-    function addProductToCart(product, quantity) {
+    function addProductToCart(product, quantity, category = currentCategory) {
         if (!product) return;
 
         if (
@@ -515,8 +521,8 @@ function updateCartCount() {
                 marketplaceListingId: product.marketplaceListingId || null,
                 sellerId: product.sellerId || "",
                 sellerEmail: product.sellerEmail || "",
-                category: currentCategory,
-                categoryName: categoryNames[currentCategory] || currentCategory,
+                category,
+                categoryName: categoryNames[category] || category,
                 image: getProductImage(product, 0),
                 seller: product.brand || "Stock Mind Supplier"
             });
@@ -531,7 +537,13 @@ function updateCartCount() {
     // =========================
 
     function showProducts(category) {
-        currentCategory = category;
+        browseCategory = currentCategory = category;
+        categoryButtons.forEach(button => {
+            const selected = button.dataset.category === category;
+            button.classList.toggle("active", selected);
+            button.setAttribute("aria-pressed", String(selected));
+        });
+        if (resultsTitle) resultsTitle.textContent = categoryNames[category] || "All products";
 
         productsGrid.replaceChildren();
 
@@ -552,6 +564,19 @@ function updateCartCount() {
                 category
             }));
         }
+
+        const query = (search?.value || "").trim().toLowerCase();
+        const method = saleMethod?.value || "all";
+        const priceLimit = maxPrice?.valueAsNumber;
+        const stockLimit = minStock?.valueAsNumber;
+        products = products.filter(({product,category: productCategory}) => {
+            const terms = [product.name, product.brand, categoryNames[productCategory]].join(" ").toLowerCase();
+            const productMethod = product.sellingMethod || "regular";
+            return (!query || query.split(/\s+/).every(term => terms.includes(term))) &&
+                (method === "all" || method === productMethod) &&
+                (!Number.isFinite(priceLimit) || getPrice(product) <= priceLimit) &&
+                (!Number.isFinite(stockLimit) || Number(product.quantity) >= stockLimit);
+        });
 
         if (trendsOnly) {
             products = products.filter(
@@ -585,13 +610,26 @@ function updateCartCount() {
             empty.className = "no-products";
 
             const title = document.createElement("h3");
-            title.textContent = "No products available yet";
+            title.textContent = "No products match";
 
             const text = document.createElement("p");
             text.textContent =
-                "Products for this category will be added soon.";
+                "Try another category or adjust your filters.";
 
-            empty.append(title, text);
+            const reset = document.createElement("button");
+            reset.type = "button";
+            reset.className = "market-reset";
+            reset.textContent = "Show all products";
+            reset.addEventListener("click", () => {
+                [search, maxPrice, minStock].forEach(input => { if (input) input.value = ""; });
+                if (saleMethod) saleMethod.value = "all";
+                trendsOnly = false;
+                trendsButton?.classList.remove("active");
+                trendsButton?.setAttribute("aria-pressed", "false");
+                showProducts("all");
+                search?.focus();
+            });
+            empty.append(title, text, reset);
             productsGrid.appendChild(empty);
             return;
         }
@@ -777,6 +815,7 @@ imageBox.appendChild(favoriteButton);
 
             hoverInterval = setInterval(() => {
                 imageIndex = (imageIndex + 1) % product.images.length;
+                if (!imageBox.isConnected) { clearInterval(hoverInterval); return; }
                 image.src = product.images[imageIndex];
             }, 1500);
         });
@@ -803,14 +842,14 @@ imageBox.appendChild(favoriteButton);
             `Add ${product.name} to cart`
         );
 
-        imageBox.appendChild(cartButton);
+
 
         const info = document.createElement("div");
         info.className = "product-info";
 
         const brand = document.createElement("div");
         brand.className = "product-brand";
-        brand.textContent = `${product.brand || "Stock Mind"} ✦`;
+        brand.textContent = product.brand || "Stock Mind";
 
         const name = document.createElement("h3");
         name.className = "product-name";
@@ -829,6 +868,11 @@ imageBox.appendChild(favoriteButton);
             lotLabel.className = "product-old-price";
             lotLabel.textContent = "Complete lot";
             priceRow.appendChild(lotLabel);
+        } else {
+            const unit = document.createElement("span");
+            unit.className = "product-unit";
+            unit.textContent = "/ unit";
+            priceRow.appendChild(unit);
         }
 
         if (Number(product.oldPrice) > getPrice(product)) {
@@ -856,7 +900,7 @@ imageBox.appendChild(favoriteButton);
         meta.append(sold, minimum);
 
         const bottom = document.createElement("div");
-        bottom.className = "product-bottom";
+        bottom.className = "product-bottom product-card-actions";
 
         const colors = document.createElement("div");
         colors.className = "color-options";
@@ -873,13 +917,14 @@ imageBox.appendChild(favoriteButton);
         detailsButton.type = "button";
         detailsButton.textContent = "View details";
 
-        bottom.append(colors, detailsButton);
-        info.append(brand, name, priceRow, meta, bottom);
+        if (colors.children.length) info.append(colors);
+        bottom.append(detailsButton, cartButton);
+        info.prepend(brand, name, priceRow, meta);
+        info.append(bottom);
         card.append(imageBox, info);
 
         cartButton.addEventListener("click", () => {
-            currentCategory = category;
-            addProductToCart(product, getMinimum(product));
+            addProductToCart(product, getMinimum(product), category);
         });
 
         detailsButton.addEventListener("click", () => {
@@ -1103,7 +1148,7 @@ imageBox.appendChild(favoriteButton);
 
         currentProduct = null;
 
-        showProducts(currentCategory);
+        showProducts(browseCategory);
 
         window.scrollTo({
             top: 0,
@@ -1129,19 +1174,20 @@ imageBox.appendChild(favoriteButton);
 
             trendsOnly = false;
             trendsButton?.classList.remove("active");
+            trendsButton?.setAttribute("aria-pressed", "false");
 
             showProducts(currentCategory);
         });
     });
 
-    sortSelect?.addEventListener("change", () => {
-        showProducts(currentCategory);
-    });
+    [sortSelect, saleMethod].forEach(control => control?.addEventListener("change", () => showProducts(browseCategory)));
+    [search, maxPrice, minStock].forEach(control => control?.addEventListener("input", () => showProducts(browseCategory)));
 
     trendsButton?.addEventListener("click", () => {
         trendsOnly = !trendsOnly;
         trendsButton.classList.toggle("active", trendsOnly);
-        showProducts(currentCategory);
+        trendsButton.setAttribute("aria-pressed", String(trendsOnly));
+        showProducts(browseCategory);
     });
 
     // =========================
@@ -1163,9 +1209,11 @@ imageBox.appendChild(favoriteButton);
 
     updateCartCount();
 
+    const requestedCategory = new URLSearchParams(location.search).get("category");
+    const preferredCategory = normalizeCategory(requestedCategory);
     const activeCategory = $(".category-card.active");
 
-    currentCategory = normalizeCategory(activeCategory?.dataset.category)
+    currentCategory = preferredCategory || normalizeCategory(activeCategory?.dataset.category)
         || activeCategory?.dataset.category
         || "clothing";
 

@@ -55,17 +55,11 @@
   <script src="store-profile-data.js"></script>
   <script>const activeSeller=window.StockMindStoreProfile?.currentSeller();if(!activeSeller)window.location.replace("../../login/login.html?role=seller");else if(!window.StockMindStoreProfile.isComplete(activeSeller))window.location.replace("store-profile.html?mode=setup");</script>
   <script src="seller-tabs.js"></script>
-  <script src="subscription-access.js?v=freemium-2"></script>
+  <script src="subscription-access.js?v=plan-choice-2"></script>
   <script>
     (() => {
       const access = window.StockMindAccess;
       if (!access) return;
-      const account = (() => { try { return JSON.parse(localStorage.getItem("stockMindUser") || "null") || {}; } catch { return {}; } })();
-      const introKey = `stockMindSubscriptionIntroSeen:${String(account.email || account.id || account.username || "seller").trim().toLowerCase()}`;
-      if (!access.isPremium() && !localStorage.getItem(introKey)) {
-        window.location.replace("subscription.html?welcome=1");
-        return;
-      }
       const plan = document.getElementById("ai-tools-plan");
       const buy = document.getElementById("buy-allowance");
       const rec = document.getElementById("rec-allowance");

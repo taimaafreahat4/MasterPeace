@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Contact | Stock Mind</title>
+  <link rel="stylesheet" href="../components/navbar.css">
+  <link rel="stylesheet" href="../components/footer.css">
+  <link rel="stylesheet" href="contact.css?v=clipboard-1">
+</head>
+<body class="contact-page contact-compose">
+  <div id="navbar-container"></div>
+  <main>
+    <section class="contact-hero" aria-labelledby="contact-title">
+      <div class="contact-shell">
+        <header class="contact-heading">
+          <h1 id="contact-title">Let’s talk.</h1>
+          <p>A question about an order, a listing, or your account? Send the Stock Mind team a note.</p>
+        </header>
+      </div>
+    </section>
+    <div class="contact-shell contact-workspace">
+      <div class="contact-layout">
+        <section class="contact-compose__form" aria-labelledby="contact-form-title">
+          <h2 id="contact-form-title">Contact us</h2>
+          <form class="contact-card contact-form" id="contactForm">
+            <div class="contact-fields">
+              <label>Full name<input name="name" dir="auto" autocomplete="name" required maxlength="100" placeholder="Your name"></label>
+              <label>Email address<input name="email" type="email" autocomplete="email" required maxlength="254" placeholder="you@example.com"></label>
+            </div>
+            <label>Subject<input name="subject" dir="auto" required maxlength="140" placeholder="What can we help with?"></label>
+            <label>
+              <span class="contact-label-row">Message <span id="contactCount" aria-hidden="true">0 / 2000</span></span>
+              <textarea name="message" dir="auto" rows="4" required minlength="10" maxlength="2000" placeholder="Tell us what happened or what you need."></textarea>
+            </label>
+            <div class="contact-submit">
+              <button class="contact-button" type="submit">
+                Send message
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+              </button>
+              <p id="contactStatus" class="contact-status" role="status" hidden></p>
+            </div>
+          </form>
+        </section>
+        <section class="contact-preview-stage" aria-labelledby="message-preview-title">
+          <div class="contact-clipboard-clip" aria-hidden="true"></div>
+          <div class="contact-preview">
+            <header class="contact-preview-stage__header">
+              <img src="../components/logo.png" width="42" height="42" alt="">
+              <div><strong>Stock Mind</strong><h2 id="message-preview-title">Message preview</h2></div>
+            </header>
+            <div class="contact-letter-meta"><span>To Stock Mind Support</span><time id="contactDraftDate"></time></div>
+            <dl>
+              <div><dt>From</dt><dd data-preview="name" dir="auto">Your name</dd></div>
+              <div><dt>Reply to</dt><dd data-preview="email">Your email address</dd></div>
+            </dl>
+            <p class="contact-letter-label">Regarding</p>
+            <p class="contact-preview-subject" data-preview="subject" dir="auto">Your subject</p>
+            <p class="contact-preview-message" data-preview="message" dir="auto">Your message will appear here as you type.</p>
+            <div class="contact-letter-signature"><span>Signed by</span><p data-preview="name" dir="auto">Your signature</p></div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+  <div id="footer-container"></div>
+  <script src="../components/navbar.js?v=contact-1"></script>
+  <script src="../components/load-navbar.js"></script>
+  <script src="contact.js?v=clipboard-1"></script>
+</body>
+</html>

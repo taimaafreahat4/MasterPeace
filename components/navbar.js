@@ -62,6 +62,10 @@ function initStockMindNavbar() {
     const logo = brand?.querySelector(".navbar-logo-image");
     if (brand) brand.href = NAVBAR_ROOT + "home/index.html";
     if (logo) logo.src = NAVBAR_DEFAULT_AVATAR;
+    document.querySelectorAll("[data-nav-route]").forEach(link => {
+        link.href = new URL(link.dataset.navRoute, NAVBAR_ROOT).href;
+    });
+    updateNavbarCurrentLink();
 
     const user       = getNavbarUser();
     const isLoggedIn = Boolean(user);
@@ -350,6 +354,22 @@ function notificationBelongsToViewer(item) {
 
 const surfacedNotificationIds = new Set(getStockMindNotifications().map(item => item.id));
 
+let navbarNotificationFilter = "all";
+const inboxIcons = {
+    shipping: "bi-truck", delivered: "bi-check2-circle", subscription: "bi-stars",
+    "seller-listing": "bi-box-seam", "feedback-review": "bi-chat-left-text"
+};
+
+function formatInboxTime(value) {
+    const date = new Date(value);
+    if (!value || !Number.isFinite(date.getTime())) return "";
+    const minutes = Math.max(0, Math.floor((Date.now() - date.getTime()) / 60000));
+    if (minutes < 1) return "Just now";
+    if (minutes < 60) return minutes + " min ago";
+    if (minutes < 1440) return Math.floor(minutes / 60) + " hr ago";
+    return new Intl.DateTimeFormat(undefined, {month:"short",day:"numeric",year:"numeric"}).format(date);
+}
+
 function renderNavbarNotifications() {
     const list = document.getElementById("notificationList");
     const badge = document.getElementById("notificationCount");
@@ -360,15 +380,18 @@ function renderNavbarNotifications() {
     badge.hidden = unread === 0;
     const summary = document.getElementById("notificationSummary");
     if (summary) summary.textContent = unread ? `${unread} unread update${unread === 1 ? "" : "s"}` : "You're all caught up";
+    const markAll = document.getElementById("markNotificationsRead");
+    if (markAll) markAll.disabled = unread === 0;
+    const items = navbarNotificationFilter === "unread" ? visible.filter(item => !item.readAt) : visible;
     list.replaceChildren();
-    if (!visible.length) {
+    if (!items.length) {
         const empty = document.createElement("div");
         empty.className = "notification-empty";
-        empty.innerHTML = "<span aria-hidden=\"true\">♧</span>No updates yet. Order and delivery updates will appear here.";
+        empty.textContent = navbarNotificationFilter === "unread" ? "No unread notifications." : "Your updates will appear here.";
         list.append(empty);
         return;
     }
-    visible.slice(0, 15).forEach(item => {
+    items.slice(0, 15).forEach(item => {
         const link = document.createElement("a");
         link.className = `notification-item${item.readAt ? "" : " is-unread"}`;
         link.dataset.notificationId = item.id;
@@ -377,11 +400,13 @@ function renderNavbarNotifications() {
         const icon = document.createElement("span");
         icon.className = "notification-item__icon";
         icon.setAttribute("aria-hidden", "true");
-        icon.textContent = stockMindNotificationIcon(item.kind);
+        const symbol = document.createElement("i");
+        symbol.className = "bi " + (inboxIcons[item.kind] || "bi-bag-check");
+        icon.append(symbol);
         const copy = document.createElement("span"); copy.className = "notification-item__copy";
         const title = document.createElement("strong"); title.textContent = item.title || "Order update";
         const message = document.createElement("small"); message.textContent = item.message || "There is an update to your order.";
-        const time = document.createElement("time"); time.dateTime = item.createdAt || ""; time.textContent = item.createdAt ? new Date(item.createdAt).toLocaleString() : "Just now";
+        const time = document.createElement("time"); time.dateTime = item.createdAt || ""; time.textContent = formatInboxTime(item.createdAt);
         copy.append(title, message, time); link.append(icon, copy); list.append(link);
     });
 }
@@ -427,11 +452,29 @@ function setupNavbarNotifications() {
     renderNavbarNotifications();
     if (trigger.dataset.ready === "true") return;
     trigger.dataset.ready = "true";
-    trigger.addEventListener("click", event => { event.stopPropagation(); panel.hidden = !panel.hidden; trigger.setAttribute("aria-expanded", String(!panel.hidden)); if (!panel.hidden) renderNavbarNotifications(); });
+    function closeInbox(restoreFocus = false) {
+        panel.hidden = true;
+        trigger.setAttribute("aria-expanded", "false");
+        if (restoreFocus) trigger.focus();
+    }
+    trigger.addEventListener("click", () => {
+        if (!panel.hidden) return closeInbox();
+        panel.hidden = false;
+        trigger.setAttribute("aria-expanded", "true");
+        renderNavbarNotifications();
+    });
+    document.getElementById("closeNotificationPanel")?.addEventListener("click", () => closeInbox(true));
+    const filters = panel.querySelectorAll("[data-notification-filter]");
+    filters.forEach(button => button.addEventListener("click", () => {
+        navbarNotificationFilter = button.dataset.notificationFilter;
+        filters.forEach(filter => filter.setAttribute("aria-pressed", String(filter === button)));
+        renderNavbarNotifications();
+    }));
     panel.addEventListener("click", event => {
         const link = event.target.closest("[data-notification-id]"); if (!link) return;
         const all = getStockMindNotifications(); const item = all.find(note => note.id === link.dataset.notificationId);
         if (item && !item.readAt) { item.readAt = new Date().toISOString(); localStorage.setItem("stockMindNotifications", JSON.stringify(all)); }
+        if (link.getAttribute("href") === "#") { event.preventDefault(); renderNavbarNotifications(); }
     });
     document.getElementById("markNotificationsRead")?.addEventListener("click", () => {
         const ids = new Set(getStockMindNotifications().filter(notificationBelongsToViewer).map(item => item.id));
@@ -439,14 +482,29 @@ function setupNavbarNotifications() {
         localStorage.setItem("stockMindNotifications", JSON.stringify(getStockMindNotifications().map(item => ids.has(item.id) && !item.readAt ? {...item,readAt:now} : item)));
         renderNavbarNotifications();
     });
-    document.getElementById("enableDesktopNotifications")?.addEventListener("click", async () => {
-        if (!("Notification" in window)) return;
-        if (Notification.permission === "default") await Notification.requestPermission();
-        const button = document.getElementById("enableDesktopNotifications");
-        if (button) button.textContent = Notification.permission === "granted" ? "Desktop alerts on" : "Desktop alerts blocked";
+    const desktopButton = document.getElementById("enableDesktopNotifications");
+    const desktopLabel = desktopButton?.querySelector("span");
+    function updateDesktopButton() {
+        if (!desktopButton || !desktopLabel) return;
+        const permission = "Notification" in window ? Notification.permission : "unsupported";
+        desktopButton.disabled = permission !== "default";
+        desktopLabel.textContent = {
+            granted:"Desktop alerts on", denied:"Desktop alerts blocked", unsupported:"Desktop alerts unavailable"
+        }[permission] || "Enable desktop alerts";
+    }
+    desktopButton?.addEventListener("click", async () => {
+        if ("Notification" in window && Notification.permission === "default") await Notification.requestPermission();
+        updateDesktopButton();
     });
-    document.addEventListener("click", event => { if (!wrap?.contains(event.target)) { panel.hidden = true; trigger.setAttribute("aria-expanded", "false"); } });
-    document.addEventListener("keydown", event => { if (event.key === "Escape") { panel.hidden = true; trigger.setAttribute("aria-expanded", "false"); } });
+    updateDesktopButton();
+    document.addEventListener("click", event => {
+        if (!panel.hidden && !wrap?.contains(event.target)) closeInbox();
+    });
+    wrap?.addEventListener("keydown", event => {
+        if (event.key !== "Escape" || panel.hidden) return;
+        event.stopPropagation();
+        closeInbox(true);
+    });
 }
 
 window.addStockMindNotification = addStockMindNotification;
@@ -524,6 +582,16 @@ initializeDemoOrderProgress();
    MOBILE MENU
 ===================================================== */
 
+function updateNavbarCurrentLink() {
+    const current = new URL(location.href);
+    document.querySelectorAll("[data-nav-route]").forEach(link => {
+        const target = new URL(link.href);
+        const isCurrent = target.pathname === current.pathname && target.hash === current.hash;
+        if (isCurrent) link.setAttribute("aria-current", target.hash ? "location" : "page");
+        else link.removeAttribute("aria-current");
+    });
+}
+
 function setupNavbarMobileMenu() {
 
     const mobileMenu = document.getElementById("mobileMenu");
@@ -534,10 +602,27 @@ function setupNavbarMobileMenu() {
 
     mobileMenu.dataset.ready = "true";
 
+    function closeMenu() {
+        navInner.classList.remove("mobile-open");
+        mobileMenu.setAttribute("aria-expanded", "false");
+    }
     mobileMenu.addEventListener("click", () => {
         const isOpen = navInner.classList.toggle("mobile-open");
         mobileMenu.setAttribute("aria-expanded", String(isOpen));
     });
+    navInner.querySelector("#navLinks")?.addEventListener("click", event => {
+        if (event.target.closest("a")) closeMenu();
+    });
+    document.addEventListener("click", event => {
+        if (!navInner.contains(event.target)) closeMenu();
+    });
+    navInner.addEventListener("keydown", event => {
+        if (event.key === "Escape" && navInner.classList.contains("mobile-open")) {
+            closeMenu();
+            mobileMenu.focus();
+        }
+    });
+    window.addEventListener("hashchange", updateNavbarCurrentLink);
 }
 
 

@@ -10,16 +10,16 @@
 
     <title>Stock Mind - Categories</title>
 
-    <link rel="stylesheet" href="category.css">
+    <link rel="stylesheet" href="category.css?v=card-actions-1">
 
     <link rel="stylesheet" href="../components/navbar.css?v=navbar-links-glow-1">
 
     <link rel="stylesheet" href="../components/footer.css">
 
-    <link rel="stylesheet" href="../responsive.css?v=site-responsive-2">
+    <link rel="stylesheet" href="../responsive.css?v=card-actions-1">
 </head>
 
-<body>
+<body class="market-page">
 
 <!-- ================= NAVBAR ================= -->
 
@@ -33,19 +33,23 @@
 
     <section class="categories-section">
 
-        <div class="section-heading">
-
-            <h1>Categories</h1>
-
-            <p>
-
-                Explore products from every category
-
-            </p>
-
+        <header class="market-hero">
+            <div class="market-intro">
+                <h1>Marketplace</h1>
+                <p>Browse stock by category and compare unit prices and whole lots.</p>
+            </div>
+            <label class="market-search">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg>
+                <span class="market-visually-hidden">Search products or sellers</span>
+                <input id="marketSearch" type="search" placeholder="Search products or sellers" autocomplete="off">
+            </label>
+        </header>
+        <div class="market-section-title">
+            <h2>Shop by category</h2>
+            <button class="category-card market-all active" type="button" data-category="all" aria-pressed="true">All products</button>
         </div>
 
-        <div class="categories">
+        <div class="categories" role="group" aria-label="Product categories">
             
 
             <button class="category-card" data-category="clothing">
@@ -55,7 +59,7 @@
                 <span>Clothing</span>
             </button>
 
-            <button class="category-card active" data-category="cosmetics">
+            <button class="category-card" data-category="cosmetics">
                 <div class="category-image">
                     <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=400&q=85" alt="Cosmetics">
                 </div>
@@ -122,65 +126,32 @@
         <!-- TOOLBAR -->
 
         <div class="market-toolbar">
-
-            <div class="sort-control">
-
-                <span>
-
-                    Sort By
-
-                </span>
-
-                <select id="sortSelect">
-
-                    <option value="recommended">
-
-                        Recommended
-
-                    </option>
-
-                    <option value="price-low">
-
-                        Price: Low to High
-
-                    </option>
-
-                    <option value="price-high">
-
-                        Price: High to Low
-
-                    </option>
-
-                    <option value="name">
-
-                        Name
-
-                    </option>
-
+            <label class="market-filter">Selling method
+                <select id="marketSellingMethod">
+                    <option value="all">All offers</option>
+                    <option value="regular">By quantity</option>
+                    <option value="whole_lot">Whole lot</option>
                 </select>
-
-            </div>
-
-            <button
-
-                id="trendsButton"
-
-                class="trends-button"
-
-            >
-
-                ✦ Trends
-
-            </button>
-
-            <div
-
-                class="results-count"
-
-                id="resultsCount"
-
-            ></div>
-
+            </label>
+            <label class="market-filter">Max price (JOD)
+                <input id="marketMaxPrice" type="number" min="0" step="0.01" placeholder="Any">
+            </label>
+            <label class="market-filter">Min. available units
+                <input id="marketMinStock" type="number" min="1" step="1" placeholder="Any">
+            </label>
+            <label class="market-filter">Sort by
+                <select id="sortSelect">
+                    <option value="recommended">Recommended</option>
+                    <option value="price-low">Price: Low to high</option>
+                    <option value="price-high">Price: High to low</option>
+                    <option value="name">Name</option>
+                </select>
+            </label>
+            <button id="trendsButton" class="trends-button" type="button" aria-pressed="false">Trends</button>
+        </div>
+        <div class="market-results-heading">
+            <h2 id="marketResultsTitle">All products</h2>
+            <div class="results-count" id="resultsCount" role="status"></div>
         </div>
 
         <!-- OLD FILTERS
@@ -626,14 +597,7 @@
 
 <div id="footer-container"></div>
 
-<!-- ================= LOAD NAVBAR ================= -->
-
-
-<!-- ================= NAVBAR ================= -->
-
-<div id="navbar-container"></div>
-
-<script src="../components/navbar.js?v=subscription-notification-1"></script>
+<script src="../components/navbar.js?v=notification-inbox-1"></script>
 
 <script>
     fetch("../components/navbar.html")
@@ -651,15 +615,6 @@
                 initStockMindNavbar();
             }
 
-            // Mobile menu
-            const menu = document.getElementById("mobileMenu");
-            const nav = document.getElementById("navInner");
-
-            if (menu && nav) {
-                menu.addEventListener("click", () => {
-                    nav.classList.toggle("mobile-open");
-                });
-            }
         })
         .catch(error => console.error("Navbar error:", error));
 
@@ -688,7 +643,7 @@
 
 <!-- ================= CATEGORY JS ================= -->
 
-<script src="category.js?v=toys-baby-category-1"></script>
+<script src="category.js?v=card-actions-1"></script>
 
 
 <script src="../components/site-validation.js"></script>

@@ -18,6 +18,28 @@
   const email = String(account.email || savedAccount.email || "").trim().toLowerCase();
   const accountKey = email || String(account.id || account.username || "guest").trim().toLowerCase();
   const usageKey = `stockMindAiUsage:${accountKey}`;
+  const planChoiceKey = `stockMindSelectedAiPlan:${accountKey}`;
+  const toolPages = new Set(["ai-tools.html", "ai-advisor.html", "recommendations.html"]);
+
+  function plansUrl(page) {
+    return "subscription.html" + (toolPages.has(page) ? "?returnTo=" + encodeURIComponent(page) : "");
+  }
+
+  function chooseFreePlan() {
+    try {
+      localStorage.setItem(planChoiceKey, JSON.stringify("free"));
+    } catch { return false; }
+    return true;
+  }
+
+  function requirePlanChoice() {
+    const page = location.pathname.split("/").pop();
+    if (page === "ai-tools.html" || !toolPages.has(page) || !account.loggedIn || String(account.role).toLowerCase() !== "seller") return;
+    const profile = window.StockMindStoreProfile;
+    if (profile && !profile.isComplete(profile.currentSeller())) return;
+    if (isPremium() || read(planChoiceKey, null) === "free") return;
+    window.location.replace(plansUrl(page) + "&welcome=1");
+  }
 
   function getSubscription() {
     const now = Date.now();
@@ -131,7 +153,8 @@
     });
   }
 
-  window.StockMindAccess = { isPremium, used, limit, canUse, record, message, renderNotice, notifyLimit, usageKey };
+  window.StockMindAccess = { isPremium, used, limit, canUse, record, message, renderNotice, notifyLimit, plansUrl, chooseFreePlan, usageKey };
+  requirePlanChoice();
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mountNotices, { once: true });
   else mountNotices();
 })();

@@ -40,11 +40,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const values = Object.fromEntries(["storeName", "businessCategory", "locationDetails", "city", "country", "storeType", "targetCustomers", "averageVisitorsPerDay", "description"].map(id => [id, document.getElementById(id).value.trim()]));
         try {
             api.save(user, values);
-            showMessage("Your store information has been saved. Opening your AI tools plan options…", "success");
+            const settingUp = new URLSearchParams(location.search).get("mode") === "setup";
+            showMessage(settingUp ? "Store saved. Opening your subscription plans…" : "Store saved. Opening your seller dashboard…", "success");
             button.querySelector("span").textContent = "Saved";
-            const introKey = `stockMindSubscriptionIntroSeen:${String(user.email || user.id || user.username || "seller").trim().toLowerCase()}`;
-            const introSeen = localStorage.getItem(introKey) === "true";
-            setTimeout(() => window.location.assign(introSeen ? "dashboard.html" : "subscription.html?welcome=1"), 700);
+            setTimeout(() => window.location.assign(settingUp ? "subscription.html?welcome=1" : "dashboard.html"), 700);
         } catch (error) {
             showMessage(error.message || "We couldn't save your store information. Please try again.", "error");
             button.disabled = false;

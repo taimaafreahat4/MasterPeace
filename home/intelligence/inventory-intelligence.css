@@ -205,3 +205,8 @@
     .stock-intel .card, .stock-intel .card.wide { width: min(290px, calc(100% - 32px)); padding: 8px 11px; }
     .stock-intel .card svg { max-height: 54px; }
 }
+
+/* Paint the opening page surface independently of the floating navbar. */
+html.stockmind-home, html.stockmind-home body { background: linear-gradient(#07112b 0 80px, #fff 80px); }
+
+html.stockmind-home.warehouse-in-view #navbar-container .stockmind-nav { background: #07112b; }

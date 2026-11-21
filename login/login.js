@@ -252,15 +252,6 @@ loginForm.addEventListener("submit", e => {
     const isAdmin  = userRole === "admin";
     const isSeller = userRole === "seller";
     const needsStoreSetup = isSeller && !window.StockMindStoreProfile?.isComplete(account);
-    const subscriptionIntroKey = `stockMindSubscriptionIntroSeen:${String(account.email || account.id || account.username || "seller").trim().toLowerCase()}`;
-    const existingSubscription = (() => {
-        try {
-            const item = JSON.parse(localStorage.getItem("stockMindSubscription") || "null");
-            const matchesAccount = Boolean(item?.ownerEmail && String(item.ownerEmail).trim().toLowerCase() === emailLower);
-            return Boolean(item && matchesAccount && Number(item.expiresAt) > Date.now() && Number(item.startedAt || 0) <= Date.now());
-        } catch { return false; }
-    })();
-    const shouldShowSubscriptionIntro = isSeller && !needsStoreSetup && !existingSubscription && !localStorage.getItem(subscriptionIntroKey);
 
 
     /* Admin can login from the page directly (no role tab),
@@ -295,7 +286,7 @@ loginForm.addEventListener("submit", e => {
             isAdmin
             ? "Taking you to admin dashboard..."
             : isSeller
-            ? (needsStoreSetup ? "Taking you to set up your store..." : shouldShowSubscriptionIntro ? "Review AI Tools plans and your free first analyses..." : "Taking you to your seller dashboard...")
+            ? (needsStoreSetup ? "Taking you to set up your store..." : "Opening your subscription plans...")
             : "Taking you to the marketplace...";
 
     }, 600);
@@ -311,9 +302,7 @@ loginForm.addEventListener("submit", e => {
 
             window.location.href = needsStoreSetup
                 ? "../seller/stockmind_seller_center/store-profile.html?mode=setup"
-                : shouldShowSubscriptionIntro
-                ? "../seller/stockmind_seller_center/subscription.html?welcome=1"
-                : "../seller/stockmind_seller_center/dashboard.html";
+                : "../seller/stockmind_seller_center/subscription.html?welcome=1";
 
         } else {
 

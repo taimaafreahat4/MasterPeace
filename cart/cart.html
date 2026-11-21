@@ -138,29 +138,6 @@
     <div id="footer-container"></div>
 
     <script>
-        // Load the shared navbar.
-        fetch("../components/navbar.html")
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Navbar could not be loaded");
-                }
-                return response.text();
-            })
-            .then(html => {
-                const container = document.getElementById("navbar-container");
-                container.innerHTML = html;
-
-                const menu = container.querySelector("#mobileMenu");
-                const inner = container.querySelector("#navInner");
-
-                if (menu && inner) {
-                    menu.addEventListener("click", () => {
-                        inner.classList.toggle("mobile-open");
-                    });
-                }
-            })
-            .catch(error => console.error(error));
-
         // Load the shared footer.
         fetch("../components/footer.html")
             .then(response => {
@@ -174,7 +151,7 @@
             })
             .catch(error => console.error(error));
     </script>
-<script src="../components/navbar.js?v=subscription-notification-1"></script>
+<script src="../components/navbar.js?v=notification-inbox-1"></script>
 <script src="../components/load-navbar.js"></script>
 <script>
     loadStockMindNavbar();

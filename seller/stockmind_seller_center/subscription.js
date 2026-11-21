@@ -34,10 +34,22 @@
   const container = document.getElementById("plans");
   const status = document.getElementById("subscription-status");
   const welcome = document.getElementById("subscription-welcome");
-  if (new URLSearchParams(location.search).get("welcome") === "1") {
-    if (welcome) welcome.hidden = false;
-    const introKey = `stockMindSubscriptionIntroSeen:${ownerEmail || String(account.id || account.username || "seller").trim().toLowerCase()}`;
-    try { localStorage.setItem(introKey, "true"); } catch { /* The welcome offer still displays for this visit. */ }
+  const params = new URLSearchParams(location.search);
+  if (params.get("welcome") === "1" && welcome) welcome.hidden = false;
+  const requestedPage = params.get("returnTo");
+  const returnTo = ["ai-tools.html", "ai-advisor.html", "recommendations.html"].includes(requestedPage)
+    ? requestedPage : "ai-tools.html";
+  const freePlan = document.querySelector(".free-plan-button");
+  if (freePlan) {
+    freePlan.href = returnTo;
+    freePlan.addEventListener("click", event => {
+      if (window.StockMindAccess?.chooseFreePlan()) return;
+      event.preventDefault();
+      if (status) {
+        status.hidden = false;
+        status.textContent = "Allow browser storage to continue with the free plan.";
+      }
+    });
   }
 
   function planCard(plan) {

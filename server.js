@@ -1,7 +1,9 @@
 "use strict";
 // Stock Mind local multi-seller demo server. Node >=18; no npm packages.
 const http=require('node:http'), fs=require('node:fs'), path=require('node:path'), crypto=require('node:crypto');
-const ROOT=__dirname, DATA=path.join(ROOT,'server-data.json'), PORT=Number(process.env.PORT||3000);
+const ROOT=__dirname, PORT=Number(process.env.PORT||3000);
+const DATA=process.env.STOCKMIND_DEMO_DATA || path.join(require('node:os').homedir(),'.stockmind','demo-server.json');
+fs.mkdirSync(path.dirname(DATA),{recursive:true});
 const hash=(password,salt)=>crypto.scryptSync(password,salt,32).toString('hex');
 function seedUser(email,password,name,role){const salt=crypto.randomBytes(16).toString('hex');return {id:email.toLowerCase(),email:email.toLowerCase(),name,role,salt,hash:hash(password,salt)};}
 function initial(){return {users:[seedUser('seller@stockmind.com','Seller123','Seller One','Seller'),seedUser('seller2@stockmind.com','Seller2@123','Seller Two','Seller'),seedUser('buyer@stockmind.com','Buyer123','Default Buyer','Buyer')],listings:[],orders:[]};}
@@ -20,8 +22,10 @@ const fileTypes={'.html':'text/html; charset=utf-8','.js':'application/javascrip
 const cleanText=(v,n=200)=>String(v??'').trim().slice(0,n);
 const cents=v=>Math.round(Number(v)*100);
 const validInt=v=>Number.isInteger(Number(v))&&Number(v)>0;
+const contactApi=require('./contact-api').createContactApi({send,fail,json});
 const server=http.createServer(async(req,res)=>{try{
 const url=new URL(req.url,'http://localhost');const route=url.pathname;
+if(route.startsWith('/api/')&&await contactApi(req,res,route))return;
 if(route==='/api/login'&&req.method==='POST'){
  const {email,password}=await json(req);const u=db.users.find(x=>x.email===String(email||'').toLowerCase());
  if(!u||typeof password!=='string'||!crypto.timingSafeEqual(Buffer.from(u.hash,'hex'),Buffer.from(hash(password,u.salt),'hex')))fail(401,'Incorrect email or password');
@@ -86,7 +90,7 @@ if(route.match(/^\/api\/orders\/[^/]+\/status$/)&&req.method==='PATCH'){
 if(route.startsWith('/api/'))fail(404,'Unknown endpoint');
 let file;try{file=decodeURIComponent(route)}catch{fail(400,'Invalid path')}
 if(file==='/'||file==='')file='/home/index.html';
-const full=path.resolve(ROOT,'.'+file);if(!full.startsWith(ROOT+path.sep)||path.basename(full)==='server-data.json'||path.basename(full)==='server.js'||!fs.existsSync(full)||fs.statSync(full).isDirectory())fail(404,'Page not found');
+const full=path.resolve(ROOT,'.'+file);if(!full.startsWith(ROOT+path.sep)||path.basename(full)==='server-data.json'||path.basename(full)==='server.js'||path.basename(full)==='contact-api.js'||!/^(?:home|admin|components|images|login|seller|buyer-dashboard|category|cart|checkout|favorite|profile|settings)[\\/]/i.test(path.relative(ROOT,full))&&file!=='/responsive.css'||!fs.existsSync(full)||fs.statSync(full).isDirectory())fail(404,'Page not found');
 res.writeHead(200,{'Content-Type':fileTypes[path.extname(full).toLowerCase()]||'application/octet-stream'});fs.createReadStream(full).pipe(res);
 }catch(e){if(!res.headersSent)send(res,e.status||500,{error:e.message||'Server error'});}});
-server.listen(PORT,()=>console.log(`Stock Mind server: http://localhost:${PORT}/login/login.html`));
+server.listen(PORT,process.env.STOCKMIND_HOST||'127.0.0.1',()=>console.log(`Stock Mind server: http://localhost:${PORT}/login/login.html`));

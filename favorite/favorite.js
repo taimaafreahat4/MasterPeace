@@ -122,7 +122,7 @@ JOD ${product.price}
 
 
 
-<div class="card-buttons">
+<div class="card-buttons product-card-actions">
 
 
 <button class="cart-btn">

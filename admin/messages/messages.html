@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Contact inbox | Stock Mind Admin</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../components/sidebar.css?v=rail-1">
+  <link rel="stylesheet" href="../components/admin-theme.css">
+  <link rel="stylesheet" href="../../home/contact.css">
+  <link rel="stylesheet" href="messages.css">
+</head>
+<body class="contact-page admin-theme">
+  <div id="sidebar"></div>
+  <main class="content contact-inbox">
+    <header class="contact-heading">
+      <p class="contact-kicker">Stock Mind Admin</p>
+      <h1>Contact inbox</h1>
+      <p>Read messages sent through the Contact page.</p>
+    </header>
+    <form class="contact-card inbox-access" id="inboxAccess">
+      <label>Administrator inbox key<input id="inboxKey" type="password" required autocomplete="off"></label>
+      <button class="contact-button" type="submit">Open inbox</button>
+    </form>
+    <p id="inboxStatus" class="contact-status inbox-status" role="status"></p>
+    <section id="inboxPanel" hidden aria-label="Contact messages">
+      <div class="inbox-toolbar"><h2>Messages</h2><button class="contact-button" id="inboxRefresh" type="button">Refresh inbox</button></div>
+      <div id="inboxMessages" class="inbox-messages"></div>
+    </section>
+  </main>
+  <script src="../components/sidebar.js?v=contact-1"></script>
+  <script src="messages.js"></script>
+</body>
+</html>

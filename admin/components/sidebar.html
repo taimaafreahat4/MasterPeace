@@ -1,27 +1,32 @@
 <aside class="admin-sidebar" aria-label="Administrator navigation">
-  <a href="../../home/index.html" class="admin-logo">
+  <div class="sidebar-header">
+  <a href="../../home/index.html" class="admin-logo" aria-label="Stock Mind home" title="Stock Mind home">
     <img src="../../components/logo.png" alt="">
     <span class="admin-brand-copy"><span class="admin-brand-name">Stock <b>Mind</b></span><small>ADMIN CONSOLE</small></span>
   </a>
+  <button class="sidebar-toggle" type="button" aria-label="Collapse sidebar" aria-expanded="true" aria-controls="admin-sidebar-links" title="Collapse sidebar"><i class="bi bi-list" aria-hidden="true"></i></button>
+  </div>
 
+  <div class="sidebar-links" id="admin-sidebar-links">
   <div class="sidebar-section-label">WORKSPACE</div>
   <nav class="sidebar-menu">
-    <a href="../dashboard/dashboard.html" data-admin-link="dashboard"><i class="bi bi-grid-1x2" aria-hidden="true"></i><span>Overview</span></a>
-    <a href="../users/users.html" data-admin-link="users"><i class="bi bi-people" aria-hidden="true"></i><span>Users</span></a>
-    <a href="../sellers/sellers.html" data-admin-link="sellers"><i class="bi bi-shop" aria-hidden="true"></i><span>Sellers</span></a>
-    <a href="../products/products.html#products" data-admin-link="products"><i class="bi bi-box-seam" aria-hidden="true"></i><span>Product approvals</span><em class="sidebar-count" id="admin-pending-products" hidden>0</em></a>
-    <a href="../products/products.html#feedback" data-admin-link="feedback"><i class="bi bi-chat-left-text" aria-hidden="true"></i><span>Feedback</span><em class="sidebar-count" id="admin-pending-feedback" hidden>0</em></a>
-    <a href="../orders/orders.html" data-admin-link="orders"><i class="bi bi-bag" aria-hidden="true"></i><span>Orders</span></a>
+    <a href="../dashboard/dashboard.html" data-admin-link="dashboard" aria-label="Overview" title="Overview"><i class="bi bi-grid-1x2" aria-hidden="true"></i><span>Overview</span></a>
+    <a href="../users/users.html" data-admin-link="users" aria-label="Users" title="Users"><i class="bi bi-people" aria-hidden="true"></i><span>Users</span></a>
+    <a href="../sellers/sellers.html" data-admin-link="sellers" aria-label="Sellers" title="Sellers"><i class="bi bi-shop" aria-hidden="true"></i><span>Sellers</span></a>
+    <a href="../products/products.html#products" data-admin-link="products" aria-label="Product approvals" title="Product approvals"><i class="bi bi-box-seam" aria-hidden="true"></i><span>Product approvals</span><em class="sidebar-count" id="admin-pending-products" hidden>0</em></a>
+    <a href="../products/products.html#feedback" data-admin-link="feedback" aria-label="Feedback" title="Feedback"><i class="bi bi-chat-left-text" aria-hidden="true"></i><span>Feedback</span><em class="sidebar-count" id="admin-pending-feedback" hidden>0</em></a>
+    <a href="../messages/messages.html" data-admin-link="messages" aria-label="Contact messages" title="Contact messages"><i class="bi bi-envelope" aria-hidden="true"></i><span>Contact messages</span></a>
+    <a href="../orders/orders.html" data-admin-link="orders" aria-label="Orders" title="Orders"><i class="bi bi-bag" aria-hidden="true"></i><span>Orders</span></a>
   </nav>
 
   <div class="sidebar-section-label sidebar-section-settings">PREFERENCES</div>
   <nav class="sidebar-menu sidebar-preferences">
-    <a href="../settings/settings.html" data-admin-link="settings"><i class="bi bi-sliders" aria-hidden="true"></i><span>Settings</span></a>
+    <a href="../settings/settings.html" data-admin-link="settings" aria-label="Settings" title="Settings"><i class="bi bi-sliders" aria-hidden="true"></i><span>Settings</span></a>
   </nav>
 
   <div class="sidebar-bottom">
-    <div class="sidebar-admin-card"><span class="sidebar-admin-avatar">SM</span><span><strong>Stock Mind</strong><small>Administrator</small></span></div>
-    <a href="../profile/profile.html" data-admin-link="profile"><i class="bi bi-person-circle" aria-hidden="true"></i><span>Profile</span></a>
-    <a href="../../home/index.html" id="logoutBtn"><i class="bi bi-box-arrow-right" aria-hidden="true"></i><span>Log out</span></a>
+    <a href="../profile/profile.html" data-admin-link="profile" aria-label="Profile" title="Profile"><i class="bi bi-person-circle" aria-hidden="true"></i><span>Profile</span></a>
+    <a href="../../home/index.html" id="logoutBtn" aria-label="Log out" title="Log out"><i class="bi bi-box-arrow-right" aria-hidden="true"></i><span>Log out</span></a>
+  </div>
   </div>
 </aside>
