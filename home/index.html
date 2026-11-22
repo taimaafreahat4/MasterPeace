@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="../components/footer.css">
     <!-- Main CSS -->
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="intelligence/inventory-intelligence.css?v=nav-warehouse-1">
+    <link rel="stylesheet" href="intelligence/inventory-intelligence.css?v=floor-panels-1">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap">
     <link rel="stylesheet" href="../responsive.css?v=site-responsive-2">
 </head>
@@ -37,8 +37,30 @@
     <span id="home"></span>
     <div id="stock-intel-app">
         <div id="stock-intel-stage"></div>
-        <svg id="stock-intel-lines" aria-hidden="true"></svg>
-        <div id="stock-intel-cards"></div>
+        <section class="intel-floor-panel intel-floor-panel--ground" data-floor-panel="ground" aria-labelledby="intel-ground-panel-title" aria-hidden="true">
+            <header>
+                <p>Ground floor · Inventory</p>
+                <h2 id="intel-ground-panel-title">Where stock gets stuck</h2>
+            </header>
+            <ul class="intel-floor-grid">
+                <li><h3>Unsold inventory</h3><p>Products stay on the shelves longer than expected.</p></li>
+                <li><h3>Storage costs</h3><p>Slow-moving stock uses space you could put to better use.</p></li>
+                <li><h3>Locked capital</h3><p>Money stays tied up in products that haven’t sold.</p></li>
+                <li><h3>Uncertain demand</h3><p>Limited sales data makes the next order harder to plan.</p></li>
+            </ul>
+        </section>
+        <section class="intel-floor-panel intel-floor-panel--upper" data-floor-panel="upper" aria-labelledby="intel-upper-panel-title" aria-hidden="true">
+            <header>
+                <p>Upper floor · Seller tools</p>
+                <h2 id="intel-upper-panel-title">Plan purchases and move surplus</h2>
+            </header>
+            <ul class="intel-floor-grid">
+                <li><h3>Before You Buy</h3><p>Review cost, expected margin, and store context before ordering.</p></li>
+                <li><h3>AI Recommendations</h3><p>Review a surplus lot and see suggested next steps.</p></li>
+                <li><h3>Demand Forecast</h3><p>Estimate future demand from recent recorded sales.</p></li>
+                <li><h3>Surplus listings</h3><p>Offer stock by quantity or as a complete lot.</p></li>
+            </ul>
+        </section>
         <div class="intel-tools">
             <a href="#categories" class="intel-skip">Skip to categories &#8595;</a>
         </div>
@@ -731,7 +753,7 @@ loadStockMindNavbar();
 <script src="../components/site-validation.js"></script>
 <script src="script.js"></script>
 <script defer src="intelligence/three.min.js"></script>
-<script defer src="intelligence/inventory-intelligence.js?v=nav-warehouse-1"></script>
+<script defer src="intelligence/inventory-intelligence.js?v=floor-panels-1"></script>
 
 <!-- FOOTER COMPONENT -->
 <div id="footer-container"></div>

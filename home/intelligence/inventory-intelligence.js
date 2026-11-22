@@ -33,26 +33,6 @@ var SC=[
 [.8,.885,'INVENTORY INTELLIGENCE','Know what to keep.<br><em>Know what to sell.</em>','Understand your stock. Unlock better decisions.'],
 [.885,.955,'STOCKMIND MARKETPLACE','One seller’s surplus.<br><em>Another seller’s opportunity.</em>','List surplus, discover stock, and connect products with the people who need them.'],
 [.955,1.01,'BUY. SELL. CONNECT.','Smarter inventory.<br><em>Stronger business.</em>','Forecast demand. Optimize stock. Unlock the value of surplus inventory.',CB2]];
-/* [from,to,anchor(x,y,z | 'hero'),side,title,text,class] */
-var CD=[
-[.31,.37,[0,4.7,-9],1,'Unsold Inventory','Products that remain on shelves longer than expected.','warn'],
-[.34,.40,[3.3,1.6,-8.2],-1,'Storage Costs','Every unused shelf takes up valuable space.','warn'],
-[.37,.43,[0,3.9,-7.2],1,'Locked Capital','Money invested in products that have not sold.','warn'],
-[.40,.45,[-3.3,1.6,-6.2],-1,'Uncertain Demand','Purchasing decisions without clear demand insights.','warn'],
-[.615,.67,[-6,8.2,-8],-1,'Location Intelligence','Understand demand patterns across different locations.'],
-[.63,.685,[-6,7.2,-8],1,'Seasonal Trends','See how timing and seasonality may influence demand.'],
-[.645,.70,[-6,7.6,-8],-1,'Customer Insights','Identify patterns in customer purchasing behavior.'],
-[.66,.72,[-6,7.6,-8],1,'Demand Forecasts','Estimate future demand before committing to new stock.'],
-[.67,.73,[-6,7.4,-8],1,'PANEL','','wide'],
-[.725,.775,[1.45,9.45,-11.5],1,'Demand Opportunity','Discover products with promising demand signals.','good'],
-[.735,.785,[.35,6.85,-11.5],-1,'Inventory Risk','Identify products with potential overstocking risk.','warn'],
-[.75,.795,[3.65,8.15,-11.5],1,'Suggested Quantity','Data-informed guidance on how much stock to consider.'],
-[.805,.86,[9,9.4,-9.6],1,'Slow-Moving Stock','Identify products that may need attention.','warn'],
-[.825,.875,[9,7.6,-6.4],-1,'Storage Efficiency','Make better use of valuable warehouse space.'],
-[.845,.88,[9,9.9,-6.4],1,'Smart Promotions','Explore discount and promotional recommendations.','good'],
-[.895,.95,'hero',1,'LISTING','','wide'],
-[.915,.95,[16.4,8.2,-6],-1,'Buy by Quantity · Buy the Whole Lot','Choose the units you need, or purchase the complete lot. For businesses and individuals.']];
-
 var copy=$('stock-intel-copy'),cur=-2;
 function setScene(i){if(i===cur)return;cur=i;if(i<0){copy.classList.add('off');copy.inert=true;return}copy.inert=false;
  var s=SC[i];$('stock-intel-ce').textContent=s[2];$('stock-intel-ch').innerHTML=s[3];$('stock-intel-cs').textContent=s[4];var cc=$('stock-intel-cc');cc.innerHTML='';
@@ -84,14 +64,32 @@ root.addEventListener('click',function(e){
  window.scrollTo({top:window.scrollY+root.getBoundingClientRect().top-navHeight+p*maxS(),behavior:reduce?'auto':'smooth'});
 });
 
-/* ---------- cards ---------- */
-var cardsEl=$('stock-intel-cards'),linesEl=$('stock-intel-lines'),NS='http://www.w3.org/2000/svg';
-var PANEL='<span class="tag">Illustrative data</span><h4>Wireless Headphones</h4><svg viewBox="0 0 220 84" aria-hidden="true"><path d="M0 80H220" stroke="rgba(196,181,253,.2)" fill="none"/><path class="gr2" pathLength="1" d="M0 70C40 68 70 58 100 56S150 46 220 38"/><path class="gr" pathLength="1" d="M0 72C30 66 50 50 80 52S130 30 160 26 200 16 220 8"/></svg><div class="row"><span>Estimated demand</span><b>Rising</b></div><div class="row"><span>Seasonal peak</span><b>Q4</b></div><div class="row"><span>Suggested stock</span><b>180–240 units</b></div><div class="row"><span>Forecast uncertainty</span><b>Moderate</b></div>';
-var LIST='<span class="tag">Sample listing</span><div><div class="thumb"></div><h4>Wireless Headphones</h4><p>Qty 240 · $18.50 / unit</p></div><div class="row" style="clear:both"><span>Type</span><b>Quantity or whole lot</b></div><div class="row"><span>Seller</span><b>Sample seller</b></div>';
-var CARDS=CD.map(function(c){var el=document.createElement('div');el.className='card '+(c[6]||'');el.setAttribute('aria-hidden','true');
- el.innerHTML=c[4]==='PANEL'?PANEL:c[4]==='LISTING'?LIST:(c[4].indexOf('<')>-1?'<h4 style="display:none"></h4>':'')+(c[4].indexOf('<')>-1?c[4].replace('<br>','<h4>')+'</h4><p>'+c[5]+'</p>':'<h4>'+c[4]+'</h4><p>'+c[5]+'</p>');
- cardsEl.appendChild(el);var ln=document.createElementNS(NS,'line'),dt=document.createElementNS(NS,'circle');dt.setAttribute('r',3.5);linesEl.appendChild(ln);linesEl.appendChild(dt);
- return{a:c[0],b:c[1],at:c[2],side:c[3],el:el,ln:ln,dt:dt,w:0,h:0}});
+/* Keep one grouped callout visible at each floor. */
+var floorPanels=[
+    {element:root.querySelector('[data-floor-panel="ground"]'), start:.278, end:.448},
+    {element:root.querySelector('[data-floor-panel="upper"]'), start:.628, end:.881}
+];
+function updateFloorPanels(progress){
+    var anyVisible=false;
+    floorPanels.forEach(function(panel){
+        var entering=ss(panel.start,panel.start+.025,progress);
+        var leaving=ss(panel.end-.025,panel.end,progress);
+        var opacity=entering*(1-leaving);
+        var shown=opacity>0;
+        var accessible=opacity>.12;
+        if(panel.shown||shown){
+            panel.element.style.setProperty('--panel-opacity',opacity.toFixed(3));
+            panel.element.style.setProperty('--panel-offset',((1-entering)*22-leaving*15).toFixed(1)+'px');
+        }
+        if(accessible!==panel.accessible){
+            panel.element.setAttribute('aria-hidden',String(!accessible));
+            panel.accessible=accessible;
+        }
+        panel.shown=shown;
+        anyVisible=anyVisible||shown;
+    });
+    root.classList.toggle('floor-panel-visible',anyVisible);
+}
 
 /* ---------- WebGL ---------- */
 var THREE=window.THREE,stage=$('stock-intel-stage'),renderer;
@@ -594,8 +592,7 @@ function path(p){var i=0;while(i<KS.length-2&&p>KS[i+1][0])i++;var a=KS[i],b=KS[
 
 /* sizing */
 var W=1,H=1;
-function resize(){nav=document.querySelector('#navbar-container .navbar');navHeight=nav?nav.offsetHeight:64;root.style.setProperty('--intel-nav',navHeight+'px');W=stage.clientWidth;H=stage.clientHeight;if(!W||!H)return;renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.3,Math.sqrt(1000000/(W*H))));renderer.setSize(W,H,false);cam.aspect=W/H;cam.updateProjectionMatrix();linesEl.setAttribute('viewBox','0 0 '+W+' '+H);
- CARDS.forEach(function(c){c.w=c.el.offsetWidth;c.h=c.el.offsetHeight})}
+function resize(){nav=document.querySelector('#navbar-container .navbar');navHeight=nav?nav.offsetHeight:64;root.style.setProperty('--intel-nav',navHeight+'px');W=stage.clientWidth;H=stage.clientHeight;if(!W||!H)return;renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.3,Math.sqrt(1000000/(W*H))));renderer.setSize(W,H,false);cam.aspect=W/H;cam.updateProjectionMatrix();}
 var ro=window.ResizeObserver?new ResizeObserver(resize):null;if(ro){ro.observe(stage);if(nav)ro.observe(nav);}else addEventListener('resize',resize);resize();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(resize);
 var navbarHost=document.getElementById('navbar-container');
@@ -606,7 +603,7 @@ var navbarObserver=navbarHost?new MutationObserver(function(){
 if(navbarObserver)navbarObserver.observe(navbarHost,{childList:true});
 
 /* frame */
-var clock=new THREE.Clock(),sp=readP(),raf=0,pv=new THREE.Vector3();
+var clock=new THREE.Clock(),sp=readP(),raf=0;
 function update(dt,t){
  var target=readP();sp=reduce?target:sp+(target-sp)*(1-Math.exp(-dt*8));
  if(sp>=.41&&sp<=.57)animateSorter(sp);
@@ -638,27 +635,8 @@ function update(dt,t){
  var mt=ss(.81,.87,sp);if(mt!==lastMt){lastMt=mt;for(var i=0;i<inv.length;i++){col.copy(invA[i]).lerp(invB[i],mt);bxM.setColorAt(inv[i].i,col)}bxM.instanceColor.needsUpdate=true}
  /* copy + progress */
  setScene(sceneFor(target));updateJourneyHud(target);$('stock-intel-hint').style.opacity=target>.02?0:1;
- /* cards */
- var shown=0,narrow=W<=760,stackBottom=0;
- var hud=root.querySelector(".intel-hud");
- var cardBottom=hud.offsetTop-12;
- var cardTop=narrow&&!copy.inert?copy.offsetTop+copy.offsetHeight+12:75;
- CARDS.forEach(function(c){var v=ss(c.a,c.a+.012,sp)*(1-ss(c.b-.012,c.b,sp));
-  if(v<.02||shown>=(narrow?1:2)){c.el.style.opacity=0;c.el.setAttribute('aria-hidden','true');c.ln.setAttribute('opacity',0);c.dt.setAttribute('opacity',0);return}
-  if(c.at==='hero')pv.copy(hero.position).y+=.6;else pv.set(c.at[0],c.at[1],c.at[2]);pv.project(cam);
-  if(pv.z>1||Math.abs(pv.x)>1.15||Math.abs(pv.y)>1.15){c.el.style.opacity=0;c.el.setAttribute('aria-hidden','true');c.ln.setAttribute('opacity',0);c.dt.setAttribute('opacity',0);return}
-  var ax=(pv.x*.5+.5)*W,ay=(-pv.y*.5+.5)*H;
-  var cx=Math.max(16,W-c.w-(narrow?16:Math.max(22,W*.044)));
-  var low=Math.max(cardTop,stackBottom?stackBottom+12:0);
-  var high=cardBottom-c.h;
-  if(high<low){c.el.style.opacity=0;c.el.setAttribute('aria-hidden','true');c.ln.setAttribute('opacity',0);c.dt.setAttribute('opacity',0);return}
-  var cy=cl(ay-c.h/2,low,high);
-  stackBottom=cy+c.h;shown++;
-  var ex=cx>ax?cx:cx+c.w,ey=cy+c.h/2;
-  c.el.setAttribute('aria-hidden','false');c.el.style.opacity=v;c.el.style.transform='translate('+cx.toFixed(1)+'px,'+(cy+(1-v)*14).toFixed(1)+'px)';
-  c.el.style.setProperty('--dr',ss(c.a+.012,c.b-.02,sp).toFixed(3));
-  var lv=ss(c.a+.004,c.a+.03,sp);c.ln.setAttribute('x1',ax);c.ln.setAttribute('y1',ay);c.ln.setAttribute('x2',lp(ax,ex,lv));c.ln.setAttribute('y2',lp(ay,ey,lv));c.ln.setAttribute('opacity',v);
-  c.dt.setAttribute('cx',ax);c.dt.setAttribute('cy',ay);c.dt.setAttribute('opacity',v)})}
+ updateFloorPanels(sp);
+}
 var lastMt=-1;
 var visible=true, elapsed=0;
 function schedule(){if(!raf && visible && !document.hidden)raf=requestAnimationFrame(frame);}
