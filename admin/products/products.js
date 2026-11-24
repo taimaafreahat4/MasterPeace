@@ -11,7 +11,7 @@
     const write = (key, value) => localStorage.setItem(key, JSON.stringify(value));
     const text = value => String(value ?? "");
     const escapeHTML = value => text(value).replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[char]);
-    const statusOf = item => item.approvalStatus || "approved";
+    const statusOf = item => item.approvalStatus || "pending_review";
     const dateLabel = value => {
         const date = new Date(value || "");
         return Number.isNaN(date.getTime()) ? "—" : date.toLocaleDateString(undefined, {year:"numeric",month:"short",day:"numeric"});

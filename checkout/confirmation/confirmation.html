@@ -1,35 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#061735"><title>Stock Mind | Order confirmed</title>
-  <link rel="stylesheet" href="confirmation.css"><link rel="stylesheet" href="../../components/navbar.css?v=navbar-links-glow-1"><link rel="stylesheet" href="../../components/footer.css">
-    <link rel="stylesheet" href="../../responsive.css?v=site-responsive-2">
-    <link rel="stylesheet" href="confirmation-polish.css?v=confirmation-layout-1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1630">
+  <title>Stock Mind | Order confirmation</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../../components/navbar.css?v=navbar-links-glow-1">
+  <link rel="stylesheet" href="../../components/footer.css">
+  <link rel="stylesheet" href="../../responsive.css?v=site-responsive-2">
+  <link rel="stylesheet" href="confirmation.css?v=order-receipt-1">
+  <link rel="stylesheet" href="confirmation-polish.css?v=order-receipt-1">
 </head>
-<body>
+<body class="confirmation-body">
   <div id="navbar-container"></div>
   <main class="confirmation-page">
-    <section class="confirmation-card">
-      <div class="success-icon" aria-hidden="true"><svg viewBox="0 0 64 64"><path d="M16 33 L27 44 L49 20"></path></svg></div>
-      <p class="success-eyebrow">DEMO ORDER CONFIRMED</p>
-      <h1>Order placed <span>successfully.</span></h1>
-      <p class="thank-you">Your order is being prepared. We’ll add an in-site notification when its delivery status changes.</p>
-      <p class="demo-note">No payment was taken. This order is saved in this browser for the Stock Mind demo.</p>
-      <div class="order-info">
-        <div><small>Order number</small><strong id="orderNumber">—</strong></div>
-        <div><small>Demo total</small><strong id="orderTotal">JOD 0.00</strong></div>
-        <div><small>Current status</small><strong id="orderStatus">Processing</strong></div>
+    <header class="confirmation-hero">
+      <div class="confirmation-heading">
+        <span class="confirmation-icon" aria-hidden="true">
+          <i id="confirmationIcon" class="bi bi-receipt"></i>
+        </span>
+        <div>
+          <h1 id="confirmationTitle">Order confirmation</h1>
+          <p id="confirmationMessage" role="status">Loading your order details…</p>
+        </div>
       </div>
-      <div class="items-box"><h3>Order items</h3><div id="orderItems"></div></div>
-      <div class="buttons"><button id="viewOrderDetails" class="primary-button" type="button">Track this order <span aria-hidden="true">→</span></button><a href="../../category/category.html">Continue shopping</a></div>
-      <p id="orderDetails" class="order-details" hidden></p>
-    </section>
+      <dl class="confirmation-reference" id="orderReference" hidden>
+        <dt>Order number</dt>
+        <dd id="orderNumber"></dd>
+      </dl>
+    </header>
+
+    <div class="confirmation-layout" id="confirmationDetails" hidden>
+      <section class="receipt-card receipt-items" aria-labelledby="order-items-title">
+        <header class="receipt-heading">
+          <h2 id="order-items-title">Order items</h2>
+          <span id="orderItemCount" class="receipt-count"></span>
+        </header>
+        <div id="orderItems"></div>
+      </section>
+
+      <section class="receipt-card receipt-summary" aria-labelledby="order-summary-title">
+        <h2 id="order-summary-title">Order summary</h2>
+        <dl class="receipt-totals">
+          <div>
+            <dt>Current status</dt>
+            <dd><span id="orderStatus" class="receipt-status"></span></dd>
+          </div>
+          <div class="receipt-total">
+            <dt>Demo total</dt>
+            <dd id="orderTotal"></dd>
+          </div>
+        </dl>
+        <a id="viewOrderDetails" class="receipt-track">
+          <i class="bi bi-truck" aria-hidden="true"></i>
+          Track this order
+          <i class="bi bi-arrow-right" aria-hidden="true"></i>
+        </a>
+        <p class="receipt-note"><i class="bi bi-info-circle" aria-hidden="true"></i><span>No payment was taken. Your demo order is saved in this browser.</span></p>
+      </section>
+    </div>
+
+    <div class="confirmation-actions">
+      <a href="../../category/category.html">Continue shopping <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+    </div>
   </main>
   <div id="footer-container"></div>
-  <script src="../../components/navbar.js?v=subscription-notification-1"></script><script src="../../components/load-navbar.js"></script>
-  <script>loadStockMindNavbar("navbar-container","../../components/");</script>
-  <script src="../../components/site-validation.js"></script><script src="confirmation.js"></script>
-  <script>fetch("../../components/footer.html").then(r=>r.ok?r.text():"").then(html=>{if(html)document.getElementById("footer-container").innerHTML=html;}).catch(()=>{});</script>
+
+  <script src="../../components/navbar.js?v=subscription-notification-1"></script>
+  <script src="../../components/load-navbar.js"></script>
+  <script>
+    loadStockMindNavbar("navbar-container", "../../components/");
+    fetch("../../components/footer.html")
+      .then(response => response.ok ? response.text() : "")
+      .then(html => { document.getElementById("footer-container").innerHTML = html; })
+      .catch(error => console.warn("Could not load the footer", error));
+  </script>
+  <script src="../../components/site-validation.js"></script>
+  <script src="confirmation.js?v=order-receipt-1"></script>
 </body>
 </html>

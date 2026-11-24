@@ -8,13 +8,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const cardFields = $("cardFields");
   const money = amount => `JOD ${Number(amount || 0).toFixed(2)}`;
 
-  try {
-    const account = JSON.parse(localStorage.getItem("stockMindUser") || "null");
-    if (account?.loggedIn) {
-      const defaults = {fullName:account.name,email:account.email,phone:account.phone,address:account.address,city:account.city,country:account.country};
-      Object.entries(defaults).forEach(([id,value]) => { if (value && $(id) && !$(id).value) $(id).value = value; });
+  function readAccount() {
+    try {
+      const account = JSON.parse(localStorage.getItem("stockMindUser") || "null");
+      return account?.loggedIn === true ? account : null;
+    } catch {
+      return null;
     }
-  } catch { /* Guest checkout remains available if account data is unreadable. */ }
+  }
+
+  const account = readAccount();
+  if (!account) {
+    window.location.replace("../cart/cart.html");
+    return;
+  }
+
+  const defaults = {fullName:account.name,email:account.email,phone:account.phone,address:account.address,city:account.city,country:account.country};
+  Object.entries(defaults).forEach(([id,value]) => { if (value && $(id) && !$(id).value) $(id).value = value; });
 
   function readCart() {
     try {
@@ -138,12 +148,10 @@ document.addEventListener("DOMContentLoaded", () => {
     return form.checkValidity();
   }
 
-  function validateListings() {
+  function validateListings(buyer) {
     let listings = [];
     try { listings = JSON.parse(localStorage.getItem("stockMindMarketplaceListings") || "[]"); }
     catch { return "Could not validate current marketplace stock."; }
-    let buyer = {};
-    try { buyer = JSON.parse(localStorage.getItem("stockMindUser") || "{}"); } catch { buyer = {}; }
     for (const item of cart.filter(product => product.marketplaceListingId)) {
       const listing = Array.isArray(listings) && listings.find(product => String(product.id) === String(item.marketplaceListingId));
       if (!listing || (listing.approvalStatus && listing.approvalStatus !== "approved") || listing.status === "reserved" || Number(listing.quantity) < 1) return `${item.name} is not currently approved or available. Remove it and refresh your cart.`;
@@ -158,12 +166,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   form.addEventListener("submit", event => {
     event.preventDefault(); formError.textContent = "";
+    const account = readAccount();
+    if (!account) { window.location.replace("../cart/cart.html"); return; }
     if (!cart.length) { formError.textContent = "Your cart is empty. Browse products and add an item before checkout."; return; }
     if (!validateCheckout()) { if (!$("orderConsent").checked) formError.textContent = "Please confirm that you understand this is a demo order."; return; }
-    const listingProblem = validateListings();
+    const listingProblem = validateListings(account);
     if (listingProblem) { formError.textContent = listingProblem; return; }
-    let account = {};
-    try { account = JSON.parse(localStorage.getItem("stockMindUser") || "{}"); } catch { account = {}; }
     const method = form.querySelector('input[name="paymentMethod"]:checked')?.value || "card";
     const now = new Date();
     const estimated = new Date(now); estimated.setDate(estimated.getDate() + 4);
@@ -171,7 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const order = {
       orderId, trackingNumber:"",
       customer:{fullName:$("fullName").value.trim(),email:$("email").value.trim().toLowerCase(),address:$("address").value.trim(),city:$("city").value.trim(),country:$("country").value,phone:$("phone").value.trim(),notes:$("notes").value.trim()},
-      buyerEmail:$("email").value.trim().toLowerCase(), buyerAccountEmail:account.loggedIn ? String(account.email || "").trim().toLowerCase() : $("email").value.trim().toLowerCase(), buyerId:account.loggedIn ? account.id || account.username || "" : "", buyerRole:account.loggedIn ? account.role || "Buyer" : "Buyer",
+      buyerEmail:$("email").value.trim().toLowerCase(), buyerAccountEmail:String(account.email || "").trim().toLowerCase(), buyerId:account.id || account.username || "", buyerRole:account.role || "Buyer",
       paymentMethod:method, paymentStatus:"demo-no-charge",
       items:cart.map(p=>({id:p.id,name:p.name,image:p.image,price:Number(p.price),quantity:Number(p.quantity),categoryName:p.categoryName || "Wholesale",condition:p.condition || "New",sellingMethod:p.sellingMethod || "regular",lotUnits:p.sellingMethod === "whole_lot" ? Number(p.lotUnits) : null,marketplaceListingId:p.marketplaceListingId || null,seller:p.seller || "Stock Mind Supplier",sellerId:p.sellerId || "",sellerEmail:p.sellerEmail || ""})),
       subtotal,commission,shipping:null,total:grandTotal,
@@ -198,8 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       sessionStorage.setItem("stockMindLastOrder",JSON.stringify(order));
       localStorage.setItem("stockMindLastOrder",JSON.stringify(order));
-      if (account.loggedIn) sessionStorage.removeItem("stockMindGuestEmail");
-      else sessionStorage.setItem("stockMindGuestEmail",order.buyerEmail);
+      sessionStorage.removeItem("stockMindGuestEmail");
       sessionStorage.removeItem("stockMindCart");
       window.dispatchEvent(new Event("cartUpdated"));
       window.addStockMindNotification?.({kind:"order",orderId,recipientEmail:order.buyerAccountEmail,recipientUserId:order.buyerId,title:"Order confirmed",message:`Order ${orderId} is being prepared. We’ll notify you when it’s on the way.`});

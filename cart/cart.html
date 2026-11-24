@@ -8,7 +8,7 @@
 
     <title>Stock Mind | Shopping Cart</title>
 
-    <link rel="stylesheet" href="cart.css">
+    <link rel="stylesheet" href="cart.css?v=cart-account-1">
     <link rel="stylesheet" href="../components/navbar.css?v=navbar-links-glow-1">
     <link rel="stylesheet" href="../components/footer.css">
     <link rel="stylesheet" href="../responsive.css?v=site-responsive-2">
@@ -115,6 +115,15 @@
                     confirmed before the order is placed.
                 </p>
 
+                <section id="cartAccountPrompt" class="cart-account-prompt" aria-labelledby="cartAccountTitle" hidden>
+                    <h3 id="cartAccountTitle">Sign in to check out</h3>
+                    <p>Log in or create a buyer account to continue. Your items will stay in your cart.</p>
+                    <div class="cart-account-actions">
+                        <a class="primary-button" href="../login/signup.html?role=buyer&amp;from=cart">Create an account</a>
+                        <a class="cart-account-login" href="../login/login.html?role=buyer&amp;from=cart">Log in</a>
+                    </div>
+                </section>
+
                 <button
                     id="checkoutButton"
                     class="primary-button checkout-button"
@@ -156,7 +165,7 @@
 <script>
     loadStockMindNavbar();
 </script>
-    <script src="cart.js"></script>
+    <script src="cart.js?v=cart-account-1"></script>
 
 </body>
 </html>

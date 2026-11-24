@@ -24,7 +24,7 @@
                 <p>Analyze a buying decision or publish extra stock as one listing with its total quantity. No piece-by-piece stock tracking needed.</p>
             </div>
             <div class="seller-overview-actions">
-                <a href="ai-tools.html" class="sm-btn sm-btn-secondary">✦ Explore AI tools</a>
+                <a href="subscription.html?returnTo=ai-tools.html" class="sm-btn sm-btn-secondary">✦ Explore AI tools</a>
                 <a href="marketplace.html?newListing=1" class="sm-btn sm-btn-primary">＋ List surplus stock</a>
             </div>
         </header>
@@ -59,8 +59,8 @@
     <script>if(typeof loadStockMindNavbar==="function")loadStockMindNavbar("navbar-container","../../components/");</script>
     <script src="store-profile-data.js?v=store-category-filter-1"></script>
     <script>const activeSeller=window.StockMindStoreProfile?.currentSeller();if(!activeSeller)window.location.replace("../../login/login.html?role=seller");else if(!window.StockMindStoreProfile.isComplete(activeSeller))window.location.replace("store-profile.html?mode=setup");</script>
-    <script src="seller-data.js"></script>
-    <script src="seller-tabs.js"></script>
+    <script src="seller-data.js?v=approved-demo-1"></script>
+    <script src="seller-tabs.js?v=2"></script>
     <script src="seller-overview.js"></script>
 </body>
 </html>

@@ -62,17 +62,23 @@ body { margin: 0; }
 .sub-page .subscription-welcome h2{margin:7px 0 4px;color:#0f1b3d;font-size:22px}
 .sub-page .subscription-welcome p{margin:0;color:#55607f;font-size:14px;line-height:1.6}
 .sub-page .subscription-welcome__free{flex:none;padding:13px 17px;border:1px solid #d9cafb;border-radius:12px;background:#fff;color:#5b21b6;font-size:14px;font-weight:750;text-decoration:none}
-.sub-page .plans { padding: 32px 24px 24px; }
+.sub-page .plans {
+  --plan-width: 330px;
+  --plan-gap: 24px;
+  --plans-width: calc(3 * var(--plan-width) + 2 * var(--plan-gap));
+  container: subscription-plans / inline-size;
+  padding: 32px 24px 24px;
+}
 .sub-page .plans__grid {
-  max-width: 1160px; margin: 0 auto;
-  display: flex; flex-wrap: wrap; gap: 24px;
+  max-width: var(--plans-width); margin: 0 auto;
+  display: flex; flex-wrap: wrap; gap: var(--plan-gap);
   align-items: stretch; justify-content: center;
 }
 
 .sub-page .plan {
   position: relative;
   flex: 1 1 280px;
-  max-width: 330px;
+  max-width: var(--plan-width);
   border-radius: 22px;
   padding: 25px 22px;
 
@@ -180,6 +186,17 @@ body { margin: 0; }
 .sub-page .faq__item summary { font-size: 17px; font-weight: 700; cursor: pointer; }
 .sub-page .faq__item p { margin: 10px 0 0; font-size: 15px; line-height: 1.7; color: var(--muted); }
 
+@container subscription-plans (width < 888px) {
+  .sub-page .plans__grid,
+  .sub-page .plans .freemium-overview {
+    --plans-width: calc(2 * var(--plan-width) + var(--plan-gap));
+  }
+}
+
+@container subscription-plans (width < 584px) {
+  .sub-page .plan { max-width: none; }
+}
+
 /* MOBILE */
 @media (max-width: 640px) {
   .sub-page .subscription-welcome { align-items: stretch; flex-direction: column; padding: 19px; }
@@ -190,7 +207,7 @@ body { margin: 0; }
 }
 
 /* Compact, non-repeating Free and Premium plan overview. */
-.sub-page .plans .freemium-overview{display:flex;align-items:center;justify-content:space-between;gap:24px;margin:0 auto 22px;padding:19px 24px;border-radius:18px}
+.sub-page .plans .freemium-overview{max-width:var(--plans-width);display:flex;align-items:center;justify-content:space-between;gap:24px;margin:0 auto 22px;padding:19px 24px;border-radius:18px}
 .sub-page .plans .freemium-overview h2{margin:5px 0 3px;font-size:21px}
 .sub-page .plans .freemium-overview p{margin:0;color:#69758c;font-size:14px;line-height:1.5}
 .sub-page .free-plan-label{color:#6d35df;font-size:11px;font-weight:800;letter-spacing:.12em}

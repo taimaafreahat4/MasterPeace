@@ -1,12 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
   "use strict";
   const $ = id => document.getElementById(id);
-  const orderId = new URLSearchParams(location.search).get("order");
+  const params = new URLSearchParams(location.search);
+  const orderId = params.get("order");
+  const initialRating = Number(params.get("rating"));
   const form = $("feedbackForm");
   const stars = [...document.querySelectorAll("[data-rating]")];
   const tagButtons = [...document.querySelectorAll("[data-tag]")];
   let order = null;
-  let selectedRating = 0;
+  let selectedRating = [1, 2, 3, 4, 5].includes(initialRating) ? initialRating : 0;
   const trackingUrl = id => `../tracking/tracking.html?order=${encodeURIComponent(id || "")}`;
 
   function loadOrder() {

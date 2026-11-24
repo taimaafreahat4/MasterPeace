@@ -5,6 +5,8 @@
 ===================================================== */
 
 let role = "Buyer";
+const fromCart = new URLSearchParams(location.search).get("from") === "cart";
+if (fromCart) document.getElementById("signupLink").href = "signup.html?role=buyer&from=cart";
 
 const body       = document.body;
 const buyer      = document.getElementById("buyerRole");
@@ -252,6 +254,7 @@ loginForm.addEventListener("submit", e => {
     const isAdmin  = userRole === "admin";
     const isSeller = userRole === "seller";
     const needsStoreSetup = isSeller && !window.StockMindStoreProfile?.isComplete(account);
+    const returnToCart = fromCart && !isAdmin && !needsStoreSetup;
 
 
     /* Admin can login from the page directly (no role tab),
@@ -285,8 +288,10 @@ loginForm.addEventListener("submit", e => {
         document.getElementById("successText").textContent =
             isAdmin
             ? "Taking you to admin dashboard..."
+            : returnToCart
+            ? "Taking you back to your cart..."
             : isSeller
-            ? (needsStoreSetup ? "Taking you to set up your store..." : "Opening your subscription plans...")
+            ? (needsStoreSetup ? "Taking you to set up your store..." : "Taking you to your seller dashboard...")
             : "Taking you to the marketplace...";
 
     }, 600);
@@ -298,11 +303,15 @@ loginForm.addEventListener("submit", e => {
 
             window.location.href = "../admin/dashboard/dashboard.html";
 
+        } else if (returnToCart) {
+
+            window.location.href = "../cart/cart.html";
+
         } else if (isSeller) {
 
             window.location.href = needsStoreSetup
                 ? "../seller/stockmind_seller_center/store-profile.html?mode=setup"
-                : "../seller/stockmind_seller_center/subscription.html?welcome=1";
+                : "../seller/stockmind_seller_center/dashboard.html";
 
         } else {
 

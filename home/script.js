@@ -184,59 +184,6 @@ authForm.addEventListener("submit", function (event) {
 
 });
 /* =====================================================
-   SEARCH
-===================================================== */
-
-const searchInput =
-    document.getElementById("searchInput");
-
-const categoryCards =
-    document.querySelectorAll(".category-card");
-searchInput.addEventListener("input", function () {
-    const value =
-        searchInput.value
-        .toLowerCase()
-        .trim();
-    categoryCards.forEach(card => {
-        const name =
-            card.dataset.name.toLowerCase();
-
-
-        if (name.includes(value)) {
-
-            card.style.display = "";
-
-        }
-        else {
-
-            card.style.display = "none";
-
-        }
-
-    });
-
-});
-
-
-
-/* =====================================================
-   CATEGORY CLICK
-===================================================== */
-
-categoryCards.forEach(card => {
-
-    card.addEventListener("click", function () {
-
-        const category =
-            this.querySelector(".category-name").textContent;
-
-
-        showToast(
-            `${category} selected ✨`
-        );
-    });
-});
-/* =====================================================
    TOAST
 ===================================================== */
 
@@ -315,32 +262,6 @@ window.addEventListener("scroll", function () {
 
 });
 
-function openCategory(category){
-
-    const loggedUser = localStorage.getItem("user");
-
-
-    if(loggedUser){
-
-        window.location.href =
-        `../category/category.html?category=${category}`;
-
-    }
-
-    else{
-
-        localStorage.setItem(
-            "selectedCategory",
-            category
-        );
-
-
-        window.location.href =
-        "../login/login.html?role=buyer";
-
-    }
-
-}
 function playHeroVideo(){
 
     const video =

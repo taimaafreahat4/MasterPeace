@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const categoryNames = {
         clothing: "Clothing",
+        shoes: "Shoes",
         cosmetics: "Cosmetics",
         electronics: "Electronics",
         home: "Home & Living",
@@ -76,9 +77,12 @@ document.addEventListener("DOMContentLoaded", () => {
             .replace(/\s+/g, " ");
 
         const aliases = {
+            "all": "all",
             "clothing": "clothing",
             "clothes": "clothing",
             "fashion": "clothing",
+            "shoes": "shoes",
+            "footwear": "shoes",
 
             "cosmetic": "cosmetics",
             "cosmetics": "cosmetics",
@@ -125,208 +129,63 @@ document.addEventListener("DOMContentLoaded", () => {
         return aliases[category] || (category ? "other" : "");
     }
 
-    // =========================
-    // ORIGINAL PRODUCTS
-    // =========================
+    const listingsKey = "stockMindMarketplaceListings";
 
-    const categoryProducts = {
-        clothing: [
-            {
-                id: "clothing-001",
-                name: "Classic T-Shirt",
-                price: 6,
-                oldPrice: 9,
-                minimumOrder: 20,
-                sold: 1250,
-                badge: "Trends",
-                brand: "Stock Mind",
-                colors: ["#111111", "#ffffff", "#d9d9d9"],
-                images: [
-                    "../Images/clothes/G74258s.webp",
-                    "../Images/clothes/G74258s2.webp",
-                    "../Images/clothes/G74258s4.webp",
-                    "../Images/clothes/G74258s5.webp"
-                ]
-            }
-        ],
-
-        cosmetics: [
-            {
-                id: "cosmetics-001",
-                name: "Cosmetic Product",
-                price: 8,
-                oldPrice: 12,
-                minimumOrder: 10,
-                sold: 980,
-                badge: "Trends",
-                brand: "Stock Mind",
-                colors: ["#111111", "#d9b08c", "#e8c7b8"],
-                images: [
-                    "../Images/cosmatics/p1.png",
-                    "../Images/cosmatics/p2.png",
-                    "../Images/cosmatics/p3.png",
-                    "../Images/cosmatics/p4.png"
-                ]
-            }
-        ],
-
-        electronics: [
-            {
-                id: "electronics-001",
-                name: "Electronic Product",
-                price: 25,
-                oldPrice: 35,
-                minimumOrder: 5,
-                sold: 620,
-                badge: "Trends",
-                brand: "Stock Mind",
-                colors: ["#111111", "#ffffff", "#808080"],
-                images: [
-                    "../Images/electronic/p1.jpg",
-                    "../Images/electronic/p2.jpg",
-                    "../Images/electronic/p3.jpg",
-                    "../Images/electronic/p4.jpg"
-                ]
-            }
-        ],
-
-        home: [
-    {
-        id: "home-001",
-        name: "Home & Living Product",
-        price: 25,
-        oldPrice: 35,
-        minimumOrder: 1,
-        sold: 0,
-        badge: "Trends",
-        brand: "Stock Mind",
-        colors: ["#d9d0c3", "#ffffff", "#808080"],
-        images: [
-            "../Images/home/m1.avif",
-            "../Images/home/m2.avif",
-            "../Images/home/m3.avif",
-            "../Images/home/m4.avif"
-        ]
-    }
-],
-        books: [],
-        toys_baby: [],
-        grocery: [],
-        sports: [],
-        bags: [],
-        auto: [],
-        other: []
-    };
-
-    // =========================
-    // SELLER PRODUCTS
-    // =========================
-
-    function readSellerProducts() {
-        // Merge seller-store products and published marketplace listings.
-        // Some versions of the seller pages wrote to different localStorage keys.
-        const storageKeys = [
-            "sellerProducts",
-            "stockMindSellerProducts",
-            "stockMindProducts",
-            "stockMindMarketplaceListings"
-        ];
-
-        const merged = new Map();
-        let fallbackId = 0;
-        for (const key of storageKeys) {
-            try {
-                const saved = JSON.parse(localStorage.getItem(key) || "[]");
-                if (!Array.isArray(saved)) continue;
-                saved.forEach(item => {
-                    if (!item || typeof item !== "object") return;
-                    const id = String(item.id || `${key}-${fallbackId++}-${item.name || "product"}`);
-                    merged.set(id, {...(merged.get(id) || {}), ...item});
-                });
-            } catch (error) {
-                console.warn("Could not read seller products:", key, error);
-            }
+    function readListings(key) {
+        try {
+            const rows = JSON.parse(localStorage.getItem(key) || "[]");
+            return Array.isArray(rows) ? rows : [];
+        } catch {
+            return [];
         }
-        return [...merged.values()];
     }
 
-    function addSellerProductsToCategories() {
-        const sellerProducts = readSellerProducts();
+    const categoryProducts = Object.fromEntries(
+        Object.keys(categoryNames).map(category => [category, []])
+    );
+    const legacyListings = new Map(readListings("sellerProducts")
+        .filter(item => item?.id)
+        .map(item => [String(item.id), item]));
+    const approvedListings = readListings(listingsKey)
+        .filter(item => item?.id && item.sellerListed && item.approvalStatus === "approved");
 
-        sellerProducts.forEach((item, index) => {
-            if (!item || typeof item !== "object") return;
-            // Seller listings stay private until an admin approves them.
-            if (item.sellerListed && item.approvalStatus && item.approvalStatus !== "approved") return;
-            const category = normalizeCategory(
-                item.category || item.categoryName
-            );
+    approvedListings.forEach(item => {
+        const category = normalizeCategory(item.category || item.categoryName);
+        if (!Object.hasOwn(categoryProducts, category)) return;
 
-            // Do not show a seller's item in unrelated categories.
-            if (!category || !categoryProducts[category]) return;
-
-            const productId = String(
-                item.id || `seller-${index}-${item.name || "product"}`
-            );
-
-            // Prevent duplicate products.
-            const alreadyExists = categoryProducts[category].some(
-                product => String(product.id) === productId
-            );
-
-            if (alreadyExists) return;
-
-            let images = [];
-
-            if (Array.isArray(item.images)) {
-                images = item.images;
-            } else if (Array.isArray(item.photos)) {
-                images = item.photos;
-            } else if (item.image) {
-                images = [item.image];
-            }
-
-            // Keep only usable image strings.
-            images = images.filter(
-                image => typeof image === "string" && image.trim() !== ""
-            );
-
-            const sellingMethod = item.sellingMethod === "whole_lot" ? "whole_lot" : "regular";
-            const quantity = Math.max(0, Number(item.quantity) || 0);
-            const unitPrice = Number(item.price || item.sellingPrice || 0);
-            const lotPrice = sellingMethod === "whole_lot"
-                ? Number(item.lotPrice) || unitPrice * quantity
-                : null;
-            categoryProducts[category].push({
-                id: productId,
-                name: String(item.name || item.title || "Seller Product"),
-                price: unitPrice,
-                lotPrice,
-                sellingMethod,
-                oldPrice: 0,
-                minimumOrder: sellingMethod === "whole_lot" ? 1 : Math.max(1, Math.floor(Number(item.minOrder) || 1)),
-                quantity,
-                sold: 0,
-                badge: "",
-                brand: String(item.brand || item.seller || "Seller"),
-                colors: [],
-                images: images,
-                condition: item.condition || "New",
-                description: item.description || "",
-                sellerProduct: true,
-                marketplaceListingId: item.marketplaceListingId || (item.sellerListed ? productId : null),
-                sellerId: item.sellerId || "",
-                sellerEmail: item.sellerEmail || "",
-                status: item.status || "available"
-            });
+        const legacy = legacyListings.get(String(item.id));
+        const gallery = [item.images, item.photos, legacy?.images, legacy?.photos].find(Array.isArray) || [];
+        const images = [...new Set([item.image, ...gallery])]
+            .filter(image => typeof image === "string" && image.trim());
+        const sellingMethod = item.sellingMethod === "whole_lot" ? "whole_lot" : "regular";
+        const quantity = Math.max(0, Number(item.quantity) || 0);
+        const unitPrice = Number(item.price || item.sellingPrice || 0);
+        categoryProducts[category].push({
+            id: String(item.id),
+            name: String(item.name || item.title || "Seller Product"),
+            price: unitPrice,
+            lotPrice: sellingMethod === "whole_lot" ? Number(item.lotPrice) || unitPrice * quantity : null,
+            sellingMethod,
+            oldPrice: Number(item.oldPrice) || 0,
+            minimumOrder: sellingMethod === "whole_lot" ? 1 : Math.max(1, Math.floor(Number(item.minOrder) || 1)),
+            quantity,
+            badge: item.badge || "",
+            brand: String(item.brand || item.seller || "Seller"),
+            colors: Array.isArray(item.colors) ? item.colors : [],
+            images,
+            condition: item.condition || "New",
+            description: item.description || "",
+            sellerProduct: true,
+            marketplaceListingId: item.marketplaceListingId || String(item.id),
+            sellerId: item.sellerId || "",
+            sellerEmail: item.sellerEmail || "",
+            status: item.status || "available"
         });
-    }
-
-    // Important: define categoryProducts before adding seller products.
-    addSellerProductsToCategories();
+    });
 
     // An admin review in another tab immediately refreshes buyer-visible products.
     window.addEventListener("storage", event => {
-        if (event.key === "stockMindMarketplaceListings") window.location.reload();
+        if (event.key === listingsKey || event.key === null) window.location.reload();
     });
 
     // =========================
@@ -610,11 +469,11 @@ function updateCartCount() {
             empty.className = "no-products";
 
             const title = document.createElement("h3");
-            title.textContent = "No products match";
+            title.textContent = approvedListings.length ? "No products match" : "No approved products yet";
 
             const text = document.createElement("p");
             text.textContent =
-                "Try another category or adjust your filters.";
+                approvedListings.length ? "Try another category or adjust your filters." : "Products appear here after admin approval.";
 
             const reset = document.createElement("button");
             reset.type = "button";
@@ -629,7 +488,8 @@ function updateCartCount() {
                 showProducts("all");
                 search?.focus();
             });
-            empty.append(title, text, reset);
+            empty.append(title, text);
+            if (approvedListings.length) empty.append(reset);
             productsGrid.appendChild(empty);
             return;
         }
@@ -1210,12 +1070,5 @@ imageBox.appendChild(favoriteButton);
     updateCartCount();
 
     const requestedCategory = new URLSearchParams(location.search).get("category");
-    const preferredCategory = normalizeCategory(requestedCategory);
-    const activeCategory = $(".category-card.active");
-
-    currentCategory = preferredCategory || normalizeCategory(activeCategory?.dataset.category)
-        || activeCategory?.dataset.category
-        || "clothing";
-
-    showProducts(currentCategory);
+    showProducts(normalizeCategory(requestedCategory) || "all");
 });

@@ -3,6 +3,8 @@
 ===================================================== */
 
 let role = "Buyer";
+const fromCart = new URLSearchParams(location.search).get("from") === "cart";
+if (fromCart) document.getElementById("loginLink").href = "login.html?role=buyer&from=cart";
 let imageData = "https://i.pravatar.cc/150";
 
 const form       = document.getElementById("signupForm");
@@ -287,6 +289,7 @@ form.addEventListener("submit", e => {
 
     signupBtn.classList.add("loading");
     if (role === "Seller") document.getElementById("signupSuccessMessage").textContent = "Taking you to your store setup...";
+    else if (fromCart) document.getElementById("signupSuccessMessage").textContent = "Taking you back to your cart...";
 
     setTimeout(() => {
         document.getElementById("success").classList.add("show");
@@ -295,6 +298,8 @@ form.addEventListener("submit", e => {
     setTimeout(() => {
         if (role === "Seller") {
             window.location.href = "../seller/stockmind_seller_center/store-profile.html?mode=setup";
+        } else if (fromCart) {
+            window.location.href = "../cart/cart.html";
         } else {
             window.location.href = "../login/login.html?role=" + role.toLowerCase();
         }

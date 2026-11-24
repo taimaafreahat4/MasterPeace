@@ -7,8 +7,8 @@
 
   function render() {
     const products = read("stockMindMarketplaceListings").filter(item => item?.sellerListed);
-    const pendingProducts = products.filter(item => item.approvalStatus === "pending_review");
-    const approvedProducts = products.filter(item => !item.approvalStatus || item.approvalStatus === "approved");
+    const pendingProducts = products.filter(item => (item.approvalStatus || "pending_review") === "pending_review");
+    const approvedProducts = products.filter(item => item.approvalStatus === "approved");
     const feedbackRows = ["stockMindFeedbacks","stockMindSiteFeedback"].flatMap(key=>read(key).map(item=>({...item,_key:key})));
     const feedback = [...new Map(feedbackRows.map(item=>[String(item.id || item.orderId || `${item._key}-${item.createdAt}`),item])).values()];
     const pendingFeedback = feedback.filter(item=>!item.approvalStatus || item.approvalStatus === "pending_review");

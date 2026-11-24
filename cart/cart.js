@@ -16,6 +16,7 @@
     const shippingElement = $("#shipping");
     const totalElement = $("#total");
     const checkoutButton = $("#checkoutButton");
+    const accountPrompt = $("#cartAccountPrompt");
     const browseButton = $("#browseProducts");
 
     if (!itemsElement || !emptyElement || !checkoutButton) {
@@ -85,7 +86,10 @@
 
         emptyElement.classList.toggle("hidden", !isEmpty);
         itemsElement.classList.toggle("hidden", isEmpty);
-        checkoutButton.disabled = isEmpty;
+        const signedIn = isLoggedIn();
+        accountPrompt.hidden = signedIn;
+        checkoutButton.hidden = !signedIn;
+        checkoutButton.disabled = isEmpty || !signedIn;
 
         if (countElement) {
             const lotPieces = cart.reduce((sum, item) => sum + (item.sellingMethod === "whole_lot" ? Math.max(0, Number(item.lotUnits) || 0) : 0), 0);
@@ -273,34 +277,21 @@ totalElement.textContent = money(subtotal + commission);
     }
 
     
-function isBuyerLoggedIn() {
-    try {
-        const rawUser = localStorage.getItem("stockMindUser");
-        if (!rawUser) return false;
-
-        const user = JSON.parse(rawUser);
-
-        return (
-            user &&
-            user.loggedIn === true &&
-            String(user.role || "").toLowerCase() === "buyer"
-        );
-    } catch (error) {
-        console.error("Could not check login status:", error);
-        return false;
+    function isLoggedIn() {
+        try {
+            return JSON.parse(localStorage.getItem("stockMindUser") || "null")?.loggedIn === true;
+        } catch {
+            return false;
+        }
     }
-}
 
-
-checkoutButton.addEventListener("click", () => {
-    if (getCart().length === 0) return;
-
-    // Go directly to checkout without redirecting to login.
-    window.location.href = "../checkout/checkout.html";
-});
-
-
-
+    checkoutButton.addEventListener("click", () => {
+        if (!isLoggedIn()) {
+            renderCart();
+            return;
+        }
+        if (getCart().length) window.location.href = "../checkout/checkout.html";
+    });
 
     if (browseButton) {
         browseButton.addEventListener("click", () => {
@@ -310,6 +301,9 @@ checkoutButton.addEventListener("click", () => {
 
     // Update if the cart changes in this tab.
     window.addEventListener("pageshow", renderCart);
+    window.addEventListener("storage", event => {
+        if (event.key === "stockMindUser" || event.key === null) renderCart();
+    });
 
     renderCart();
 })();

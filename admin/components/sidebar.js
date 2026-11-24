@@ -6,7 +6,7 @@
     };
 
     function updateBadges() {
-        const pendingProducts = parseRows("stockMindMarketplaceListings").filter(item => item?.sellerListed && item.approvalStatus === "pending_review").length;
+        const pendingProducts = parseRows("stockMindMarketplaceListings").filter(item => item?.sellerListed && (item.approvalStatus || "pending_review") === "pending_review").length;
         const feedbackRows = ["stockMindFeedbacks","stockMindSiteFeedback"].flatMap(parseRows);
         const pendingFeedback = feedbackRows.filter(item => !item.approvalStatus || item.approvalStatus === "pending_review").length;
         [["admin-pending-products",pendingProducts],["admin-pending-feedback",pendingFeedback]].forEach(([id,count]) => {

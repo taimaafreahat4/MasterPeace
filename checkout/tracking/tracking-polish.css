@@ -1,15 +1,74 @@
-body{background:radial-gradient(ellipse at 8% 0%,#efeaff,transparent 32rem),#f7f8fc;color:#14213f;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
-.tracking-page{width:min(1120px,calc(100% - 44px));margin:84px auto 70px}
-.back-to-cart{display:inline-flex;align-items:center;gap:8px;padding:11px 15px;border:1px solid #e7e8f1;border-radius:11px;background:#fff;color:#596781;text-decoration:none;font-size:14px;font-weight:700}
-.tracking-header{margin:27px 0 23px}.tracking-header span{font-size:12px;letter-spacing:1.7px;font-weight:750}.tracking-header h1{margin:9px 0 7px;font-size:clamp(34px,4vw,44px);letter-spacing:-1.4px}.tracking-header p{margin:0;color:#697790;font-size:16px;line-height:1.6}
-.tracking-container{padding:26px;border:1px solid #e6e8f0;border-radius:20px;box-shadow:0 12px 34px rgba(22,32,69,.055)}
-.status-header{margin-bottom:30px}.status-header h2{font-size:20px}.status-badge{display:inline-flex;align-items:center;gap:7px;padding:10px 15px;border:1px solid #e8e1fa;border-radius:99px;background:#f5f1ff;color:#6841d5;font-size:14px;font-weight:800}
-.tracking-status-message{margin:-17px 0 23px;color:#68758d;font-size:14px;line-height:1.7}
-.status-badge.status-shipped{border-color:#dce8ff;background:#eff5ff;color:#3d6bce}.status-badge.status-delivered{border-color:#d6f0e1;background:#edfaf3;color:#168b69}.status-badge.status-cancelled{border-color:#f5dce1;background:#fff1f3;color:#c6475c}
-.timeline{max-width:820px;margin:0 auto 35px}.timeline-step{min-width:115px}.circle{width:54px;height:54px;font-size:22px;font-weight:700}.timeline-step p{margin-top:9px;font-size:14px;font-weight:700;color:#68758d}.line{width:clamp(28px,7vw,76px);height:3px;background:#e3e6ee}.timeline-step.active .circle{box-shadow:0 7px 18px rgba(113,53,232,.23)}
-.details-card{padding:22px;border:1px solid #edf0f5;border-radius:15px;background:#fafbfe}.details-card h2{margin:0 0 8px;font-size:20px}.detail{padding:15px 0;border-bottom:1px solid #e9ecf3;font-size:14px}.detail:last-child{border-bottom:0}.detail span{color:#68758d}.detail strong{color:#24314f;font-size:14px}
-.action-grid{gap:15px;margin-top:18px}.action-card{padding:20px;border:1px solid #e7e9f1;border-radius:15px;background:#fff}.action-card h2{font-size:18px}.action-card p{font-size:14px;line-height:1.7}.action-card button{min-height:44px;padding:0 16px;border:0;border-radius:10px;background:linear-gradient(110deg,#7135e8,#8754ed);color:#fff;font-size:14px;font-weight:750;cursor:pointer}.action-card button:disabled{opacity:.55;cursor:not-allowed}
-.action-card [hidden]{display:none!important}.action-card-kicker{color:#7653d5;font-size:11px;font-weight:800;letter-spacing:1.2px}.tracking-primary-button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin-top:6px;padding:0 16px;border-radius:10px;background:linear-gradient(110deg,#7135e8,#8754ed);color:#fff;font-size:14px;font-weight:750;text-decoration:none;box-shadow:0 7px 16px rgba(113,53,232,.18)}.tracking-primary-button:hover{filter:brightness(1.06);transform:translateY(-1px)}.feedback-submitted{color:#168b69;font-size:14px}
-.stars span{display:inline-block;min-width:30px;padding:5px;color:#f4ad32;font-size:22px;cursor:pointer}.stars span:focus-visible{outline:2px solid #a88af5;border-radius:6px}
-.bottom-actions{margin-top:18px}.bottom-actions a{color:#7047ed;font-size:14px;font-weight:750}
-@media(max-width:650px){.tracking-page{width:calc(100% - 26px);margin:76px auto 45px}.tracking-container{padding:16px;border-radius:16px}.status-header{margin-bottom:24px}.timeline{max-width:100%}.timeline-step{min-width:52px}.timeline-step p{font-size:11px;line-height:1.35}.circle{width:42px;height:42px;font-size:18px}.line{width:clamp(10px,4.5vw,28px)}.details-card{padding:15px}.detail{display:flex;gap:12px;align-items:flex-start;font-size:13px}.detail strong{max-width:58%;text-align:right;overflow-wrap:anywhere;font-size:13px}.action-grid{grid-template-columns:1fr}.action-card p{font-size:13px}}
+.tracking-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px 22px;
+    margin-top: 18px;
+    border-color: #e2d8f4;
+    background: linear-gradient(110deg, #f9f6ff, #fff 72%);
+}
+.tracking-action-content { display: flex; align-items: flex-start; gap: 14px; flex: 1 1 260px; }
+.tracking-action-content p { margin: 6px 0 0; color: var(--track-muted); font-size: .9rem; line-height: 1.55; }
+.tracking-action-icon {
+    display: grid;
+    flex: 0 0 44px;
+    height: 44px;
+    place-items: center;
+    border-radius: 12px;
+    background: #ede5ff;
+    color: #6031c3;
+    font-size: 1.15rem;
+}
+.tracking-action-content .delivery-message:empty { display: none; }
+.tracking-action-content .feedback-submitted { color: #106a4c; }
+
+.tracking-primary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 9px 16px;
+    border: 0;
+    border-radius: 11px;
+    background: var(--track-purple);
+    color: #fff;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: inherit;
+    font-size: .875rem;
+    font-weight: 750;
+    line-height: 1.2;
+}
+.tracking-primary-button:hover { background: #4e229f; color: #fff; }
+.tracking-primary-button:disabled { opacity: .55; cursor: default; }
+.tracking-feedback-tools { display: flex; align-items: center; flex-wrap: wrap; gap: 9px 16px; }
+.tracking-rating { min-width: 0; }
+.tracking-rating p { margin: 0 0 1px 4px; color: var(--track-muted); font-size: .78rem; font-weight: 750; }
+.tracking-rating-stars { display: flex; gap: 2px; color: #925900; }
+.tracking-rating-stars a {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    min-height: 44px;
+    border-radius: 8px;
+    color: inherit;
+    font-size: 1.2rem;
+    text-decoration: none;
+}
+.tracking-rating-stars a[href]:is(:hover, :focus-visible),
+.tracking-rating-stars a[href]:has(~ a:is(:hover, :focus-visible)) { background: #fff2d9; }
+
+@media (max-width: 760px) {
+    .tracking-page { width: calc(100% - 32px); padding-block: 98px 45px; }
+    .tracking-overview { grid-template-columns: 1fr; gap: 12px; }
+    .tracking-header { margin-bottom: 14px; gap: 16px; border-radius: 18px; }
+    .tracking-action { margin-top: 12px; }
+}
+@media (max-width: 410px) {
+    .tracking-page { width: calc(100% - 24px); }
+    .timeline-step { --track-step-size: 39px; font-size: .74rem; }
+    .timeline-step .circle { border-radius: 11px; font-size: 1rem; }
+    .tracking-action-content { gap: 10px; }
+}

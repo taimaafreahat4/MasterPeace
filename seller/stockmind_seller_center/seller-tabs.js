@@ -12,7 +12,7 @@
             id: "ai-tools",
             label: "AI Tools",
             icon: "✧",
-            href: "ai-tools.html"
+            href: "subscription.html?returnTo=ai-tools.html"
         },
         {
             id: "marketplace",

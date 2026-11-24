@@ -2815,18 +2815,36 @@ color:#e63946;
 .market-page .market-toolbar .trends-button.active { border-color: #7044d0; background: #7044d0; color: #fff; }
 .market-results-heading { margin-bottom: 10px; }
 .market-page .results-count { color: #566783; font-size: 13px; }
-.market-page .products-grid { grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; }
-.market-page .product-card { overflow: hidden; border: 1px solid #dfe3f0; border-radius: 13px; box-shadow: 0 6px 18px #24365e0b; }
-.market-page .product-card:hover { transform: translateY(-2px); }
-.market-page .product-card .product-image { aspect-ratio: 4/3; border-radius: 0; }
+.market-page .products-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: 1fr;
+    align-items: stretch;
+    gap: 12px;
+}
+.market-page .product-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #dfe3f0;
+    border-radius: 13px;
+    box-shadow: 0 6px 18px #24365e0b;
+}
+.market-page .product-card:hover { transform: none; box-shadow: 0 8px 22px #24365e18; }
+.market-page .product-card .product-image { flex: none; aspect-ratio: 4/3; border-radius: 0; }
 .market-page .product-card .product-main-photo { padding: 8px; }
-.market-page .product-card .product-info { padding: 12px; }
+.market-page .product-card .product-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 12px;
+}
+.market-page .product-card :is(.product-meta, .color-options):has(+ .product-bottom) { margin-bottom: 9px; }
 .market-page .product-card .product-brand { margin-bottom: 3px; color: #596a88; font-size: 12px; }
 .market-page .product-card .product-name { margin-top: 0; color: #172749; font-size: 16px; }
 .market-page .product-card .product-price { color: #5c37b2; }
 .market-page .product-card .product-unit { color: #516181; font-size: 12px; }
 .market-page .product-card .product-meta { display: flex; flex-wrap: wrap; gap: 4px 9px; color: #536482; }
-.market-page .product-card .product-bottom { margin-top: 9px; }
+.market-page .product-card .product-bottom { margin-top: auto; }
 .market-page .product-card .view-details-button { border: 1px solid #e0e4f4; }
 .market-page .no-products { grid-column: 1 / -1; padding: 25px 14px; border: 1px dashed #d5d9ec; border-radius: 11px; background: #fff; }
 .market-reset { margin-top: 11px; }

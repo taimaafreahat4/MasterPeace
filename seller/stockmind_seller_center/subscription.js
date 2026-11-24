@@ -83,23 +83,7 @@
   function render() {
     if (!container) return;
     container.innerHTML = PLANS.map(planCard).join("");
-    if (activeSubscription && status) {
-      const expiry = new Date(Number(activeSubscription.expiresAt));
-      status.hidden = false;
-      status.replaceChildren();
-      const icon = document.createElement("span");
-      icon.className = "subscription-status__icon"; icon.setAttribute("aria-hidden", "true"); icon.textContent = "✓";
-      const details = document.createElement("span");
-      const title = document.createElement("strong"); title.textContent = `Your ${Number(activeSubscription.months) || 0}-month access is active`;
-      const next = scheduledSubscriptions[0];
-      const nextDate = next ? new Date(Number(next.startsAt || next.startedAt)).toLocaleDateString(undefined,{year:"numeric",month:"long",day:"numeric"}) : "";
-      const note = document.createElement("small"); note.textContent = next
-        ? `Available until ${expiry.toLocaleDateString(undefined,{year:"numeric",month:"long",day:"numeric"})}. Your next ${Number(next.months)}-month plan is scheduled to start ${nextDate}.`
-        : `Available until ${expiry.toLocaleDateString(undefined,{year:"numeric",month:"long",day:"numeric"})}. A new plan you choose will begin after your current access ends.`;
-      details.append(title,note);
-      const link = document.createElement("a"); link.href = "ai-tools.html"; link.textContent = "Open AI tools →";
-      status.append(icon,details,link);
-    } else if (scheduledSubscriptions[0] && status) {
+    if (!activeSubscription && scheduledSubscriptions[0] && status) {
       const next = scheduledSubscriptions[0];
       status.hidden = false;
       status.replaceChildren();

@@ -670,3 +670,18 @@ button {
     font-weight:600;
 
 }
+
+.cart-account-prompt[hidden],
+.checkout-button[hidden] { display: none; }
+
+.cart-account-prompt {
+    padding: 16px;
+    border: 1px solid #e4daf8;
+    border-radius: 13px;
+    background: #faf7ff;
+}
+.cart-account-prompt h3 { margin: 0 0 5px; font-size: 16px; color: #1a2042; }
+.cart-account-prompt p { margin: 0 0 12px; color: #535e79; font-size: 13px; line-height: 1.5; }
+.cart-account-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.cart-account-actions .primary-button { width: auto; min-height: 42px; padding: 8px 14px; }
+.cart-account-login { padding: 8px 4px; color: #5a2cbb; font-size: 14px; font-weight: 700; }
